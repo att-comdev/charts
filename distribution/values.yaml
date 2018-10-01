@@ -1,0 +1,198 @@
+# Default values for distribution.
+# This is a YAML-formatted file.
+# Beware when changing values here. You should know what you are doing!
+# Access the values with {{ .Values.key.subkey }}
+
+# Common
+
+images:
+  tags:
+    initContainerImage: "alpine:3.6"
+    distribution: docker.bintray.io/jfrog/distribution-distribution:1.1.0
+    distributor: docker.bintray.io/jfrog/distribution-distributor:1.1.0
+
+# For supporting pulling from private registries
+imagePullSecrets:
+
+## Role Based Access Control
+## Ref: https://kubernetes.io/docs/admin/authorization/rbac/
+rbac:
+  create: false
+  role:
+    ## Rules to create. It follows the role specification
+    rules:
+    - apiGroups:
+      - ''
+      resources:
+      - services
+      - endpoints
+      - pods
+      verbs:
+      - get
+      - watch
+      - list
+
+## Service Account
+## Ref: https://kubernetes.io/docs/admin/service-accounts-admin/
+##
+serviceAccount:
+  create: false
+  ## The name of the ServiceAccount to use.
+  ## If not set and create is true, a name is generated using the fullname template
+  name:
+
+ingress:
+  enabled: false
+  # Used to create an Ingress record.
+  hosts:
+    - distribution.domain.example
+  annotations:
+  # kubernetes.io/ingress.class: nginx
+  # kubernetes.io/tls-acme: "true"
+  tls:
+  # Secrets must be manually created in the namespace.
+  # - secretName: chart-example-tls
+  #   hosts:
+  #     - distribution.domain.example
+
+# Sub charts
+## Configuration values for the mongodb dependency
+## ref: https://github.com/kubernetes/charts/blob/master/stable/mongodb/README.md
+##
+mongodb:
+  enabled: true
+  image:
+    tag: 3.6.3
+    pullPolicy: IfNotPresent
+  persistence:
+    enabled: false
+    size: 10Gi
+  resources: {}
+  #  requests:
+  #    memory: "2Gi"
+  #    cpu: "100m"
+  #  limits:
+  #    memory: "2Gi"
+  #    cpu: "250m"
+  ## Make sure the --wiredTigerCacheSizeGB is no more than half the memory limit!
+  ## This is critical to protect against OOMKill by Kubernetes!
+  mongodbExtraFlags:
+  - "--wiredTigerCacheSizeGB=1"
+  mongodbRootPassword: smil3yfc
+  mongodbUsername: distribution
+  mongodbPassword: smil3yfc
+  mongodbDatabase: bintray
+  livenessProbe:
+    initialDelaySeconds: 40
+  readinessProbe:
+    initialDelaySeconds: 30
+
+## Configuration values for the redis dependency
+## ref: https://github.com/kubernetes/charts/blob/master/stable/redis/README.md
+##
+redis:
+  enabled: true
+  redisPassword: smil3yfc
+  persistence:
+    enabled: false
+    size: 10Gi
+  master:
+    port: 6379
+  resources: {}
+  #  requests:
+  #    memory: "1Gi"
+  #    cpu: "100m"
+  #  limits:
+  #    memory: "2Gi"
+  #    cpu: "250m"
+
+# For setting up external services, must pass the connection URL for them
+global:
+  mongoUrl:
+  mongoAuditUrl:
+  redisUrl:
+
+distribution:
+  replicaCount: 1
+  name: distribution
+  image:
+    imagePullPolicy: IfNotPresent
+  internalPort: 8080
+  externalPort: 80
+  masterKey: BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+  env:
+    artifactoryUrl:
+    btServerUrl:
+    artifactoryCi1Url:
+    artifactoryEdge1Url:
+    artifactoryEdge2Url:
+    artifactoryEdge3Url:
+  service:
+    type: NodePort
+  resources: {}
+  #  requests:
+  #    memory: "2Gi"
+  #    cpu: "500m"
+  #  limits:
+  #    memory: "4Gi"
+  #    cpu: "2"
+  ## Control Java options (JAVA_OPTIONS)
+  ## IMPORTANT: keep javaOpts.xmx no higher than resources.limits.memory
+  javaOpts:
+    xms:
+    xmx:
+  persistence:
+    enabled: false
+    ## A manually managed Persistent Volume and Claim
+    ## Requires persistence.enabled: true
+    ## If defined, PVC must be created manually before volume will be bound
+    # existingClaim:
+
+    accessMode: ReadWriteOnce
+    mountPath: "/var/opt/jfrog/distribution"
+    size: 50Gi
+    ## distribution data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner. (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+
+distributor:
+  replicaCount: 1
+  name: distributor
+  image:
+    imagePullPolicy: IfNotPresent
+  token: "eyJ2ZXIiOiIyIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYiLCJraWQiOiJNaTZjZC1aTVpPTHJNVi1CdkZpZVNrcUVwUU9WanRWS1MwTWM2MXpwSFZZIn0.eyJzdWIiOiJJTlRFUk5BTCIsInNjcCI6ImFwcGxpZWQtcGVybWlzc2lvbnNcL3N5c3RlbSIsImF1ZCI6ImpmZHNAMDFjbmhnbjkyc2FmNHMxYzdkMGE3cDBtdmMiLCJpc3MiOiJqZmRzQDAxY25oZ245MnNhZjRzMWM3ZDBhN3AwbXZjIiwiZXhwIjoyNDgxMDQ1NDMyLCJpYXQiOjE1MzQ5NjU0MzIsImp0aSI6IjM5NzBiYTBkLTFiMWUtNDM3Yi04NDdlLWZjOTA3NGZjMjI1ZSJ9.hDE8p9SYD9NwHuDUqSnJfe4mBC9ogNShQ6n8AkBpT4HmYzxpnP4qpldjaubka5pCMqkrVmVzW-jEpBRRud9pG1eF7zswkN7Zu1ea3F1IPzjq8Wf5KrB-b6vqLbY39FjMg0e9o2F_ZFWU0PZDHHSxxEAdNkR4MZhslE093NL4zsz8Rv8sdCClqU17N8HsrjDe9A4YOcVCQBSZ9wsbiqyVE6synsyul4-z3ihDeXjtZOGe9aakQylXeeAK0xCi_myCCztxUSWj2WSCRJcZdAX0hevlX0c3RjfqiP-VtrV1mKwm30DYdHFXzKes4q-vhHojuXNPtj3KAXJtC-D6f_adeg"
+  resources: {}
+  #  requests:
+  #    memory: "2Gi"
+  #    cpu: "500m"
+  #  limits:
+  #    memory: "4Gi"
+  #    cpu: "2"
+  ## Control Java options (JAVA_OPTIONS)
+  ## IMPORTANT: keep javaOpts.xmx no higher than resources.limits.memory
+  javaOpts:
+    xms:
+    xmx:
+  persistence:
+    enabled: false
+    ## A manually managed Persistent Volume and Claim
+    ## Requires persistence.enabled: true
+    ## If defined, PVC must be created manually before volume will be bound
+    # existingClaim:
+
+    accessMode: ReadWriteOnce
+    mountPath: "/var/opt/jfrog/distributor"
+    size: 50Gi
+    ## distribution data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
