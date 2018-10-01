@@ -1,0 +1,200 @@
+# Default values for Xray HA.
+# This is a YAML-formatted file.
+# Beware when changing values here. You should know what you are doing!
+# Access the values with {{ .Values.key.subkey }}
+
+# Common
+replicaCount: 1
+imagePullPolicy: IfNotPresent
+imagePullSecrets:
+
+images:
+  tags:
+    initContainerImage: "alpine:3.6"
+    analysis: docker.bintray.io/jfrog/xray-analysis:2.2.4
+    indexer: docker.bintray.io/jfrog/xray-indexer:2.2.4
+    persist: docker.bintray.io/jfrog/xray-persist:2.2.4
+    server: docker.bintray.io/jfrog/xray-server:2.2.4
+
+# PostgreSQL
+## Configuration values for the postgresql dependency
+## ref: https://github.com/kubernetes/charts/blob/master/stable/postgressql/README.md
+##
+postgresql:
+  enabled: true
+  postgresDatabase: "xraydb"
+  postgresUser: "xray"
+  postgresPassword: smil3yfc
+  service:
+    port: 5432
+  persistence:
+    enabled: true
+    size: 50Gi
+    ## existingClaim: xray-postgresql-pvc
+    storageClass: general
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+
+## Configuration values for the mongodb dependency
+## ref: https://github.com/kubernetes/charts/blob/master/stable/mongodb/README.md
+##
+mongodb:
+  enabled: true
+  image:
+    tag: 3.6.3
+    pullPolicy: IfNotPresent
+  persistence:
+    enabled: true
+    size: 50Gi
+    ## existingClaim: xray-mongo-pvc
+    storageClass: general
+  resources:
+   requests:
+     memory: "4Gi"
+     cpu: "1"
+   limits:
+      memory: "5Gi"
+      cpu: "4"
+  ## Make sure the --wiredTigerCacheSizeGB is no more than half the memory limit!
+  ## This is critical to protect against OOMKill by Kubernetes!
+  mongodbExtraFlags:
+  - "--wiredTigerCacheSizeGB=3"
+  mongodbRootPassword: smil3yfc
+  mongodbUsername: xray
+  mongodbPassword: smil3yfc
+  mongodbDatabase: xray
+#  livenessProbe:
+#    initialDelaySeconds: 60
+#    periodSeconds: 10
+#  readinessProbe:
+#    initialDelaySeconds: 30
+#    periodSeconds: 30
+
+# RabbitMQ HA
+## Configuration values for the rabbitmq-ha dependency
+## ref: https://github.com/kubernetes/charts/blob/master/stable/rabbitmq-ha/README.md
+##
+rabbitmq-ha:
+  replicaCount: 1
+  rabbitmqUsername: "guest"
+  rabbitmqPassword: smil3yfc
+  customConfigMap: true
+  rabbitmqErlangCookie: XRAYRABBITMQCLUSTER
+  rabbitmqMemoryHighWatermark: 500MB
+  rabbitmqNodePort: 5672
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+  persistentVolume:
+    enabled: false
+    size: 20Gi
+  rbac:
+    create: true
+
+common:
+  xrayVersion: 2.2.4
+  xrayConfigPath: /var/opt/jfrog/xray/data
+  xrayUserId: 1035
+  xrayGroupId: 1035
+  stdOutEnabled: true
+  ## Xray requires a unique master key
+  ## You can generate one with the command:
+  ## 'openssl rand -hex 32'
+  ## Pass it to helm with '--set common.masterKey=${MASTER_KEY}'
+  ## IMPORTANT: You should NOT use the example masterKey for a production deployment!
+  masterKey: FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+
+# For setting up external services, must pass the connection URL for them
+global:
+  mongoUrl:
+  postgresqlUrl:
+
+
+analysis:
+  name: xray-analysis
+  internalPort: 7000
+  externalPort: 7000
+  service:
+    type: ClusterIP
+  persistence:
+    enabled: false
+  ## Container storage limit
+  storage:
+    sizeLimit: 10Gi
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+
+indexer:
+  name: xray-indexer
+  internalPort: 7002
+  externalPort: 7002
+  service:
+    type: ClusterIP
+  ## Container storage limit
+  persistence:
+    enabled: false
+  storage:
+    sizeLimit: 30Gi
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+
+persist:
+  name: xray-persist
+  internalPort: 7003
+  externalPort: 7003
+  service:
+    type: ClusterIP
+  ## Container storage limit
+  persistence:
+    enabled: false
+  storage:
+    sizeLimit: 10Gi
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+
+server:
+  name: xray-server
+  internalPort: 8000
+  externalPort: 80
+  service:
+    type: NodePort
+    name: xray
+  ## Container storage limit
+  persistence:
+    enabled: false
+  storage:
+    sizeLimit: 70Gi
+  # Whitelist IPs allowed to LoadBalancer type services
+  # Example: loadBalancerSourceRanges={82.82.190.51/32,141.141.8.8/32}
+  loadBalancerSourceRanges: []
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: "1"
