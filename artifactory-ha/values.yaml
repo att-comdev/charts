@@ -1,0 +1,497 @@
+# Default values for artifactory-ha.
+# This is a YAML-formatted file.
+# Beware when changing values here. You should know what you are doing!
+# Access the values with {{ .Values.key.subkey }}
+
+# Common
+
+# For supporting pulling from private registries
+imagePullSecrets:
+
+## Role Based Access Control
+## Ref: https://kubernetes.io/docs/admin/authorization/rbac/
+rbac:
+  create: true
+  role:
+    ## Rules to create. It follows the role specification
+    rules:
+    - apiGroups:
+      - ''
+      resources:
+      - services
+      - endpoints
+      - pods
+      verbs:
+      - get
+      - watch
+      - list
+
+namespace: osh-infra
+
+labels:
+  job:
+    node_selector_key: openstack-control-plane
+    node_selector_value: enabled
+images:
+  tags:
+    artifactory: sb464f/artifactory-mariadb:1.0.1
+    initContainerImage: "alpine:3.6"
+    nginx: docker.bintray.io/jfrog/nginx-artifactory-pro:6.2.0
+    db_init: docker.io/kolla/ubuntu-source-heat-engine:3.0.3
+    ceph_key_placement: docker.io/port/ceph-config-helper:v1.10.3
+    s3_bucket: docker.io/port/ceph-config-helper:v1.10.3
+    s3_user: docker.io/port/ceph-config-helper:v1.10.3
+    dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+  pull_policy: "IfNotPresent"
+  local_registry:
+    active: false
+    exclude:
+      - dep_check
+      - image_repo_sync
+
+dependencies:
+  dynamic:
+    common:
+      local_image_registry:
+        jobs:
+          - artifactory-image-repo-sync
+        services:
+          - endpoint: node
+            service: local_image_registry
+  static:
+    curator:
+      services:
+        - endpoint: internal
+          service: artifactory
+    artifactory_client:
+      services: null
+      jobs: null
+    artifactory_data:
+      services: null
+      jobs: null
+    artifactory_master:
+      services: null
+      jobs: null
+    image_repo_sync:
+      services:
+        - endpoint: internal
+          service: local_image_registry
+    prometheus_artifactory_exporter:
+      services:
+        - endpoint: internal
+          service: artifactory
+    snapshot_repository:
+      services:
+        - endpoint: internal
+          service: artifactory
+      jobs:
+        - artifactory-s3-bucket
+    s3_user:
+      services:
+        - endpoint: internal
+          service: ceph_object_store
+    s3_bucket:
+      jobs:
+        - artifactory-s3-user
+secrets:
+  rgw:
+    admin: radosgw-s3-admin-creds
+    artifactory: artifactory-s3-user-creds
+  oslo_db:
+    admin: artifactory-db-admin
+    artifactory: artifactory-db-user
+endpoints:
+  cluster_domain_suffix: cluster.local
+  artifactory:
+    host_fqdn_override:
+      default: null
+    # NOTE(SaiBattina): this chart supports TLS for fqdn over-ridden public
+    # endpoints using the following format:
+    #   public:
+    #     host: artifactory.domain.example
+    #     tls:
+    #       crt: null
+    #       key: null
+    #       ca: null
+  oslo_db:
+    namespace: null
+    auth:
+      admin:
+        username: root
+        password: password
+      artifactory:
+        username: artifactory
+        password: password
+    hosts:
+      default: mariadb
+    host_fqdn_override:
+      default: null
+    path: /artifactory
+    scheme: mysql+pymysql
+    port:
+      mysql:
+        default: 3306
+  ceph_object_store:
+    name: radosgw
+    namespace: null
+    auth:
+      artifactory:
+        username: artifactory
+        access_key: "art_access_key"
+        secret_key: "art_secret_key"
+      admin:
+        username: s3_admin
+        access_key: "admin_access_key"
+        secret_key: "admin_secret_key"
+    hosts:
+      default: ceph-rgw
+      public: radosgw
+    host_fqdn_override:
+      default: null
+    path:
+      default: null
+    scheme:
+      default: http
+    port:
+      api:
+        default: 8088
+        public: 80
+
+conf:
+  artifactory:
+    snapshots:
+      enabled: true
+      # NOTE: The path for the radosgw s3 endpoint gets populated
+      # dynamically with this value to ensure the bucket name and s3 compatible
+      # radosgw endpoint/path match
+      bucket: artifactory_bucket
+      repositories:
+        logstash:
+          name: logstash_snapshots
+  ceph:
+    radosgw:
+      s3_admin_caps: "users=*;buckets=*;zone=*"
+    monitors: []
+    admin_keyring: null
+    override:
+    append:
+pod:
+  resources:
+    jobs:
+      storage_init:
+        requests:
+          memory: "128Mi"
+          cpu: "100m"
+        limits:
+          memory: "1024Mi"
+          cpu: "2000m"
+      s3_bucket:
+        requests:
+          memory: "128Mi"
+          cpu: "100m"
+        limits:
+          memory: "1024Mi"
+          cpu: "2000m"
+      s3_user:
+        requests:
+          memory: "128Mi"
+          cpu: "100m"
+        limits:
+          memory: "1024Mi"
+          cpu: "2000m"
+serviceAccount:
+  create: true
+  ## The name of the ServiceAccount to use.
+  ## If not set and create is true, a name is generated using the fullname template
+  name:
+
+ingress:
+  enabled: false
+  # Used to create an Ingress record.
+  hosts:
+  #  - artifactory.domain.example
+  annotations:
+  # kubernetes.io/ingress.class: nginx
+  # kubernetes.io/tls-acme: "true"
+  tls:
+  # Secrets must be manually created in the namespace.
+  # - secretName: chart-example-tls
+  #   hosts:
+  #     - artifactory.domain.example
+
+# Database
+## Configuration values for the postgresql dependency
+## ref: https://github.com/kubernetes/charts/blob/master/stable/postgresql/README.md
+##
+postgresql:
+  enabled: false
+  postgresDatabase: "artifactory"
+  postgresUser: "artifactory"
+  postgresPassword: "eEFxAqLtZV"
+  service:
+    port: 5432
+  persistence:
+    enabled: true
+    size: 50Gi
+    storageClass: general
+  resources: {}
+  #  requests:
+  #    memory: "512Mi"
+  #    cpu: "100m"
+  #  limits:
+  #    memory: "1Gi"
+  #    cpu: "500m"
+
+## If NOT using the PostgreSQL in this chart (postgresql.enabled=false),
+## you must specify the following database details
+database:
+  type: mysql
+  host: mariadb
+  port: 3306
+  user: root
+  password: password
+
+# Artifactory
+artifactory:
+  name: artifactory-ha
+  replicaCount: 1
+  ## Artifactory requires a unique master key
+  ## You can generate one with the command:
+  ## 'openssl rand -hex 32'
+  ## Pass it to helm with '--set artifactory.masterKey=${MASTER_KEY}'
+  ## IMPORTANT: You should NOT use the example masterKey for a production deployment!
+  masterKey: 8ec0e922fd0276f0cd83ed6b0e1d9e8d7add252599cf017c6c97cf4eb4ac450c
+
+  ## Artifactory license secret.
+  ## If artifactory.license.secret is passed, it will be mounted as
+  ## ARTIFACTORY_HOME/etc/artifactory.cluster.license and loaded at run time.
+  ## The dataKey should be the name of the secret data key created.
+  license:
+    secret:
+    dataKey:
+  ## Create configMap with artifactory.config.import.xml and security.import.xml and pass name of configMap in following parameter
+  configMapName:
+  ## Extra postStart command to install JDBC driver for MySql/MariaDb/Oracle
+ ## postStartCommand: "export http_proxy=http://one.proxy.att.com:8888; export https_proxy=http://one.proxy.att.com:8888; curl -s -v -L -o /opt/jfrog/artifactory/tomcat/lib/mariadb-java-client-2.3.0.jar https://downloads.mariadb.com/Connectors/java/connector-java-2.3.0/mariadb-java-client-2.3.0.jar && sleep 4; chown 1030:1030 /opt/jfrog/artifactory/tomcat/lib/mariadb-java-client-2.3.0.jar"
+
+  membershipPort: 10017
+  externalPort: 8081
+  internalPort: 8081
+  internalPortReplicator: 6061
+  externalPortReplicator: 6061
+  uid: 1030
+  ## The following settings are to configure the frequency of the liveness and readiness probes
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 180
+    failureThreshold: 10
+    timeoutSeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 60
+    failureThreshold: 10
+    timeoutSeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+  persistence:
+    enabled: true
+    local: false
+    redundancy: 3
+    mountPath: "/var/opt/jfrog/artifactory"
+    accessMode: ReadWriteOnce
+    size: 200Gi
+    ## artifactory data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    storageClass: general
+
+    ## Set the persistence storage type. This will apply the matching binarystore.xml to Artifactory config
+    ## Supported types are:
+    ## file-system (default)
+    ## nfs
+    ## google-storage
+    ## aws-s3
+    type: ceph-s3
+
+    ## For artifactory.persistence.type nfs
+    ## If using NFS as the shared storage, you must have a running NFS server that is accessible by your Kubernetes
+    ## cluster nodes.
+    ## Need to have the following set
+    nfs:
+      # Must pass actual IP of NFS server with '--set For artifactory.persistence.nfs.ip=${NFS_IP}'
+      ip:
+      haDataMount: "/data"
+      haBackupMount: "/backup"
+      dataDir: "/var/opt/jfrog/artifactory-ha"
+      backupDir: "/var/opt/jfrog/artifactory-backup"
+      capacity: 200Gi
+    ## For artifactory.persistence.type google-storage
+    googleStorage:
+      # Set a unique bucket name
+      bucketName: "artifactory-ha-gcp"
+      identity:
+      credential:
+      path: "artifactory-ha/filestore"
+    ## For artifactory.persistence.type aws-s3
+    awsS3:
+      # Set a unique bucket name
+      bucketName: "artifactory-ha-aws"
+      region:
+      identity:
+      credential:
+      path: "artifactory-ha/filestore"
+  service:
+    name: artifactory
+    type: ClusterIP
+    ## Which nodes in the cluster should be in the external load balancer pool (have external traffic routed to them)
+    ## Supported pool values
+    ## members
+    ## all
+    pool: members
+
+  ## The following Java options are passed to the java process running Artifactory.
+  ## This will be passed to all cluster members. Primary and member nodes.
+  javaOpts:
+    other: "-Dartifactory.locking.provider.type=db"
+  ## Artifactory Replicator is available only for Enterprise Plus
+  replicator:
+    enabled: false
+    publicUrl:
+  # Name of ConfigMap for Distribution Cert
+  distributionCerts:
+
+  ## Type specific configurations.
+  ## There is a difference between the primary and the member nodes.
+  ## Customising their resources and java parameters is done here.
+  primary:
+    name: artifactory-ha-primary
+    persistence:
+      ## Set existingClaim to true or false
+      ## If true, you must prepare a PVC with the name e.g `artifactory-ha-primary`
+      existingClaim: false
+    ## Resources for the primary node
+    resources: {}
+    #  requests:
+    #    memory: "1Gi"
+    #    cpu: "500m"
+    #  limits:
+    #    memory: "2Gi"
+    #    cpu: "1"
+    ## The following Java options are passed to the java process running Artifactory primary node.
+    ## You should set them according to the resources set above
+    javaOpts: {}
+    #  xms: "1g"
+    #  xmx: "2g"
+    #  other:
+
+  node:
+    name: artifactory-ha-member
+    persistence:
+      ## Set existingClaim to true or false
+      ## If true, you must prepare a PVC with the name e.g `artifactory-ha-member`
+      existingClaim: false
+    replicaCount: 2
+    ## Resources for the member nodes
+    resources:
+      requests:
+        memory: "2Gi"
+        cpu: "1"
+      limits:
+        memory: "4Gi"
+        cpu: "2"
+    ## The following Java options are passed to the java process running Artifactory member nodes.
+    ## You should set them according to the resources set above
+    javaOpts:
+      xms: "1g"
+      xmx: "3g"
+      other: "-Djavax.net.ssl.trustStore=/var/opt/jfrog/artifactory/etc/cacerts"
+
+# Nginx
+nginx:
+  enabled: true
+  name: nginx
+  replicaCount: 1
+  image:
+    repository: "docker.bintray.io/jfrog/nginx-artifactory-pro"
+    # Note that by default we use appVersion to get image tag
+    version: 6.2.0
+    pullPolicy: IfNotPresent
+  service:
+    ## For minikube, set this to NodePort, elsewhere use LoadBalancer
+    type: NodePort
+    ## For supporting whitelist on the Nginx LoadBalancer service
+    ## Set this to a list of IP CIDR ranges
+    ## Example: loadBalancerSourceRanges: ['10.10.10.5/32', '10.11.10.5/32']
+    ## or pass from helm command line
+    ## Example: helm install ... --set nginx.service.loadBalancerSourceRanges='{10.10.10.5/32,10.11.10.5/32}'
+    loadBalancerSourceRanges: []
+    ## Provide static ip address
+    loadBalancerIP:
+  externalPortHttp: 80
+  internalPortHttp: 80
+  externalPortHttps: 443
+  internalPortHttps: 443
+  internalPortReplicator: 6061
+  externalPortReplicator: 6061
+  ## The following settings are to configure the frequency of the liveness and readiness probes
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 100
+    failureThreshold: 10
+    timeoutSeconds: 10
+    periodSeconds: 1000
+    successThreshold: 1
+
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 60
+    failureThreshold: 10
+    timeoutSeconds: 10
+    periodSeconds: 1000
+    successThreshold: 1
+  ## The SSL secret that will be used by the Nginx pod
+  # tlsSecretName: chart-example-tls
+  env:
+    ssl: true
+    # artUrl: "http://artifactory:8081/artifactory"
+  persistence:
+    mountPath: "/var/opt/jfrog/nginx"
+    enabled: false
+    ## A manually managed Persistent Volume and Claim
+    ## Requires persistence.enabled: true
+    ## If defined, PVC must be created manually before volume will be bound
+    # existingClaim:
+
+    accessMode: ReadWriteOnce
+    size: 5Gi
+    ## nginx data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+  resources: {}
+  #  requests:
+  #    memory: "250Mi"
+  #    cpu: "100m"
+  #  limits:
+  #    memory: "250Mi"
+  #    cpu: "500m"
+manifests:
+  secret_ingress_tls: true
+  secret_db: true
+  job_db_init: true
+  job_s3_user: true
+  job_s3_bucket: true
+  secret_s3: true
+  configmap_bin: true
+  configmap_etc: true
