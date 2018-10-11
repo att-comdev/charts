@@ -1,0 +1,83 @@
+{{/*
+Copyright 2018 The Openstack-Helm Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/}}
+
+{{- $envAll := . }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jenkins-etc
+data:
+  config.xml: |
+{{ if .Values.conf.config.override -}}
+{{ .Values.conf.config.override | indent 4 }}
+{{- else -}}
+{{ tuple "etc/_config.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+{{- end }}
+  cicdfolderconfig.xml: |
+{{ if .Values.conf.config.override -}}
+{{ .Values.conf.config.override | indent 4 }}
+{{- else -}}
+{{ tuple "etc/_cicdfolderconfig.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+{{- end }}
+  superseedconfig.xml: |
+{{ if .Values.conf.config.override -}}
+{{ .Values.conf.config.override | indent 4 }}
+{{- else -}}
+{{ tuple "etc/_superseedconfig.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+{{- end }}
+  plugins.txt: |
+{{ if .Values.conf.plugins.override -}}
+{{ .Values.conf.plugins.override | indent 4 }}
+{{- else -}}
+{{ tuple "etc/_plugins.txt.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+{{- end }}
+  jenkins.security.UpdateSiteWarningsConfiguration.xml: |
+{{ if .Values.conf.security.override -}}
+{{ .Values.conf.security.override | indent 4 }}
+{{- else -}}
+{{ tuple "etc/_jenkins.security.UpdateSiteWarningsConfiguration.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+{{- end }}
+  jenkins.security.QueueItemAuthenticatorConfiguration.xml: |
+{{ if .Values.conf.security.override -}}
+{{ .Values.conf.security.override | indent 4 }}
+{{- else -}}
+{{ tuple "etc/_jenkins.security.QueueItemAuthenticatorConfiguration.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+{{- end }}
+  com.arkea.jenkins.openstack.heat.HOTPlayerSettings.xml: |
+{{ if .Values.conf.heat.override -}}
+{{ .Values.conf.heat.override | indent 4 }}
+{{- else -}}
+{{ tuple "etc/_com.arkea.jenkins.openstack.heat.HOTPlayerSettings.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+{{- end }}
+  jenkins.CLI.xml: |
+{{ if .Values.conf.cli.override -}}
+{{ .Values.conf.cli.override | indent 4 }}
+{{- else -}}
+{{ tuple "etc/_jenkins.CLI.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+{{- end }}
+  credentials.xml: |
+{{ if .Values.conf.credentials.override -}}
+{{ .Values.conf.credentials.override | indent 4 }}
+{{- else -}}
+{{ tuple "etc/_credentials.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+{{- end }}
+  org.jfrog.hudson.ArtifactoryBuilder.xml: |
+{{ if .Values.conf.jfrog.override -}}
+{{ .Values.conf.jfrog.override | indent 4 }}
+{{- else -}}
+{{ tuple "etc/_org.jfrog.hudson.ArtifactoryBuilder.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+{{- end }}

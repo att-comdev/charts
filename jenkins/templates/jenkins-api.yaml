@@ -1,0 +1,136 @@
+{{/*
+Copyright 2018 The Openstack-Helm Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/}}
+
+{{- $envAll := . }}
+{{- $mounts_jenkins_api := .Values.pod.mounts.jenkins_api.jenkins_api }}
+{{- $mounts_jenkins_api_init := .Values.pod.mounts.jenkins_api.init_container }}
+
+{{- $serviceAccountName := "jenkins-api" }}
+{{ tuple $envAll "api" $serviceAccountName | include "helm-toolkit.snippets.kubernetes_pod_rbac_serviceaccount" }}
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: jenkins-api
+spec:
+  serviceName: jenkins-api
+  replicas: {{ .Values.pod.replicas.api }}
+  template:
+    metadata:
+      labels:
+{{ tuple $envAll "jenkins" "api" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 8 }}
+    spec:
+      serviceAccountName: {{ $serviceAccountName }}
+      affinity:
+{{ tuple $envAll "jenkins" "api" | include "helm-toolkit.snippets.kubernetes_pod_anti_affinity" | indent 8 }}
+      nodeSelector:
+        {{ .Values.labels.api.node_selector_key }}: {{ .Values.labels.api.node_selector_value }}
+      terminationGracePeriodSeconds: {{ .Values.pod.lifecycle.termination_grace_period.api.timeout | default "600" }}
+      initContainers:
+        - name: seed
+          image: {{ .Values.images.tags.jenkins }}
+          imagePullPolicy: {{ .Values.images.pull_policy }}
+{{ tuple $envAll $envAll.Values.pod.resources.api | include "helm-toolkit.snippets.kubernetes_resources" | indent 10 }}
+          securityContext:
+            runAsUser: 0
+          command:
+            - /tmp/seed.sh
+          volumeMounts:
+            - name: jenkins-home
+              mountPath: /var/jenkins_home
+            - name: jenkins-bin
+              mountPath: /tmp/seed.sh
+              subPath: seed.sh
+            - name: jenkins-etc
+              mountPath: /seed/config.xml
+              subPath: config.xml
+            - name: jenkins-etc
+              mountPath: /seed/cicdfolderconfig.xml
+              subPath: cicdfolderconfig.xml
+            - name: jenkins-etc
+              mountPath: /seed/superseedconfig.xml
+              subPath: superseedconfig.xml
+            - name: jenkins-etc
+              mountPath: /seed/jenkins.security.UpdateSiteWarningsConfiguration.xml
+              subPath: jenkins.security.UpdateSiteWarningsConfiguration.xml
+            - name: jenkins-etc
+              mountPath: /seed/jenkins.security.QueueItemAuthenticatorConfiguration.xml
+              subPath: jenkins.security.QueueItemAuthenticatorConfiguration.xml
+            - name: jenkins-etc
+              mountPath: /seed/com.arkea.jenkins.openstack.heat.HOTPlayerSettings.xml
+              subPath: com.arkea.jenkins.openstack.heat.HOTPlayerSettings.xml
+            - name: jenkins-etc
+              mountPath: /seed/jenkins.CLI.xml
+              subPath: jenkins.CLI.xml
+            - name: jenkins-etc
+              mountPath: /seed/credentials.xml
+              subPath: credentials.xml
+            - name: jenkins-etc
+              mountPath: /seed/org.jfrog.hudson.ArtifactoryBuilder.xml
+              subPath: org.jfrog.hudson.ArtifactoryBuilder.xml
+{{ if .Values.manifests.job_ks_user }}
+{{ tuple $envAll "api" $mounts_jenkins_api_init | include "helm-toolkit.snippets.kubernetes_entrypoint_init_container" | indent 8 }}
+{{ end }}
+      containers:
+        - name: jenkins
+          image: {{ .Values.images.tags.jenkins }}
+          imagePullPolicy: {{ .Values.images.pull_policy }}
+{{ tuple $envAll $envAll.Values.pod.resources.api | include "helm-toolkit.snippets.kubernetes_resources" | indent 10 }}
+          command:
+            - /tmp/launch.sh
+          env:
+            - name: JENKINS_PROXY_CONFIG_FILE
+              value: /var/jenkins_home/proxy.xml
+          {{- if $envAll.Values.pod.env }}
+          env:
+            {{- range $envAll.Values.pod.env }}
+            - name: {{ .name | quote }}
+              value: {{ .value | quote }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - containerPort: {{ .Values.containers.ports.containerPort }}
+          volumeMounts:
+            - name: jenkins-home
+              mountPath: /var/jenkins_home
+            - name: jenkins-bin
+              mountPath: /tmp/launch.sh
+              subPath: launch.sh
+            - name: jenkins-etc
+              mountPath: /plugins.txt
+              subPath: plugins.txt
+            - name: jenkins-bin
+              mountPath: /proxy-config-gen.py
+              subPath: proxy-config-gen.py
+      volumes:
+        - name: jenkins-etc
+          configMap:
+            name: jenkins-etc
+            defaultMode: 0444
+        - name: jenkins-bin
+          configMap:
+            name: jenkins-bin
+            defaultMode: 0555
+  volumeClaimTemplates:
+  - metadata:
+      name: jenkins-home
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: {{ .Values.volume.size }}
+      storageClassName: {{ .Values.volume.class_name }}
+
