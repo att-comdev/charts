@@ -1,0 +1,13 @@
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{.Release.Name}}-test"
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  restartPolicy: Never
+  containers:
+    - name: {{.Release.Name}}-jenkins-test
+      image: {{ .Values.images.tags.jenkins }}
+      command: [ "sh", "-c", "curl --silent -I http://jenkins:8080/ | grep JSESSIONID" ]
