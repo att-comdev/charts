@@ -114,7 +114,7 @@ ports:
     port: 8080
     nodePort: 30081
   slave:
-    port: 50001
+    port: 50000
     nodePort: 30002
 
 # Names of secrets used by bootstrap and environmental checks
