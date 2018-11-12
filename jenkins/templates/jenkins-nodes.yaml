@@ -1,0 +1,6 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: jenkins-nodes
+  labels:
+    name: jenkins-nodes

@@ -114,7 +114,7 @@ ports:
     port: 8080
     nodePort: 30081
   slave:
-    port: 50001
+    port: 50000
     nodePort: 30002
 
 # Names of secrets used by bootstrap and environmental checks
@@ -130,7 +130,7 @@ endpoints:
   cluster_domain_suffix: cluster.local
   identity:
     name: keystone
-    namespace: null
+    namespace: jenkins-slaves
     auth:
       admin:
         region_name: RegionOne
