@@ -55,4 +55,3 @@ spec:
         configMap:
           name: {{ template "mission-control.fullname" . }}-setup-script
 {{- end }}
-
