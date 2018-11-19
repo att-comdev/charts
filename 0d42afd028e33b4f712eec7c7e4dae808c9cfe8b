@@ -16,6 +16,24 @@
       "revId": "0d42afd028e33b4f712eec7c7e4dae808c9cfe8b",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37a6f143_aafe4fdb",
+        "filename": "Makefile",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1014344
+      },
+      "writtenOn": "2018-11-19T17:23:32Z",
+      "side": 1,
+      "message": "this is mostly taken from here.\nhttps://github.com/openstack/openstack-helm-infra/blob/master/Makefile\n\nCurrently the Makefile supports building the charts. We could look at adding something like dev-install later",
+      "parentUuid": "4b2c414d_7cbfed40",
+      "revId": "0d42afd028e33b4f712eec7c7e4dae808c9cfe8b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
