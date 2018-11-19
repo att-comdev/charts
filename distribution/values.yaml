@@ -161,7 +161,7 @@ distribution:
     xms:
     xmx:
   persistence:
-    enabled: false
+    enabled: true
     ## A manually managed Persistent Volume and Claim
     ## Requires persistence.enabled: true
     ## If defined, PVC must be created manually before volume will be bound
@@ -177,7 +177,7 @@ distribution:
     ##   set, choosing the default provisioner. (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    # storageClass: "-"
+    storageClass: general
 
 distributor:
   replicaCount: 1
@@ -198,7 +198,7 @@ distributor:
     xms:
     xmx:
   persistence:
-    enabled: false
+    enabled: true
     ## A manually managed Persistent Volume and Claim
     ## Requires persistence.enabled: true
     ## If defined, PVC must be created manually before volume will be bound
@@ -214,6 +214,6 @@ distributor:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    # storageClass: "-"
+    storageClass: general
 manifests:
   secret_ingress_tls: true
