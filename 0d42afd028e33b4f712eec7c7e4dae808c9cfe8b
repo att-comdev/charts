@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b2c414d_7cbfed40",
+        "filename": "Makefile",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1014829
+      },
+      "writtenOn": "2018-11-19T16:56:45Z",
+      "side": 1,
+      "message": "From what I am seeing in this file(please correct if I am wrong) there is no target which actually installs helm. Is it possible to add this?",
+      "revId": "0d42afd028e33b4f712eec7c7e4dae808c9cfe8b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
