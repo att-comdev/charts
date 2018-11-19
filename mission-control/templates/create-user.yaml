@@ -10,6 +10,8 @@ metadata:
     release: {{ .Release.Name }}
     component: mongodb
   annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-delete-policy": hook-succeeded
 spec:
   template:
     metadata:
@@ -26,7 +28,7 @@ spec:
       restartPolicy: OnFailure
       containers:
       - name: post-install-job
-        image: "{{ .Values.images.tags.createUser }}"
+        image: "{{ .Values.postInstallHook.image.repository }}:{{ .Values.postInstallHook.image.tag }}"
         env:
         - name: MONGODB_ADMIN_PASSWORD
           valueFrom:
@@ -55,4 +57,3 @@ spec:
         configMap:
           name: {{ template "mission-control.fullname" . }}-setup-script
 {{- end }}
-
