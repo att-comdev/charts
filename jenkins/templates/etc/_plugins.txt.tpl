@@ -68,6 +68,8 @@ github:1.29.0
 global-build-stats:1.5
 global-variable-string-parameter:1.2
 gradle:1.28
+greenballs:1.15
+groovy-postbuild:2.4.3
 handlebars:1.1.1
 handy-uri-templates-2-api:2.1.6-1.0
 htmlpublisher:1.15
@@ -89,7 +91,7 @@ kubernetes:1.5.1
 ldap:1.20
 libvirt-slave:1.8.5
 mailer:1.21
-mask-passwords:2.11.0
+mask-passwords:2.12.0
 matrix-auth:2.2
 matrix-project:1.13
 maven-plugin:3.1.2
