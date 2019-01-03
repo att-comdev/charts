@@ -391,9 +391,9 @@ artifactory:
     ## The following Java options are passed to the java process running Artifactory primary node.
     ## You should set them according to the resources set above
     javaOpts: {}
-    #  xms: "1g"
-    #  xmx: "2g"
-    #  other:
+      xms: "1g"
+      xmx: "2g"
+      other: "-Djavax.net.ssl.trustStore=/var/opt/jfrog/artifactory/etc/cacerts"
 
   node:
     name: artifactory-ha-member
@@ -415,7 +415,7 @@ artifactory:
     javaOpts:
       xms: "1g"
       xmx: "3g"
-      ## other: "-Djavax.net.ssl.trustStore=/var/opt/jfrog/artifactory/etc/cacerts"
+      other: "-Djavax.net.ssl.trustStore=/var/opt/jfrog/artifactory/etc/cacerts"
 
 # Nginx
 nginx:
