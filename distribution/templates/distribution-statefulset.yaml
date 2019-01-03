@@ -1,0 +1,234 @@
+apiVersion: apps/v1beta2
+kind: StatefulSet
+metadata:
+  name: {{ template "distribution.fullname" . }}
+  labels:
+    app: {{ template "distribution.name" . }}
+    chart: {{ template "distribution.chart" . }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    component: {{ .Values.distribution.name }}
+spec:
+  serviceName: {{ template "distribution.fullname" . }}-headless
+  replicas: {{ .Values.replicaCount }}
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: {{ template "distribution.name" . }}
+      chart: {{ template "distribution.chart" . }}
+      release: {{ .Release.Name }}
+      role: {{ template "distribution.name" . }}
+      component: {{ .Values.distribution.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "distribution.name" . }}
+        chart: {{ template "distribution.chart" . }}
+        release: {{ .Release.Name }}
+        role: {{ template "distribution.name" . }}
+        component: {{ .Values.distribution.name }}
+    spec:
+      serviceAccountName: {{ template "distribution.serviceAccountName" . }}
+    {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+      - name: {{ .Values.imagePullSecrets }}
+    {{- end }}
+      securityContext:
+        runAsUser: {{ .Values.common.uid }}
+        fsGroup: {{ .Values.common.gid }}
+      initContainers:
+      - name: 'wait-for-db'
+        image: "{{ .Values.images.tags.initContainerImage }}"
+        command:
+        - '/bin/sh'
+        - '-c'
+        - >
+          echo "Waiting for database to be ready...";
+        {{- if .Values.mongodb.enabled }}
+          until nc -z -w 2 {{ .Release.Name }}-mongodb {{ .Values.mongodb.port }} && echo {{ .Release.Name }}-mongodb ok; do sleep 2; done;
+        {{- end }}
+        {{- if .Values.postgresql.enabled }}
+          until nc -z -w 2 {{ .Release.Name }}-postgresql {{ .Values.postgresql.service.port }} && echo {{ .Release.Name }}-postgresql ok; do sleep 2; done;
+        {{- end }}
+      containers:
+      - name: {{ .Values.distribution.name }}
+        image: '{{ .Values.images.tags.distribution }}'
+        imagePullPolicy: {{ .Values.distribution.image.imagePullPolicy }}
+        command:
+        - '/bin/sh'
+        - '-c'
+        - 'sh /scripts/startup.sh'
+        securityContext:
+          allowPrivilegeEscalation: false
+        ports:
+        - name: distribution
+          containerPort: {{ .Values.distribution.internalPort }}
+        env:
+        - name: DEFAULT_JAVA_OPTS
+          value: '-Ddistribution.home={{ .Values.distribution.persistence.mountPath }}
+                  -Djfrog.master.key={{ .Values.distribution.masterKey }}
+                  -Dcom.sun.management.jmxremote.authenticate=false
+                  -Dcom.sun.management.jmxremote.ssl=false -Duser.timezone=UTC
+                  {{- if .Values.distribution.javaOpts.xms }}
+                  -Xms{{ .Values.distribution.javaOpts.xms }}
+                  {{- end}}
+                  {{- if .Values.distribution.javaOpts.xmx }}
+                  -Xmx{{ .Values.distribution.javaOpts.xmx }}
+                  {{- end}}
+                  {{- if .Values.distribution.serviceId }}
+                  -Djfrog.distribution.platform.serviceId={{ .Values.distribution.serviceId }}
+                  {{- end}}
+                  -Dspring.profiles.active=production'
+      {{- if .Values.mongodb.enabled }}
+        - name: MONGODB_HOST
+          value: '{{ .Release.Name }}-mongodb'
+        - name: MONGODB_PORT
+          value: '{{ .Values.mongodb.port }}'
+        - name: MONGODB_DATABASE
+          value: '{{ .Values.mongodb.mongodbDatabase }}'
+        - name: MONGODB_USERNAME
+          value: '{{ .Values.mongodb.mongodbUsername }}'
+        - name: MONGODB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-mongodb
+              key: mongodb-password
+      {{- end }}
+      {{- if .Values.postgresql.enabled }}
+        - name: POSTGRES_HOST
+          value: '{{ .Release.Name }}-postgresql'
+        - name: POSTGRES_PORT
+          value: '{{ .Values.postgresql.service.port }}'
+        - name: POSTGRES_DATABASE
+          value: '{{ .Values.postgresql.postgresDatabase }}'
+        - name: POSTGRES_USERNAME
+          value: '{{ .Values.postgresql.postgresUser }}'
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-postgresql
+              key: postgres-password
+      {{- else }}
+        - name: POSTGRES_HOST
+          value: '{{ .Values.database.host }}'
+        - name: POSTGRES_PORT
+          value: '{{ .Values.database.port }}'
+        - name: POSTGRES_DATABASE
+          value: '{{ .Values.database.database }}'
+        - name: POSTGRES_USERNAME
+      {{- if .Values.database.secrets.user }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.database.secrets.user.name }}
+              key: {{ .Values.database.secrets.user.key }}
+      {{- else }}
+          value: '{{ .Values.database.user }}'
+      {{- end }}
+        - name: POSTGRES_PASSWORD
+      {{- if .Values.database.secrets.password }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.database.secrets.password.name }}
+              key: {{ .Values.database.secrets.password.key }}
+      {{- else }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "distribution.fullname" . }}-database-connection
+              key: db-password
+      {{- end }}
+      {{- end }}
+        - name: REDIS_PORT
+          value: '{{ .Values.redis.port }}'
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "distribution.fullname" . }}-redis-connection
+              key: password
+        - name: BT_ARTIFACTORY_URL
+          value: {{ .Values.distribution.env.artifactoryUrl | quote }}
+        - name: BT_SERVER_URL
+          value: {{ .Values.distribution.env.btServerUrl | quote }}
+        {{- if .Values.distribution.env.artifactoryEdge1Url }}
+        - name: artifactory_edge_1_url
+          value: {{ .Values.distribution.env.artifactoryEdge1Url }}
+        {{- end }}
+        {{- if .Values.distribution.env.artifactoryEdge2Url }}
+        - name: artifactory_edge_2_url
+          value: {{ .Values.distribution.env.artifactoryEdge2Url }}
+        {{- end }}
+        {{- if .Values.distribution.env.artifactoryEdge3Url }}
+        - name: artifactory_edge_3_url
+          value: {{ .Values.distribution.env.artifactoryEdge3Url }}
+        {{- end }}
+        {{- if .Values.distribution.env.artifactoryCi1Url }}
+        - name: artifactory_ci_1_url
+          value: {{ .Values.distribution.env.artifactoryCi1Url }}
+        {{- end }}
+        volumeMounts:
+        - name: startup
+          mountPath: "/scripts"
+        - name: distribution-data
+          mountPath: {{ .Values.distribution.persistence.mountPath | quote }}
+        resources:
+{{ toYaml .Values.distribution.resources | indent 10 }}
+        readinessProbe:
+          httpGet:
+            path: /api/v1/system/ping
+            port: {{ .Values.distribution.internalPort }}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 10
+        livenessProbe:
+          httpGet:
+            path: /api/v1/system/ping
+            port: {{ .Values.distribution.internalPort }}
+          initialDelaySeconds: 60
+          periodSeconds: 10
+  {{- with .Values.distribution.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.distribution.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.distribution.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+      volumes:
+      - name: startup
+        configMap:
+          name: {{ template "distribution.fullname" . }}-startup
+  {{- if not .Values.distribution.persistence.enabled }}
+      - name: distribution-data
+        emptyDir: {}
+  {{- else }}
+  volumeClaimTemplates:
+    - metadata:
+        name: distribution-data
+        labels:
+          app: {{ template "distribution.name" . }}
+          chart: {{ template "distribution.chart" . }}
+          release: {{ .Release.Name  }}
+          heritage: {{ .Release.Service }}
+      spec:
+      {{- if .Values.distribution.persistence.existingClaim }}
+        selector:
+          matchLabels:
+            app: {{ template "distribution.name" . }}
+      {{- else }}
+        {{- if .Values.distribution.persistence.storageClass }}
+        {{- if (eq "-" .Values.distribution.persistence.storageClass) }}
+        storageClassName: ''
+        {{- else }}
+        storageClassName: '{{ .Values.distribution.persistence.storageClass }}'
+        {{- end }}
+        {{- end }}
+        accessModes: [ '{{ .Values.distribution.persistence.accessMode }}' ]
+        resources:
+          requests:
+            storage: {{ .Values.distribution.persistence.size }}
+      {{- end }}
+  {{- end }}
