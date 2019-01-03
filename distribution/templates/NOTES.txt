@@ -1,5 +1,20 @@
 Congratulations. You have just deployed JFrog Distribution!
 
+{{- if eq .Values.distribution.masterKey "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB" }}
+
+
+***************************************** WARNING ******************************************
+* Your Distribution master key is still set to the provided example:                       *
+* distribution.masterKey=BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB  *
+*                                                                                          *
+* You should change this to your own generated key:                                        *
+* $ export MASTER_KEY=$(openssl rand -hex 32)                                              *
+* $ echo ${MASTER_KEY}                                                                     *
+*                                                                                          *
+* Pass the created master key to helm with '--set distribution.masterKey=${MASTER_KEY}'    *
+********************************************************************************************
+{{- end }}
+
 1. Get the Distribution URL by running these commands:
 
    {{- if contains "NodePort" .Values.distribution.service.type }}
@@ -21,7 +36,4 @@ Congratulations. You have just deployed JFrog Distribution!
 
    {{- end }}
 
-2. Open Distribution in your browser
-   Default credential for Distribution:
-   user: admin
-   password: password
+2. Open Distribution in your browser. Distribution should be activated with an authenticating Artifactory to be able to login.
