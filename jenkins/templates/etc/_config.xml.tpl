@@ -87,6 +87,8 @@
           <string>/home/jenkins/integration/jenkins-cli.jar</string>
           <string>NEXUS3_URL</string>
           <string>12.37.173.196:32775</string>
+          <string>NO_PROXY</string>
+          <string>127.0.0.1,localhost,::1,10.96.0.1,.cluster.local,172.17.0.1</string>
           <string>OSH_BR_EX_ADDR</string>
           <string>172.25.4.1/24</string>
           <string>OSH_EXT_SUBNET</string>
