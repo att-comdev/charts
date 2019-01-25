@@ -69,6 +69,8 @@
             <comparator class="hudson.util.CaseInsensitiveComparator"/>
           </default>
           <int>16</int>
+          <string>AIAB_REF</string>
+          <string>master</string>
           <string>ARTF_API_URL</string>
           <string>https://$ARTF_WEB_URL/api/storage</string>
           <string>ARTF_DOCKER_URL</string>
@@ -81,12 +83,22 @@
           <string>stage/</string>
           <string>CNI_POD_CIDR</string>
           <string>10.10.11.0/24</string>
+          <string>DNS_SERVER_1</string>
+          <string><{{ .Values.conf.config.jenkins.dns.server1 }}/string>
+          <string>DNS_SERVER_1</string>
+          <string><{{ .Values.conf.config.jenkins.dns.server2 }}/string>
           <string>INTERNAL_GERRIT_URL</string>
           <string>ssh://jenkins-attcomdev@10.24.20.18:29418</string>
           <string>JENKINS_CLI</string>
           <string>/home/jenkins/integration/jenkins-cli.jar</string>
+          <string>HTTP_PROXY</string>
+          <string><{{ .Values.conf.config.jenkins.proxy }}/string>
+          <string>HTTPS_PROXY</string>
+          <string><{{ .Values.conf.config.jenkins.proxy }}/string>
           <string>NEXUS3_URL</string>
           <string>12.37.173.196:32775</string>
+          <string>NO_PROXY</string>
+          <string>127.0.0.1,localhost,::1,10.96.0.1,.cluster.local,172.17.0.1</string>
           <string>OSH_BR_EX_ADDR</string>
           <string>172.25.4.1/24</string>
           <string>OSH_EXT_SUBNET</string>
