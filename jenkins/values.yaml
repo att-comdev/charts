@@ -87,6 +87,14 @@ conf:
         artifactory: temppassword
       active:
         directory: active.directory.url
+      dns:
+        server1: dnsserver1.ip
+        server2: dnsserver2.ip
+      proxy: proxyserver.hostname
+      keystone:
+        url: keystone.auth.url
+        image: keystone.image
+      region: site_name
     override: null
   plugins:
     override: null
