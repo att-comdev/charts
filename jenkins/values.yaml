@@ -90,6 +90,7 @@ conf:
 # Global env variables in Jenkins configuration
 # Most of the below env values are just dummy
       global_env_vars:
+        aiab_ref: master
         artf_api_url: https://$ARTF_WEB_URL/api/storage
         artf_docker_url: artifacts-aic.atlantafoundry.com
         artf_ip: 127.0.0.1
@@ -116,6 +117,10 @@ conf:
         mirror_key_orig: tempmirrorkeyorig
         mirror_slave_ip: 127.0.0.1
         nexus_url: 12.37.173.196:32775
+        os_auth_url: https://keystone.local/v3
+        os_keystone_image: docker-aic.atlantafoundry.com/openstackhelm/heat:ocata
+        os_project_name: jenkins
+        os_region_name: local
         osh_br_ex_addr: 172.25.4.1/24
         osh_ext_subnet: 172.25.4.0/24
         pvc_backend: ceph

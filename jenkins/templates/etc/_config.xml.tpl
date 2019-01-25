@@ -69,6 +69,8 @@
             <comparator class="hudson.util.CaseInsensitiveComparator"/>
           </default>
           <int>34</int>
+          <string>AIAB_REF</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.aiab_ref}}</string>
           <string>ARTF_API_URL</string>
           <string>{{.Values.conf.config.jenkins.global_env_vars.artf_api_url}}</string>
           <string>ARTF_DOCKER_URL</string>
@@ -121,6 +123,14 @@
           <string>{{.Values.conf.config.jenkins.global_env_vars.nexus_url}}</string>
           <string>NO_PROXY</string>
           <string>{{.Values.conf.config.jenkins.global_env_vars.no_proxy}}</string>
+          <string>OS_AUTH_URL</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.os_auth_url}}</string>
+          <string>OS_KEYSTONE_IMAGE</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.os_keystone_image}}</string>
+          <string>OS_PROJECT_NAME</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.os_project_name}}</string>
+          <string>OS_REGION_NAME</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.os_region_name}}</string>
           <string>OSH_BR_EX_ADDR</string>
           <string>{{.Values.conf.config.jenkins.global_env_vars.osh_br_ex_addr}}</string>
           <string>OSH_EXT_SUBNET</string>
