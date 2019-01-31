@@ -1,4 +1,30 @@
-# CI values for Xray.
+# CI values for Xray
+
+#rbac:
+#  create: false
+#
+#serviceAccount:
+#  create: false
+
+postgresql:
+  postgresDatabase: xraydb
+  postgresUser: xray
+  postgresPassword: xray
+  persistence:
+    enabled: false
+
+mongodb:
+  persistence:
+    enabled: false
+  mongodbRootPassword: password
+  mongodbUsername: xray
+  mongodbPassword: password
+  mongodbDatabase: xray
 
 rabbitmq-ha:
-  rabbitmqPassword: "guest"
+  rabbitmqUsername: guest
+  rabbitmqPassword: guest
+  persistentVolume:
+    enabled: false
+#  rbac:
+#    create: false
