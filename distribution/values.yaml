@@ -183,6 +183,7 @@ redis:
     ## If defined, PVC must be created manually before volume will be bound
     # existingClaim:
     accessMode: ReadWriteOnce
+    storageClass: general
   resources: {}
   #  requests:
   #    memory: "256Mi"
