@@ -87,6 +87,42 @@ conf:
         artifactory: temppassword
       active:
         directory: active.directory.url
+# Global env variables in Jenkins configuration
+      global_env_vars:
+        artf_api_url: https://$ARTF_WEB_URL/api/storage
+        artf_docker_url: artifacts-aic.atlantafoundry.com
+        artf_ip: 127.0.0.1
+        artf_secure_docker_url: docker-aic.atlantafoundry.com
+        artf_ubuntu_repo:
+        artf_web_url: artifacts-aic.atlantafoundry.com/artifactory
+        artifactory_env: stage/
+        cni_pod_cidr: 10.10.11.0/24
+        conf_package_path:
+        dns_server_one:
+        dns_server_two:
+        gerrit_ssh:
+        http_proxy:
+        https_proxy:
+        no_proxy:
+        internal_gerrit_key:
+        internal_gerrit_port:
+        internal_gerrit_ssh:
+        internal_gerrit_url: ssh://jenkins-attcomdev@10.24.20.18:29418
+        jenkins_cli: /home/jenkins/integration/jenkins-cli.jar
+        jenkins_cli_url:
+        known_hosts:
+        mirror_key:
+        mirror_key_orig:
+        mirror_slave_ip:
+        nexus_url: 12.37.173.196:32775
+        osh_br_ex_addr: 172.25.4.1/24
+        osh_ext_subnet: 172.25.4.0/24
+        pvc_backend: ceph
+        quay_url: quay.io
+        silent_mode: true
+        slack_default_channel: "#test-jenkins"
+        slack_url: https://att-comdev.slack.com/services/hooks/jenkins-ci/
+        ssh_data:
     override: null
   plugins:
     override: null
