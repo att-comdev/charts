@@ -68,39 +68,75 @@
           <default>
             <comparator class="hudson.util.CaseInsensitiveComparator"/>
           </default>
-          <int>16</int>
+          <int>34</int>
           <string>ARTF_API_URL</string>
-          <string>https://$ARTF_WEB_URL/api/storage</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.artf_api_url}}</string>
           <string>ARTF_DOCKER_URL</string>
-          <string>artifacts-aic.atlantafoundry.com</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.artf_docker_url}}</string>
+          <string>ARTF_IP</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.artf_ip}}</string>
           <string>ARTF_SECURE_DOCKER_URL</string>
-          <string>docker-aic.atlantafoundry.com</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.artf_secure_docker_url}}</string>
+          <string>ARTF_UBUNTU_REPO</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.artf_ubuntu_repo}}</string>
           <string>ARTF_WEB_URL</string>
-          <string>artifacts-aic.atlantafoundry.com/artifactory</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.artf_web_url}}</string>
           <string>ARTIFACTORY_ENV</string>
-          <string>stage/</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.artifactory_env}}</string>
           <string>CNI_POD_CIDR</string>
-          <string>10.10.11.0/24</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.cni_pod_cidr}}</string>
+          <string>CONF_PACKAGE_PATH</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.conf_package_path}}</string>
+          <string>DNS_SERVER_1</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.dns_server_one}}</string>
+          <string>DNS_SERVER_2</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.dns_server_two}}</string>
+          <string>GERRIT_SSH</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.gerrit_ssh}}</string>
+          <string>HTTP_PROXY</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.http_proxy}}</string>
+          <string>HTTPS_PROXY</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.https_proxy}}</string>
+          <string>INTERNAL_GERRIT_KEY</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.internal_gerrit_key}}</string>
+          <string>INTERNAL_GERRIT_PORT</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.internal_gerrit_port}}</string>
+          <string>INTERNAL_GERRIT_SSH</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.internal_gerrit_ssh}}</string>
           <string>INTERNAL_GERRIT_URL</string>
-          <string>ssh://jenkins-attcomdev@10.24.20.18:29418</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.internal_gerrit_url}}</string>
           <string>JENKINS_CLI</string>
-          <string>/home/jenkins/integration/jenkins-cli.jar</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.jenkins_cli}}</string>
+          <string>JENKINS_CLI_URL</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.jenkins_cli_url}}</string>
+          <string>KNOWN_HOSTS</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.known_hosts}}</string>
+          <string>MIRROR_KEY</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.mirror_key}}</string>
+          <string>MIRROR_KEY_ORIG</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.mirror_key_orig}}</string>
+          <string>MIRROR_SLAVE_IP</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.mirror_slave_ip}}</string>
           <string>NEXUS3_URL</string>
-          <string>12.37.173.196:32775</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.nexus_url}}</string>
+          <string>NO_PROXY</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.no_proxy}}</string>
           <string>OSH_BR_EX_ADDR</string>
-          <string>172.25.4.1/24</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.osh_br_ex_addr}}</string>
           <string>OSH_EXT_SUBNET</string>
-          <string>172.25.4.0/24</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.osh_ext_subnet}}</string>
           <string>PVC_BACKEND</string>
-          <string>ceph</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.pvc_backend}}</string>
           <string>QUAY_URL</string>
-          <string>quay.io</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.quay_url}}</string>
           <string>SILENT_MODE</string>
-          <string>true</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.silent_mode}}</string>
           <string>SLACK_DEFAULT_CHANNEL</string>
-          <string>#test-jenkins</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.slack_default_channel}}</string>
           <string>SLACK_URL</string>
-          <string>https://att-comdev.slack.com/services/hooks/jenkins-ci/</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.slack_url}}</string>
+          <string>SSH_DATA</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.ssh_data}}</string>
         </tree-map>
       </envVars>
     </hudson.slaves.EnvironmentVariablesNodeProperty>
