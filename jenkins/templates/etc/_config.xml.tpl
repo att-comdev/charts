@@ -68,29 +68,63 @@
           <default>
             <comparator class="hudson.util.CaseInsensitiveComparator"/>
           </default>
-          <int>16</int>
+          <int>34</int>
           <string>ARTF_API_URL</string>
-          <string>https://$ARTF_WEB_URL/api/storage</string>
+          <string></string>
           <string>ARTF_DOCKER_URL</string>
-          <string>artifacts-aic.atlantafoundry.com</string>
+          <string></string>
+          <string>ARTF_IP</string>
+          <string></string>
           <string>ARTF_SECURE_DOCKER_URL</string>
-          <string>docker-aic.atlantafoundry.com</string>
+          <string></string>
+          <string>ARTF_UBUNTU_REPO</string>
+          <string></string>
           <string>ARTF_WEB_URL</string>
-          <string>artifacts-aic.atlantafoundry.com/artifactory</string>
+          <string></string>
           <string>ARTIFACTORY_ENV</string>
-          <string>stage/</string>
+          <string></string>
           <string>CNI_POD_CIDR</string>
-          <string>10.10.11.0/24</string>
+          <string></string>
+          <string>CONF_PACKAGE_PATH</string>
+          <string></string>
+          <string>DNS_SERVER_1</string>
+          <string></string>
+          <string>DNS_SERVER_2</string>
+          <string></string>
+          <string>GERRIT_SSH</string>
+          <string></string>
+          <string>HTTP_PROXY</string>
+          <string></string>
+          <string>HTTPS_PROXY</string>
+          <string></string>
+          <string>INTERNAL_GERRIT_KEY</string>
+          <string></string>
+          <string>INTERNAL_GERRIT_PORT</string>
+          <string></string>
+          <string>INTERNAL_GERRIT_SSH</string>
+          <string></string>
           <string>INTERNAL_GERRIT_URL</string>
-          <string>ssh://jenkins-attcomdev@10.24.20.18:29418</string>
+          <string></string>
           <string>JENKINS_CLI</string>
-          <string>/home/jenkins/integration/jenkins-cli.jar</string>
+          <string></string>
+          <string>JENKINS_CLI_URL</string>
+          <string></string>
+          <string>KNOWN_HOSTS</string>
+          <string></string>
+          <string>MIRROR_KEY</string>
+          <string></string>
+          <string>MIRROR_KEY_ORIG</string>
+          <string></string>
+          <string>MIRROR_SLAVE_IP</string>
+          <string></string>
           <string>NEXUS3_URL</string>
-          <string>12.37.173.196:32775</string>
+          <string></string>
+          <string>NO_PROXY</string>
+          <string></string>
           <string>OSH_BR_EX_ADDR</string>
-          <string>172.25.4.1/24</string>
+          <string></string>
           <string>OSH_EXT_SUBNET</string>
-          <string>172.25.4.0/24</string>
+          <string></string>
           <string>PVC_BACKEND</string>
           <string>ceph</string>
           <string>QUAY_URL</string>
@@ -100,7 +134,9 @@
           <string>SLACK_DEFAULT_CHANNEL</string>
           <string>#test-jenkins</string>
           <string>SLACK_URL</string>
-          <string>https://att-comdev.slack.com/services/hooks/jenkins-ci/</string>
+          <string></string>
+          <string>SSH_DATA</string>
+          <string></string>
         </tree-map>
       </envVars>
     </hudson.slaves.EnvironmentVariablesNodeProperty>
