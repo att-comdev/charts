@@ -81,3 +81,9 @@ data:
 {{- else -}}
 {{ tuple "etc/_org.jfrog.hudson.ArtifactoryBuilder.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
 {{- end }}
+  org.jenkinsci.plugins.workflow.libs.GlobalLibraries.xml: |
+{{ if .Values.conf.global_libraries.override -}}
+{{ .Values.conf.global_libraries.override | indent 4 }}
+{{- else -}}
+{{ tuple "etc/_org.jenkinsci.plugins.workflow.libs.GlobalLibraries.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+{{- end }}
