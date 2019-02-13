@@ -81,6 +81,9 @@ spec:
             - name: jenkins-etc
               mountPath: /seed/org.jfrog.hudson.ArtifactoryBuilder.xml
               subPath: org.jfrog.hudson.ArtifactoryBuilder.xml
+            - name: jenkins-etc
+              mountPath: /seed/org.jenkinsci.plugins.workflow.libs.GlobalLibraries.xml
+              subPath: org.jenkinsci.plugins.workflow.libs.GlobalLibraries.xml
 {{ if .Values.manifests.job_ks_user }}
 {{ tuple $envAll "api" $mounts_jenkins_api_init | include "helm-toolkit.snippets.kubernetes_entrypoint_init_container" | indent 8 }}
 {{ end }}
