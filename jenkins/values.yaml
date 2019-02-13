@@ -142,6 +142,16 @@ conf:
     override: null
   jfrog:
     override: null
+  global_libraries:
+    override: null
+    use_internal_lib: false
+    libraries:
+      - name: cicd-upstream-libs
+        url: https://review.gerrithub.io/att-comdev/cicd
+        branch: master
+      - name: cicd-internal-libs
+        url: https://internal_url.com/cicd
+        branch: master
 
 containers:
   ports:
