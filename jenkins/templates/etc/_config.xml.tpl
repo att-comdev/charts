@@ -153,4 +153,23 @@
       </envVars>
     </hudson.slaves.EnvironmentVariablesNodeProperty>
   </globalNodeProperties>
+  <clouds>
+    <org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud plugin="kubernetes@1.8.4">
+      <name>kubernetes</name>
+      <defaultsProviderTemplate></defaultsProviderTemplate>
+      <templates/>
+      <serverUrl>https://kubernetes.default.svc.cluster.local</serverUrl>
+      <skipTlsVerify>false</skipTlsVerify>
+      <addMasterProxyEnvVars>false</addMasterProxyEnvVars>
+      <capOnlyOnAlivePods>false</capOnlyOnAlivePods>
+      <namespace>{{.Values.jenkinsNodes.namespace}}</namespace>
+      <jenkinsUrl>http://jenkins.{{.Values.jenkinsNodes.service.namespace}}.svc.cluster.local:8080</jenkinsUrl>
+      <jenkinsTunnel>jenkins.{{.Values.jenkinsNodes.service.namespace}}.svc.cluster.local:50000</jenkinsTunnel>
+      <containerCap>500</containerCap>
+      <retentionTimeout>5</retentionTimeout>
+      <connectTimeout>0</connectTimeout>
+      <readTimeout>0</readTimeout>
+      <maxRequestsPerHost>64</maxRequestsPerHost>
+    </org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud>
+  </clouds>
 </hudson>
