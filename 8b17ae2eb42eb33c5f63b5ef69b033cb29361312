@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "17616719_ce5e68cc",
+        "filename": "jenkins/values.yaml",
+        "patchSetId": 9
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1013049
+      },
+      "writtenOn": "2019-02-19T16:51:48Z",
+      "side": 1,
+      "message": "This would be better as an upstream and internal elements instead of an array.  I\u0027d avoid array order mattering and right now if these two are reversed in order it breaks the tpl.",
+      "range": {
+        "startLine": 144,
+        "startChar": 6,
+        "endLine": 149,
+        "endChar": 22
+      },
+      "revId": "8b17ae2eb42eb33c5f63b5ef69b033cb29361312",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
