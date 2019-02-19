@@ -70,6 +70,30 @@
       "revId": "8b17ae2eb42eb33c5f63b5ef69b033cb29361312",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "17b9b8ca_de75ac33",
+        "filename": "jenkins/values.yaml",
+        "patchSetId": 9
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1014829
+      },
+      "writtenOn": "2019-02-19T17:15:47Z",
+      "side": 1,
+      "message": "ok thanks for reviewing I will fix that.",
+      "parentUuid": "77d11d84_30336feb",
+      "range": {
+        "startLine": 144,
+        "startChar": 6,
+        "endLine": 149,
+        "endChar": 22
+      },
+      "revId": "8b17ae2eb42eb33c5f63b5ef69b033cb29361312",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
     }
   ]
 }
