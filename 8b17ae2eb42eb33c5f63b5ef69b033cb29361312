@@ -46,6 +46,30 @@
       "revId": "8b17ae2eb42eb33c5f63b5ef69b033cb29361312",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77d11d84_30336feb",
+        "filename": "jenkins/values.yaml",
+        "patchSetId": 9
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1013049
+      },
+      "writtenOn": "2019-02-19T17:07:04Z",
+      "side": 1,
+      "message": "Correct.  Since the tpl depends on the order of these two it seems fragile.  So, going with a dictionary makes it explicit.",
+      "parentUuid": "574289ea_f47f6c45",
+      "range": {
+        "startLine": 144,
+        "startChar": 6,
+        "endLine": 149,
+        "endChar": 22
+      },
+      "revId": "8b17ae2eb42eb33c5f63b5ef69b033cb29361312",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
     }
   ]
 }
