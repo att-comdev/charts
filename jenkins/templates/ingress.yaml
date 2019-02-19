@@ -1,0 +1,36 @@
+{{- if .Values.ingress.enabled -}}
+{{- $servicePort := .Values.containers.ports.containerPort -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: jenkins-nc
+  labels:
+    app: jenkins
+    chart: jenkins
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    {{- range $key, $value := .Values.ingress.annotations }}
+      {{ $key }}: {{ $value | quote }}
+    {{- end }}
+spec:
+  backend:
+    serviceName: jenkins
+    servicePort: {{ $servicePort }}
+{{- if .Values.ingress.hosts }}
+  rules:
+  {{- range $host := .Values.ingress.hosts }}
+  - host: {{ $host }}
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: jenkins
+            servicePort: {{ $servicePort }}
+  {{- end -}}
+{{- end -}}
+  {{- if .Values.ingress.tls }}
+  tls:
+{{ toYaml .Values.ingress.tls | indent 4 }}
+  {{- end -}}
+{{- end -}}
