@@ -7,12 +7,17 @@ metadata:
     chart: {{ template "distribution.chart" . }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
+    component: {{ .Values.distribution.name }}
 {{- if .Values.distribution.service.annotations }}
   annotations:
 {{ toYaml .Values.distribution.service.annotations | indent 4 }}
 {{- end }}
 spec:
   type: {{ .Values.distribution.service.type }}
+{{- if .Values.distribution.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+{{ toYaml .Values.distribution.service.loadBalancerSourceRanges | indent 4 }}
+{{- end }}
   ports:
   - name: distribution
     port: {{ .Values.distribution.externalPort }}

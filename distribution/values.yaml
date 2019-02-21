@@ -8,8 +8,8 @@
 images:
   tags:
     initContainerImage: "alpine:3.6"
-    distribution: docker.bintray.io/jfrog/distribution-distribution:1.4.0
-    distributor: docker.bintray.io/jfrog/distribution-distributor:1.4.0
+    distribution: docker.bintray.io/jfrog/distribution-distribution:1.6.0
+    distributor: docker.bintray.io/jfrog/distribution-distributor:1.6.0
     redis: docker.io/bitnami/redis:4.0.11-debian-9
 
 # For supporting pulling from private registries
@@ -259,7 +259,6 @@ distributor:
   name: distributor
   image:
     imagePullPolicy: IfNotPresent
-  token: "eyJ2ZXIiOiIyIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYiLCJraWQiOiJNaTZjZC1aTVpPTHJNVi1CdkZpZVNrcUVwUU9WanRWS1MwTWM2MXpwSFZZIn0.eyJzdWIiOiJJTlRFUk5BTCIsInNjcCI6ImFwcGxpZWQtcGVybWlzc2lvbnNcL3N5c3RlbSIsImF1ZCI6ImpmZHNAMDFjbmhnbjkyc2FmNHMxYzdkMGE3cDBtdmMiLCJpc3MiOiJqZmRzQDAxY25oZ245MnNhZjRzMWM3ZDBhN3AwbXZjIiwiZXhwIjoyNDgxMDQ1NDMyLCJpYXQiOjE1MzQ5NjU0MzIsImp0aSI6IjM5NzBiYTBkLTFiMWUtNDM3Yi04NDdlLWZjOTA3NGZjMjI1ZSJ9.hDE8p9SYD9NwHuDUqSnJfe4mBC9ogNShQ6n8AkBpT4HmYzxpnP4qpldjaubka5pCMqkrVmVzW-jEpBRRud9pG1eF7zswkN7Zu1ea3F1IPzjq8Wf5KrB-b6vqLbY39FjMg0e9o2F_ZFWU0PZDHHSxxEAdNkR4MZhslE093NL4zsz8Rv8sdCClqU17N8HsrjDe9A4YOcVCQBSZ9wsbiqyVE6synsyul4-z3ihDeXjtZOGe9aakQylXeeAK0xCi_myCCztxUSWj2WSCRJcZdAX0hevlX0c3RjfqiP-VtrV1mKwm30DYdHFXzKes4q-vhHojuXNPtj3KAXJtC-D6f_adeg"
   resources: {}
   #  requests:
   #    memory: "2Gi"
