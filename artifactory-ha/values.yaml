@@ -426,7 +426,7 @@ artifactory:
     dataKey:
 
   ## Create configMap with artifactory.config.import.xml and security.import.xml and pass name of configMap in following parameter
-  configMapName:
+  configMapName: artifactory-bootstrap
 
   ## List of secrets for Artifactory user plugins.
   ## One Secret per plugin's files.
@@ -438,6 +438,7 @@ artifactory:
 
   ## Extra pre-start command to install JDBC driver for MySql/MariaDb/Oracle
   # preStartCommand: "wget -O /opt/jfrog/artifactory/tomcat/lib/mysql-connector-java-5.1.41.jar https://jcenter.bintray.com/mysql/mysql-connector-java/5.1.41/mysql-connector-java-5.1.41.jar"
+  preStartCommand: "echo"
   ## Extra post-start command to run extra commands after container starts
   # postStartCommand:
 
@@ -466,7 +467,7 @@ artifactory:
   internalPort: 8081
   internalPortReplicator: 6061
   externalPortReplicator: 6061
-  uid: 1030
+  uid: 0
   terminationGracePeriodSeconds: 30
   ## The following settings are to configure the frequency of the liveness and readiness probes
   livenessProbe:
@@ -602,6 +603,54 @@ artifactory:
 
   annotations: {}
 
+  ldap:
+    enabled: false
+   # rootCert1base64: |
+   #   valid certificate base64 text1
+   #   -----END CERTIFICATE-----
+   # certAlias1base64: "root_ca_alias1base64"
+   # rootCert1sha256: |
+   #   -----BEGIN CERTIFICATE-----
+   #   valid certificate sha256 text1
+   #   -----END CERTIFICATE-----
+   # certAlias1sha256: "root_ca_alias1sha256"
+   # rootCert2base64: |
+   #   -----BEGIN CERTIFICATE-----
+   #   valid certificate base64 text2
+   #   -----END CERTIFICATE-----
+   # certAlias2base64: "root_ca_alias2base64"
+   # rootCert2sha256: |
+   #   -----BEGIN CERTIFICATE-----
+   #   valid certificate sha256 text2
+   #   -----END CERTIFICATE-----
+   # certAlias2sha256: "root_ca_alias2sha256"
+   # keystorePass: "changeit"
+
+  config:
+    ldapSetting:
+      enabled: false
+    #  key: "MY-LDAP"
+    #  ldapUrl: "ldaps://my-ldap.example.com:636"
+    #  searchFilter: "(sAMAccountName={0})"
+    #  searchBase: "OU=CorporateDesktop,OU=Desktop,OU=Desktop,DC=my,DC=example,DC=com"
+    #  managerDn: "CN=mybinddn,OU=Users,OU=CorporateDesktop,OU=Desktop,DC=my,DC=example,DC=com"
+    #  managerPassword: "mypassword"
+    #  autoCreateUser: true
+    #ldapGroupSettings:
+    #  name: "my-ldap-group"
+    #  groupBaseDn: "OU=Application,OU=Groups,DC=my,DC=example,D=com"
+    #  filter: "(&amp;(cn=my-domain-group)(objectClass=group))"
+    proxy:
+      enabled: false
+     # key: "MYProxy"
+     # host: "myproxy"
+     # port: "8888"
+    reverseProxy:
+      enabled: false
+     # serverName: "myserver.example.com"
+     # sslCertificate: "mycertpath"
+     # sslKey: "mykeypath"
+
   ## Type specific configurations.
   ## There is a difference between the primary and the member nodes.
   ## Customising their resources and java parameters is done here.
@@ -624,7 +673,7 @@ artifactory:
     javaOpts:
       xms: "1g"
       xmx: "2g"
-      other: "-Djavax.net.ssl.trustStore=/var/opt/jfrog/artifactory/etc/cacerts"
+      other: "-Djavax.net.ssl.trustStore=/etc/opt/jfrog/artifactory/cacerts"
     nodeSelector: {}
 
     tolerations: []
@@ -657,7 +706,7 @@ artifactory:
     javaOpts:
       xms: "1g"
       xmx: "2g"
-      other: "-Djavax.net.ssl.trustStore=/var/opt/jfrog/artifactory/etc/cacerts"
+      other: "-Djavax.net.ssl.trustStore=/etc/opt/jfrog/artifactory/cacerts"
     nodeSelector: {}
 
     tolerations: []
@@ -777,3 +826,5 @@ manifests:
   secret_s3: true
   configmap_bin: true
   configmap_etc: true
+  configmap_rootcert: true
+  configmap_bootstrap: true

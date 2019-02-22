@@ -99,6 +99,26 @@ spec:
           echo "Copying plugins";
           cp -Lrf /tmp/plugin/*/* /tmp/plugins;
           {{- end }}
+          {{- if .Values.artifactory.ldap.enabled }}
+          echo "Copying Certs";
+          mkdir -p /etc/opt/jfrog/artifactory/;
+          cp /java/jdk-11.0.2+9/lib/security/cacerts /etc/opt/jfrog/artifactory/cacerts;
+          cp -fv /tmp/cert/rootCert* /etc/opt/jfrog/artifactory/;
+          {{- if and .Values.artifactory.ldap.rootCert1base64 .Values.artifactory.ldap.certAlias1base64 }}
+          ./java/jdk-11.0.2+9/bin/keytool -import -alias {{ .Values.artifactory.ldap.certAlias1base64 }} -keystore /etc/opt/jfrog/artifactory/cacerts -storepass {{ .Values.artifactory.ldap.keystorePass }} -noprompt -trustcacerts -file /etc/opt/jfrog/artifactory/rootCert1base64.cer;
+          {{- end }}
+          {{- if and .Values.artifactory.ldap.rootCert1sha256 .Values.artifactory.ldap.certAlias1sha256 }}
+          ./java/jdk-11.0.2+9/bin/keytool -import -alias {{ .Values.artifactory.ldap.certAlias1sha256 }} -keystore /etc/opt/jfrog/artifactory/cacerts -storepass {{ .Values.artifactory.ldap.keystorePass }} -noprompt -trustcacerts -file /etc/opt/jfrog/artifactory/rootCert1sha256.cer;
+          {{- end }}
+          {{- if and .Values.artifactory.ldap.rootCert2base64 .Values.artifactory.ldap.certAlias2base64 }}
+          ./java/jdk-11.0.2+9/bin/keytool -import -alias {{ .Values.artifactory.ldap.certAlias2base64 }} -keystore /etc/opt/jfrog/artifactory/cacerts -storepass {{ .Values.artifactory.ldap.keystorePass }} -noprompt -trustcacerts -file /etc/opt/jfrog/artifactory/rootCert2base64.cer;
+          {{- end }}
+          {{- if and .Values.artifactory.ldap.rootCert2sha256 .Values.artifactory.ldap.certAlias2sha256 }}
+          ./java/jdk-11.0.2+9/bin/keytool -import -alias {{ .Values.artifactory.ldap.certAlias2sha256 }} -keystore /etc/opt/jfrog/artifactory/cacerts -storepass {{ .Values.artifactory.ldap.keystorePass }} -noprompt -trustcacerts -file /etc/opt/jfrog/artifactory/rootCert2sha256.cer;
+          {{- end }}
+          chmod 755 /etc/opt/jfrog/artifactory/cacerts;
+          chown artifact:artifact /etc/opt/jfrog/artifactory/cacerts;
+          {{- end }}
           echo "Running custom preStartCommand command";
           {{ .Values.artifactory.preStartCommand }};
           /entrypoint-artifactory.sh
@@ -111,7 +131,6 @@ spec:
               - '/bin/sh'
               - '-c'
               - >
-                echo;
                 {{ .Values.artifactory.postStartCommand }}
       {{- end }}
         env:
@@ -231,6 +250,8 @@ spec:
         ports:
         - containerPort: {{ .Values.artifactory.internalPort }}
         volumeMounts:
+        - name: artifactory-extra-rootcert
+          mountPath: "/tmp/cert/"
         - name: artifactory-extra-etc
           mountPath: "/artifactory_extra_conf/db.properties"
           subPath: db.properties
@@ -369,6 +390,9 @@ spec:
 {{ toYaml . | indent 8 }}
     {{- end }}
       volumes:
+      - name: artifactory-extra-rootcert
+        configMap:
+          name: artifactory-extra-rootcert
       - name: artifactory-extra-etc
         configMap:
           name: artifactory-extra-etc
