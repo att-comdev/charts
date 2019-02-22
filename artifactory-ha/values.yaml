@@ -439,7 +439,7 @@ artifactory:
   ## Extra pre-start command to install JDBC driver for MySql/MariaDb/Oracle
   # preStartCommand: "wget -O /opt/jfrog/artifactory/tomcat/lib/mysql-connector-java-5.1.41.jar https://jcenter.bintray.com/mysql/mysql-connector-java/5.1.41/mysql-connector-java-5.1.41.jar"
   ## Extra post-start command to run extra commands after container starts
-  # postStartCommand:
+  postStartCommand: "echo;"
 
   ## Extra environment variables that can be used to tune Artifactory to your needs.
   ## Uncomment and set value as needed
@@ -466,7 +466,7 @@ artifactory:
   internalPort: 8081
   internalPortReplicator: 6061
   externalPortReplicator: 6061
-  uid: 1030
+  uid: 0
   terminationGracePeriodSeconds: 30
   ## The following settings are to configure the frequency of the liveness and readiness probes
   livenessProbe:
@@ -601,6 +601,40 @@ artifactory:
     publicUrl:
 
   annotations: {}
+
+  ldap:
+    enabled: false
+  #  rootCert: |
+  #    -----BEGIN CERTIFICATE-----
+  #    valid certificate text
+  #    -----END CERTIFICATE-----
+  #  certAlias: "root_ca_alias"
+  #  keystorePass: "changeit"
+
+  config:
+    ldapSetting:
+      enabled: false
+    #  key: "MY-LDAP"
+    #  ldapUrl: "ldaps://my-ldap.example.com:636"
+    #  searchFilter: "(sAMAccountName={0})"
+    #  searchBase: "OU=CorporateDesktop,OU=Desktop,OU=Desktop,DC=my,DC=example,DC=com"
+    #  managerDn: "CN=mybinddn,OU=Users,OU=CorporateDesktop,OU=Desktop,DC=my,DC=example,DC=com"
+    #  managerPassword: "mypassword"
+    #  autoCreateUser: true
+    #ldapGroupSettings:
+    #  name: "my-ldap-group"
+    #  groupBaseDn: "OU=Application,OU=Groups,DC=my,DC=example,D=com"
+    #  filter: "(&amp;(cn=my-domain-group)(objectClass=group))"
+    proxy:
+      enabled: false
+    #  key: "MYProxy"
+    #  host: "myproxy"
+    #  port: "8888"
+    reverseProxy:
+      enabled: false
+    #  serverName: "myserver.example.com"
+    #  sslCertificate: "mycertpath"
+    #  sslKey: "mykeypath"
 
   ## Type specific configurations.
   ## There is a difference between the primary and the member nodes.
@@ -777,3 +811,5 @@ manifests:
   secret_s3: true
   configmap_bin: true
   configmap_etc: true
+  configmap_rootcert: true
+  configmap_bootstrap: true
