@@ -112,6 +112,23 @@ spec:
               - '-c'
               - >
                 echo;
+                {{- if .Values.artifactory.ldap.enabled }}
+                cp -fv /tmp/cert/ldaproot.cer /docker-java-home/jre/lib/security/ldaproot.cer;
+                keytool -import -alias {{ .Values.artifactory.ldap.certAlias }} -keystore /docker-java-home/jre/lib/security/cacerts -storepass {{ .Values.artifactory.ldap.keystorePass }} -noprompt -trustcacerts -file /docker-java-home/jre/lib/security/ldaproot.cer;
+                chmod 755 /etc/ssl/certs/java/cacerts;
+                cp -fvR /etc/ssl/certs/java/cacerts {{ .Values.artifactory.persistence.mountPath }}/etc/;
+                {{- end }}
+                {{- if .Values.artifactory.replicator.enabled }}
+                mkdir -p {{ .Values.artifactory.persistence.mountPath }}/replicator/etc;
+                cp -fv /tmp/replicator/replicator.yaml {{ .Values.artifactory.persistence.mountPath }}/replicator/etc/replicator.yaml;
+                {{- end }}
+                {{- if .Values.artifactory.distributionCerts }}
+                mkdir -p {{ .Values.artifactory.persistence.mountPath }}/access/etc/keys/trusted;
+                cp -fv /tmp/access/etc/keys/private.key {{ .Values.artifactory.persistence.mountPath }}/access/etc/keys;
+                cp -fv /tmp/access/etc/keys/root.crt    {{ .Values.artifactory.persistence.mountPath }}/access/etc/keys;
+                cp -fv /tmp/access/etc/keys/root.crt    {{ .Values.artifactory.persistence.mountPath }}/access/etc/keys/trusted;
+                {{- end }}
+                {{- if .Values.artifactory.postStartCommand }}
                 {{ .Values.artifactory.postStartCommand }}
       {{- end }}
         env:
@@ -231,6 +248,9 @@ spec:
         ports:
         - containerPort: {{ .Values.artifactory.internalPort }}
         volumeMounts:
+        - name: artifactory-extra-rootcert
+          mountPath: "/tmp/cert/ldaproot.cer"
+          subPath: ldaproot.cer
         - name: artifactory-extra-etc
           mountPath: "/artifactory_extra_conf/db.properties"
           subPath: db.properties
@@ -369,6 +389,9 @@ spec:
 {{ toYaml . | indent 8 }}
     {{- end }}
       volumes:
+      - name: artifactory-extra-rootcert
+        configMap:
+          name: artifactory-extra-rootcert
       - name: artifactory-extra-etc
         configMap:
           name: artifactory-extra-etc

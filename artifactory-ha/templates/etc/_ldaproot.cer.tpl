@@ -1,0 +1,1 @@
+{{ .Values.artifactory.ldap.rootCert }}
