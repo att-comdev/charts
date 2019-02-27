@@ -236,6 +236,8 @@ dependencies:
         - service: identity
           endpoint: internal
 
+additional_rolebindings: []
+
 manifests:
   configmap_bin: true
   configmap_etc: true
