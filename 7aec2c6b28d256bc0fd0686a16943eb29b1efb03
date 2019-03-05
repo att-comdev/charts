@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39f91937_8e41e7cd",
+        "filename": "jenkins/values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1014829
+      },
+      "writtenOn": "2019-03-05T22:13:22Z",
+      "side": 1,
+      "message": "Should we add a default value there ?",
+      "range": {
+        "startLine": 103,
+        "startChar": 8,
+        "endLine": 103,
+        "endChar": 26
+      },
+      "revId": "7aec2c6b28d256bc0fd0686a16943eb29b1efb03",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
