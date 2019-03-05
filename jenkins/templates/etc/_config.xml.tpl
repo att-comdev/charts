@@ -89,6 +89,8 @@
           <string>{{.Values.conf.config.jenkins.global_env_vars.cni_pod_cidr}}</string>
           <string>CONF_PACKAGE_PATH</string>
           <string>{{.Values.conf.config.jenkins.global_env_vars.conf_package_path}}</string>
+          <string>COR_DE_LDAP_GROUP</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.cor_de_ldap_group}}</string>
           <string>DNS_SERVER_1</string>
           <string>{{.Values.conf.config.jenkins.global_env_vars.dns_server_one}}</string>
           <string>DNS_SERVER_2</string>
