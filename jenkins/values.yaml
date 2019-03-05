@@ -239,4 +239,4 @@ dependencies:
 manifests:
   configmap_bin: true
   configmap_etc: true
-  job_ks_user: true
+  job_ks_user: false
