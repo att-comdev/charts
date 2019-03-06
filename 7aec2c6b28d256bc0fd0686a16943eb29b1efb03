@@ -22,6 +22,30 @@
       "revId": "7aec2c6b28d256bc0fd0686a16943eb29b1efb03",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73a1bd96_b2888be0",
+        "filename": "jenkins/values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1016071
+      },
+      "writtenOn": "2019-03-06T16:18:07Z",
+      "side": 1,
+      "message": "I do not like default values since the default value could get into production.  We have written of code to support empty values and we tested it.",
+      "parentUuid": "39f91937_8e41e7cd",
+      "range": {
+        "startLine": 103,
+        "startChar": 8,
+        "endLine": 103,
+        "endChar": 26
+      },
+      "revId": "7aec2c6b28d256bc0fd0686a16943eb29b1efb03",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
