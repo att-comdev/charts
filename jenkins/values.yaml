@@ -91,6 +91,7 @@ conf:
 # Most of the below env values are just dummy
       global_env_vars:
         aiab_ref: master
+        aqua_haproxy_vip: 127.0.0.1
         artf_api_url: https://$ARTF_WEB_URL/api/storage
         artf_docker_url: artifacts-aic.atlantafoundry.com
         artf_ip: 127.0.0.1

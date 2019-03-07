@@ -71,6 +71,8 @@
           <int>34</int>
           <string>AIAB_REF</string>
           <string>{{.Values.conf.config.jenkins.global_env_vars.aiab_ref}}</string>
+          <string>AQUA_HAPROXY_VIP</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.aqua_haproxy_vip}}</string>
           <string>ARTF_API_URL</string>
           <string>{{.Values.conf.config.jenkins.global_env_vars.artf_api_url}}</string>
           <string>ARTF_DOCKER_URL</string>
