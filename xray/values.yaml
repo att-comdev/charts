@@ -215,7 +215,7 @@ rabbitmq-ha:
   replicaCount: 1
   rabbitmqUsername: guest
   rabbitmqPassword: smil3yfc
-  customConfigMap: false
+  customConfigMap: true
   rabbitmqErlangCookie: XRAYRABBITMQCLUSTER
   rabbitmqMemoryHighWatermark: 500MB
   rabbitmqNodePort: 5672
