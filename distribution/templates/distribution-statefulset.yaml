@@ -203,7 +203,7 @@ spec:
         resources:
 {{ toYaml .Values.distributor.resources | indent 10 }}
       - name: {{ template "redis.name" . }}
-        image: '{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}'
+        image: '{{ .Values.images.tags.redis }}'
         imagePullPolicy: {{ .Values.redis.image.pullPolicy }}
         env:
         - name: REDIS_REPLICATION_MODE
