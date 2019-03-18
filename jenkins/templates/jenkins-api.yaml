@@ -89,6 +89,7 @@ spec:
 {{ end }}
       containers:
         - name: jenkins
+{{ dict "envAll" $envAll "application" "server" "container" "jenkins" | include "helm-toolkit.snippets.kubernetes_container_security_context" | indent 10 }}
           image: {{ .Values.images.tags.jenkins }}
           imagePullPolicy: {{ .Values.images.pull_policy }}
 {{ tuple $envAll $envAll.Values.pod.resources.api | include "helm-toolkit.snippets.kubernetes_resources" | indent 10 }}
