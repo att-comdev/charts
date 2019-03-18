@@ -30,6 +30,7 @@ spec:
       securityContext:
         runAsUser: {{ .Values.common.xrayUserId }}
         fsGroup: {{ .Values.common.xrayGroupId }}
+        readOnlyRootFilesystem: true
       initContainers:
       - name: init-wait
         image: {{ .Values.images.tags.initContainerImage | quote }}
@@ -134,6 +135,9 @@ spec:
           mountPath: "{{ .Values.common.xrayConfigPath }}"
         securityContext:
           allowPrivilegeEscalation: false
+          runAsUser: {{ .Values.common.xrayUserId }}
+          fsGroup: {{ .Values.common.xrayGroupId }}
+          readOnlyRootFilesystem: true
         resources:
 {{ toYaml .Values.server.resources | indent 10 }}
         readinessProbe:
