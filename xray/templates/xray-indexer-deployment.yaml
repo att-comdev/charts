@@ -134,6 +134,7 @@ spec:
           mountPath: "{{ .Values.common.xrayConfigPath }}"
         securityContext:
           allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
         resources:
 {{ toYaml .Values.indexer.resources | indent 10 }}
         readinessProbe:
