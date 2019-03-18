@@ -51,44 +51,57 @@ spec:
           volumeMounts:
             - name: jenkins-home
               mountPath: /var/jenkins_home
+              readOnly: true
             - name: jenkins-bin
               mountPath: /tmp/seed.sh
               subPath: seed.sh
+              readOnly: true
             - name: jenkins-etc
               mountPath: /seed/config.xml
               subPath: config.xml
+              readOnly: true
             - name: jenkins-etc
               mountPath: /seed/cicdfolderconfig.xml
               subPath: cicdfolderconfig.xml
+              readOnly: true
             - name: jenkins-etc
               mountPath: /seed/superseedconfig.xml
               subPath: superseedconfig.xml
+              readOnly: true
             - name: jenkins-etc
               mountPath: /seed/jenkins.security.UpdateSiteWarningsConfiguration.xml
               subPath: jenkins.security.UpdateSiteWarningsConfiguration.xml
+              readOnly: true
             - name: jenkins-etc
               mountPath: /seed/jenkins.security.QueueItemAuthenticatorConfiguration.xml
               subPath: jenkins.security.QueueItemAuthenticatorConfiguration.xml
+              readOnly: true
             - name: jenkins-etc
               mountPath: /seed/com.arkea.jenkins.openstack.heat.HOTPlayerSettings.xml
               subPath: com.arkea.jenkins.openstack.heat.HOTPlayerSettings.xml
+              readOnly: true
             - name: jenkins-etc
               mountPath: /seed/jenkins.CLI.xml
               subPath: jenkins.CLI.xml
+              readOnly: true
             - name: jenkins-etc
               mountPath: /seed/credentials.xml
               subPath: credentials.xml
+              readOnly: true
             - name: jenkins-etc
               mountPath: /seed/org.jfrog.hudson.ArtifactoryBuilder.xml
               subPath: org.jfrog.hudson.ArtifactoryBuilder.xml
+              readOnly: true
             - name: jenkins-etc
               mountPath: /seed/org.jenkinsci.plugins.workflow.libs.GlobalLibraries.xml
               subPath: org.jenkinsci.plugins.workflow.libs.GlobalLibraries.xml
+              readOnly: true
 {{ if .Values.manifests.job_ks_user }}
 {{ tuple $envAll "api" $mounts_jenkins_api_init | include "helm-toolkit.snippets.kubernetes_entrypoint_init_container" | indent 8 }}
 {{ end }}
       containers:
         - name: jenkins
+{{ dict "envAll" $envAll "application" "server" "container" "jenkins" | include "helm-toolkit.snippets.kubernetes_container_security_context" | indent 10 }}
           image: {{ .Values.images.tags.jenkins }}
           imagePullPolicy: {{ .Values.images.pull_policy }}
 {{ tuple $envAll $envAll.Values.pod.resources.api | include "helm-toolkit.snippets.kubernetes_resources" | indent 10 }}
