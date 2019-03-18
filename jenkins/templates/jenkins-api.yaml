@@ -33,6 +33,8 @@ spec:
       labels:
 {{ tuple $envAll "jenkins" "api" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 8 }}
     spec:
+      securityContext:
+        readOnlyRootFilesystem: true
       serviceAccountName: {{ $serviceAccountName }}
       affinity:
 {{ tuple $envAll "jenkins" "api" | include "helm-toolkit.snippets.kubernetes_pod_anti_affinity" | indent 8 }}
