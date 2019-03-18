@@ -30,6 +30,7 @@ spec:
       securityContext:
         runAsUser: {{ .Values.common.xrayUserId }}
         fsGroup: {{ .Values.common.xrayGroupId }}
+        readOnlyRootFilesystem: true
       initContainers:
       - name: init-wait
         image: {{ .Values.images.tags.initContainerImage | quote }}
