@@ -39,7 +39,7 @@ images:
     nginx: docker.bintray.io/jfrog/nginx-artifactory-pro:6.5.0
     db_init: docker.io/kolla/ubuntu-source-heat-engine:3.0.3
     ceph_key_placement: docker.io/port/ceph-config-helper:v1.10.3
-    s3_bucket: docker.io/port/ceph-config-helper:v1.10.3
+    s3_bucket: docker.io/openstackhelm/ceph-daemon:latest
     s3_user: docker.io/port/ceph-config-helper:v1.10.3
     dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
   pull_policy: "IfNotPresent"
