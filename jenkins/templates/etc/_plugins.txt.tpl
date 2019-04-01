@@ -89,8 +89,8 @@ jobConfigHistory:2.18
 jquery-detached:1.2.1
 jsch:0.1.54.2
 junit:1.24
-kubernetes-credentials:0.4.0
-kubernetes:1.8.4
+kubernetes-credentials:0.3.1
+kubernetes:1.5.1
 last-changes:2.6.8
 ldap:1.20
 libvirt-slave:1.8.5

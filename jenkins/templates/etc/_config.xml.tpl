@@ -68,7 +68,7 @@
           <default>
             <comparator class="hudson.util.CaseInsensitiveComparator"/>
           </default>
-          <int>34</int>
+          <int>41</int>
           <string>AIAB_REF</string>
           <string>{{.Values.conf.config.jenkins.global_env_vars.aiab_ref}}</string>
           <string>AQUA_HAPROXY_VIP</string>
@@ -156,7 +156,7 @@
     </hudson.slaves.EnvironmentVariablesNodeProperty>
   </globalNodeProperties>
   <clouds>
-    <org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud plugin="kubernetes@1.8.4">
+    <org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud plugin="kubernetes@1.5.1">
       <name>kubernetes</name>
       <defaultsProviderTemplate></defaultsProviderTemplate>
       <templates/>
