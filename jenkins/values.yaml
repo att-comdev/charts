@@ -325,6 +325,9 @@ dependencies:
         - service: identity
           endpoint: internal
 
+master:
+  InitScripts: true
+
 manifests:
   configmap_bin: true
   configmap_etc: true
@@ -332,3 +335,4 @@ manifests:
   secret_ingress_tls: true
   job_create_namespaces: true
   kubernetes_rbac_rule: true
+  configmap_jenkins_css: true
