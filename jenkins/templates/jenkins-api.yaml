@@ -104,9 +104,23 @@ spec:
               value: {{ .value | quote }}
             {{- end }}
           {{- end }}
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                - '/bin/sh'
+                - '-c'
+                - >
+                  {{- if .Values.master.InitScripts }}
+                  mkdir -p /var/jenkins_home/init.groovy.d/;
+                  cp -fv /tmp/init_Scripts/relaxed-CSP.groovy /var/jenkins_home/init.groovy.d/relaxed-CSP.groovy;
+                  {{- end }}
           ports:
             - containerPort: {{ .Values.containers.ports.containerPort }}
           volumeMounts:
+            - name: jenkins-initscript
+              mountPath: /tmp/init-scripts/relaxed-CSP.groovy
+              subPath: relaxed-CSP.groovy
             - name: jenkins-home
               mountPath: /var/jenkins_home
             - name: jenkins-bin
@@ -119,6 +133,9 @@ spec:
               mountPath: /proxy-config-gen.py
               subPath: proxy-config-gen.py
       volumes:
+        - name: jenkins-initscript
+          configMap:
+            name: jenkins-initscript
         - name: jenkins-etc
           configMap:
             name: jenkins-etc
