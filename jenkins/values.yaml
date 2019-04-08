@@ -302,8 +302,13 @@ dependencies:
         - service: identity
           endpoint: internal
 
+master:
+  InitScripts: true
+
 manifests:
   configmap_bin: true
   configmap_etc: true
   job_ks_user: false
   secret_ingress_tls: true
+  configmap_jenkins_css: true
+
