@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4960ab68_d26acf09",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1014344
+      },
+      "writtenOn": "2019-04-09T08:52:26Z",
+      "side": 1,
+      "message": "could you please add more descriptive info about the ps",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 43
+      },
+      "revId": "a813b3976a14eec47b56b3034942b1c3a854d876",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ada82d42_88145d3f",
+        "filename": "jenkins/templates/jenkins-css-initScript.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1014344
+      },
+      "writtenOn": "2019-04-09T08:52:26Z",
+      "side": 1,
+      "message": "could you remove the whitespace",
+      "range": {
+        "startLine": 22,
+        "startChar": 9,
+        "endLine": 22,
+        "endChar": 10
+      },
+      "revId": "a813b3976a14eec47b56b3034942b1c3a854d876",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "183c36ab_3cf7f24e",
+        "filename": "jenkins/templates/jenkins-css-initScript.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1014344
+      },
+      "writtenOn": "2019-04-09T08:52:26Z",
+      "side": 1,
+      "message": "could you remove the whitespace",
+      "range": {
+        "startLine": 23,
+        "startChar": 26,
+        "endLine": 23,
+        "endChar": 27
+      },
+      "revId": "a813b3976a14eec47b56b3034942b1c3a854d876",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4fcf3980_e55f962e",
+        "filename": "jenkins/values.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1014344
+      },
+      "writtenOn": "2019-04-09T08:52:26Z",
+      "side": 1,
+      "message": "just a suggestion to move this before the manifests section",
+      "range": {
+        "startLine": 312,
+        "startChar": 0,
+        "endLine": 313,
+        "endChar": 19
+      },
+      "revId": "a813b3976a14eec47b56b3034942b1c3a854d876",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
