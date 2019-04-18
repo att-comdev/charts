@@ -109,6 +109,7 @@ nexus-jenkins-plugin:3.0.20180214-134325.e135900
 openstack-cloud:2.33
 openstack-heat:1.5
 pam-auth:1.3
+paranoia:1.1
 pipeline-build-step:2.7
 pipeline-github:1.0
 pipeline-graph-analysis:1.6
