@@ -121,8 +121,33 @@ pod:
 conf:
   config:
     jenkins:
-      credentials:
-        artifactory: temppassword
+      seeds:
+        gerritTriggers:
+          - comparisonType: PLAIN
+            pattern: 'att-comdev/cicd'
+            branches:
+              - comparisonType: ANT
+                pattern: '**'
+            forbiddenPaths:
+              - comparisonType: PLAIN
+                pattern: 'resources/**'
+              - comparisonType: PLAIN
+                pattern: 'vars/**'
+            strictVerification: 'false'
+          - comparisonType: PLAIN
+            pattern: 'nc-cicd'
+            branches:
+              - comparisonType: ANT
+                pattern: '**'
+            forbiddenPaths:
+              - comparisonType: PLAIN
+                pattern: 'resources/**'
+              - comparisonType: PLAIN
+                pattern: 'vars/**'
+              - comparisonType: PLAIN
+                pattern: '5ec-seaworthy/**'
+            strictVerification: 'false'
+
       active:
         directory: active.directory.url
 # Global env variables in Jenkins configuration

@@ -39,52 +39,29 @@
     <com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.GerritTrigger plugin="gerrit-trigger@2.27.5">
       <spec></spec>
       <gerritProjects>
+        {{- range $trigger := .Values.conf.config.jenkins.seeds.gerritTriggers }}
         <com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.GerritProject>
-          <compareType>PLAIN</compareType>
-          <pattern>att-comdev/cicd</pattern>
+          <compareType>{{ index $trigger "comparisonType" }}</compareType>
+          <pattern>{{ index $trigger "pattern" }}</pattern>
           <branches>
+            {{- range $branch := index $trigger "branches" }}
             <com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.Branch>
-              <compareType>ANT</compareType>
-              <pattern>**</pattern>
+              <compareType>{{ index $branch "comparisonType" }}</compareType>
+              <pattern>{{ index $branch "pattern" }}</pattern>
             </com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.Branch>
+            {{- end }}
           </branches>
           <forbiddenFilePaths>
+            {{- range $path := index $trigger "forbiddenPaths" }}
             <com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.FilePath>
-              <compareType>PLAIN</compareType>
-              <pattern>resources/**</pattern>
+              <compareType>{{ index $path "comparisonType" }}</compareType>
+              <pattern>{{ index $path "pattern" }}</pattern>
             </com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.FilePath>
-            <com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.FilePath>
-              <compareType>PLAIN</compareType>
-              <pattern>vars/**</pattern>
-            </com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.FilePath>
+            {{- end }}
           </forbiddenFilePaths>
-          <disableStrictForbiddenFileVerification>false</disableStrictForbiddenFileVerification>
+          <disableStrictForbiddenFileVerification>{{ index $trigger "strictVerification" }}</disableStrictForbiddenFileVerification>
         </com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.GerritProject>
-        <com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.GerritProject>
-          <compareType>PLAIN</compareType>
-          <pattern>nc-cicd</pattern>
-          <branches>
-            <com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.Branch>
-              <compareType>ANT</compareType>
-              <pattern>**</pattern>
-            </com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.Branch>
-          </branches>
-          <forbiddenFilePaths>
-            <com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.FilePath>
-              <compareType>PLAIN</compareType>
-              <pattern>resources/**</pattern>
-            </com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.FilePath>
-            <com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.FilePath>
-              <compareType>PLAIN</compareType>
-              <pattern>vars/**</pattern>
-            </com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.FilePath>
-            <com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.FilePath>
-              <compareType>PLAIN</compareType>
-              <pattern>5ec-seaworthy/**</pattern>
-            </com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.FilePath>
-          </forbiddenFilePaths>
-          <disableStrictForbiddenFileVerification>false</disableStrictForbiddenFileVerification>
-        </com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.GerritProject>
+        {{- end }}
       </gerritProjects>
       <dynamicGerritProjects class="empty-list"/>
       <skipVote>
