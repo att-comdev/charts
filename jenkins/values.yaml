@@ -179,6 +179,12 @@ conf:
   cli:
     override: null
   credentials:
+    entries:
+      jenkins-artifactory-artifactory:
+        username: jenkins
+        password: password
+        description: This user is used only be Jenkins to push artifacts
+        scope: GLOBAL
     override: null
   jfrog:
     override: null
