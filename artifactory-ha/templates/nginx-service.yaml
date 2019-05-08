@@ -9,13 +9,19 @@ metadata:
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
     component: {{ .Values.nginx.name }}
+{{- if .Values.nginx.service.annotations }}
+  annotations:
+{{ toYaml .Values.nginx.service.annotations | indent 4 }}
+{{- end }}
 spec:
   type: {{ .Values.nginx.service.type }}
 {{- if eq .Values.nginx.service.type "LoadBalancer" }}
   {{ if .Values.nginx.service.loadBalancerIP -}}
   loadBalancerIP: {{ .Values.nginx.service.loadBalancerIP }}
   {{ end -}}
-  externalTrafficPolicy: Local
+  {{- if .Values.nginx.service.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ .Values.nginx.service.externalTrafficPolicy }}
+  {{- end }}
 {{- end }}
 {{- if .Values.nginx.service.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
