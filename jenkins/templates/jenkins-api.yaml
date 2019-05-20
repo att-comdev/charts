@@ -89,6 +89,7 @@ spec:
 {{ end }}
       containers:
         - name: jenkins
+{{ dict "envAll" $envAll "application" "server" "container" "jenkins" | include "helm-toolkit.snippets.kubernetes_container_security_context" | indent 10 }}
           image: {{ .Values.images.tags.jenkins }}
           imagePullPolicy: {{ .Values.images.pull_policy }}
 {{ tuple $envAll $envAll.Values.pod.resources.api | include "helm-toolkit.snippets.kubernetes_resources" | indent 10 }}
@@ -107,18 +108,26 @@ spec:
           ports:
             - containerPort: {{ .Values.containers.ports.containerPort }}
           volumeMounts:
+            - name: tmp
+              mountPatch: /tmp
             - name: jenkins-home
               mountPath: /var/jenkins_home
+              readOnly: false
             - name: jenkins-bin
               mountPath: /tmp/launch.sh
               subPath: launch.sh
+              readOnly: true
             - name: jenkins-etc
               mountPath: /plugins.txt
               subPath: plugins.txt
+              readOnly: true
             - name: jenkins-bin
               mountPath: /proxy-config-gen.py
               subPath: proxy-config-gen.py
+              readOnly: true
       volumes:
+        - name: tmp
+          emptyDir: {}
         - name: jenkins-etc
           configMap:
             name: jenkins-etc
