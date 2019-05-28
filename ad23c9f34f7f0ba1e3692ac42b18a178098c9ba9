@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1a690ae5_6c59d75a",
+        "filename": "artifactory-ha/templates/artifactory-networkpolicy.yaml",
+        "patchSetId": 10
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1012483
+      },
+      "writtenOn": "2019-05-28T14:54:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "03e10e89_84f4c042",
+      "revId": "ad23c9f34f7f0ba1e3692ac42b18a178098c9ba9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c36b037b_5fa4a19c",
         "filename": "artifactory-ha/templates/ingress.yaml",
         "patchSetId": 10
@@ -30,6 +48,24 @@
       "writtenOn": "2019-05-28T14:46:30Z",
       "side": 1,
       "message": "$ correct?",
+      "revId": "ad23c9f34f7f0ba1e3692ac42b18a178098c9ba9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8eca5d0d_b3ea4fba",
+        "filename": "artifactory-ha/templates/ingress.yaml",
+        "patchSetId": 10
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1012483
+      },
+      "writtenOn": "2019-05-28T14:54:53Z",
+      "side": 1,
+      "message": "Fixed",
+      "parentUuid": "c36b037b_5fa4a19c",
       "revId": "ad23c9f34f7f0ba1e3692ac42b18a178098c9ba9",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
