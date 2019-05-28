@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d3f87350_231508fc",
+        "filename": "artifactory-ha/values.yaml",
+        "patchSetId": 11
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1013696
+      },
+      "writtenOn": "2019-05-28T16:35:31Z",
+      "side": 1,
+      "message": "should be change not private repo link",
+      "revId": "aaf243162133f4f8ef154c68511834b7e25aa981",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e7323f7_cae1bc6a",
+        "filename": "artifactory-ha/values.yaml",
+        "patchSetId": 11
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1013696
+      },
+      "writtenOn": "2019-05-28T16:35:31Z",
+      "side": 1,
+      "message": "are those will be made available locally and can be overridden ?",
+      "revId": "aaf243162133f4f8ef154c68511834b7e25aa981",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9d12515_9a795192",
+        "filename": "artifactory-ha/values.yaml",
+        "patchSetId": 11
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1013696
+      },
+      "writtenOn": "2019-05-28T16:35:31Z",
+      "side": 1,
+      "message": "this one also ?",
+      "revId": "aaf243162133f4f8ef154c68511834b7e25aa981",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf61a9c6_4e1da8e3",
+        "filename": "artifactory-ha/values.yaml",
+        "patchSetId": 11
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1013696
+      },
+      "writtenOn": "2019-05-28T16:35:31Z",
+      "side": 1,
+      "message": "why all those parameters are we overiding it why all being commented ?",
+      "revId": "aaf243162133f4f8ef154c68511834b7e25aa981",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5735e087_37224658",
+        "filename": "artifactory-ha/values.yaml",
+        "patchSetId": 11
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1013696
+      },
+      "writtenOn": "2019-05-28T16:35:31Z",
+      "side": 1,
+      "message": "uid and gid for the ngnix generated or static",
+      "revId": "aaf243162133f4f8ef154c68511834b7e25aa981",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d0f7a3c_1d040750",
+        "filename": "artifactory-ha/values.yaml",
+        "patchSetId": 11
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 1013696
+      },
+      "writtenOn": "2019-05-28T16:35:31Z",
+      "side": 1,
+      "message": "affinity we should not configured ?",
+      "revId": "aaf243162133f4f8ef154c68511834b7e25aa981",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
