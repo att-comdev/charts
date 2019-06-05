@@ -35,6 +35,7 @@ build-history-metrics-plugin:1.2
 build-metrics:1.3
 build-name-setter:1.6.9
 build-timestamp:1.0.2
+build-user-vars-plugin:1.5
 buildresult-trigger:0.17
 cloud-stats:0.18
 cloudbees-bitbucket-branch-source:2.2.10
