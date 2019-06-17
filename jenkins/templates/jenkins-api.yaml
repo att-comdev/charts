@@ -36,6 +36,7 @@ spec:
       serviceAccountName: {{ $serviceAccountName }}
       affinity:
 {{ tuple $envAll "jenkins" "api" | include "helm-toolkit.snippets.kubernetes_pod_anti_affinity" | indent 8 }}
+{{ dict "envAll" $envAll "application" "jenkins" | include "helm-toolkit.snippets.kubernetes_pod_security_context" | indent 6 }}
       nodeSelector:
         {{ .Values.labels.api.node_selector_key }}: {{ .Values.labels.api.node_selector_value }}
       terminationGracePeriodSeconds: {{ .Values.pod.lifecycle.termination_grace_period.api.timeout | default "600" }}
@@ -44,8 +45,7 @@ spec:
           image: {{ .Values.images.tags.jenkins }}
           imagePullPolicy: {{ .Values.images.pull_policy }}
 {{ tuple $envAll $envAll.Values.pod.resources.api | include "helm-toolkit.snippets.kubernetes_resources" | indent 10 }}
-          securityContext:
-            runAsUser: 0
+{{ dict "envAll" $envAll "application" "jenkins" "container" "seed" | include "helm-toolkit.snippets.kubernetes_container_security_context" | indent 10 }}
           command:
             - /tmp/seed.sh
           volumeMounts:
@@ -92,6 +92,7 @@ spec:
           image: {{ .Values.images.tags.jenkins }}
           imagePullPolicy: {{ .Values.images.pull_policy }}
 {{ tuple $envAll $envAll.Values.pod.resources.api | include "helm-toolkit.snippets.kubernetes_resources" | indent 10 }}
+{{ dict "envAll" $envAll "application" "jenkins" "container" "jenkins" | include "helm-toolkit.snippets.kubernetes_container_security_context" | indent 10 }}
           command:
             - /tmp/launch.sh
           env:
@@ -107,6 +108,10 @@ spec:
           ports:
             - containerPort: {{ .Values.containers.ports.containerPort }}
           volumeMounts:
+            - name: pod-tmp
+              mountPath: /tmp
+            - name: jenkins-usr
+              mountPath: /usr/share/jenkins/ref/plugins
             - name: jenkins-home
               mountPath: /var/jenkins_home
             - name: jenkins-bin
@@ -119,6 +124,11 @@ spec:
               mountPath: /proxy-config-gen.py
               subPath: proxy-config-gen.py
       volumes:
+        - name: pod-tmp
+          emptyDir: {}
+        - name: jenkins-usr
+          emptyDir:
+            medium: "Memory"
         - name: jenkins-etc
           configMap:
             name: jenkins-etc
