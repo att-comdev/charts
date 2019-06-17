@@ -72,6 +72,17 @@ rbac:
       - update
 
 pod:
+  security_context:
+    jenkins:
+      pod:
+        runAsUser: 65534
+      container:
+        seed:
+          runAsUser: 0
+          readOnlyRootFilesystem: true
+        jenkins:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
   affinity:
     anti:
       type:
