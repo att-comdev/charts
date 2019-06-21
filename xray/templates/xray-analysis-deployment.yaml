@@ -133,6 +133,7 @@ spec:
         - name: data-volume
           mountPath: "{{ .Values.common.xrayConfigPath }}"
         securityContext:
+          readOnlyRootFilesystem: true
           allowPrivilegeEscalation: false
         resources:
 {{ toYaml .Values.analysis.resources | indent 10 }}
