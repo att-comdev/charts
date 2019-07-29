@@ -7,10 +7,11 @@
 
 images:
   tags:
-    initContainerImage: "alpine:3.6"
-    distribution: docker.bintray.io/jfrog/distribution-distribution:1.6.0
-    distributor: docker.bintray.io/jfrog/distribution-distributor:1.6.0
+    initContainerImage: "alpine:3.8"
+    distribution: docker.bintray.io/jfrog/distribution-distribution:1.6.1
+    distributor: docker.bintray.io/jfrog/distribution-distributor:1.6.1
     redis: docker.io/bitnami/redis:4.0.11-debian-9
+    logger: busybox:1.30
 
 # For supporting pulling from private registries
 imagePullSecrets:
@@ -35,6 +36,37 @@ rbac:
       - get
       - watch
       - list
+
+networkpolicy:
+  # Allows all ingress and egress
+  - name: distribution
+    podSelector:
+      matchLabels:
+        app: distribution
+    egress:
+      - {}
+    ingress:
+      - {}
+  # Uncomment to allow only distribution pods to communicate with postgresql (if postgresql.enabled is true)
+  # - name: postgres
+  #   podSelector:
+  #     matchLabels:
+  #       app: postgresql
+  #   ingress:
+  #   - from:
+  #     - podSelector:
+  #         matchLabels:
+  #           app: distribution
+  # Uncomment to allow only distribution pods to communicate with redis
+  # - name: redis
+  #   podSelector:
+  #     matchLabels:
+  #       app: redis
+  #   ingress:
+  #   - from:
+  #     - podSelector:
+  #         matchLabels:
+  #           app: distribution
 
 ## Service Account
 ## Ref: https://kubernetes.io/docs/admin/service-accounts-admin/
@@ -164,6 +196,7 @@ database:
 ## ref: https://github.com/kubernetes/charts/blob/master/stable/redis/README.md
 ##
 redis:
+  name: redis
   image:
     repository: docker.io/bitnami/redis
     tag: 4.0.11-debian-9
@@ -177,7 +210,7 @@ redis:
   persistence:
     enabled: true
     path: /bitnami/redis/data
-    size: 5Gi
+    size: 10Gi
     ## A manually managed Persistent Volume and Claim
     ## Requires redis.persistence.enabled: true
     ## If defined, PVC must be created manually before volume will be bound
@@ -213,7 +246,13 @@ distribution:
     imagePullPolicy: IfNotPresent
   internalPort: 8080
   externalPort: 80
+  ## Distribution requires a unique master key
+  ## You can generate one with the command:
+  ## 'openssl rand -hex 32'
+  ## Pass it to helm with '--set distribution.masterKey=${MASTER_KEY}'
+  ## IMPORTANT: You should NOT use the example masterKey for a production deployment!
   masterKey: BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+  serviceId:
   env:
     artifactoryUrl:
     btServerUrl:
@@ -223,6 +262,19 @@ distribution:
     artifactoryEdge3Url:
   service:
     type: ClusterIP
+  ## Add custom init containers
+  customInitContainers: |
+  #  - name: "custom-setup"
+  #    image: "{{ .Values.images.tags.initContainerImage }}"
+  #    imagePullPolicy: "{{ .Values.distribution.image.pullPolicy }}"
+  #    command:
+  #      - 'sh'
+  #      - '-c'
+  #      - 'touch {{ .Values.distribution.persistence.mountPath }}/example-custom-setup'
+  #    volumeMounts:
+  #      - mountPath: "{{ .Values.distribution.persistence.mountPath }}"
+  #        name: distribution-data
+
   resources: {}
   #  requests:
   #    memory: "2Gi"
@@ -244,7 +296,7 @@ distribution:
 
     accessMode: ReadWriteOnce
     mountPath: "/var/opt/jfrog/distribution"
-    size: 10Gi
+    size: 50Gi
     ## distribution data Persistent Volume Storage Class
     ## If defined, storageClassName: <storageClass>
     ## If set to "-", storageClassName: "", which disables dynamic provisioning
@@ -253,6 +305,17 @@ distribution:
     ##   GKE, AWS & OpenStack)
     ##
     storageClass: general
+
+  # Add any of the loggers to a sidecar if you want to be able to see them with
+  # kubectl logs or a log collector in your k8s cluster
+  loggers: []
+  # - access.log
+  # - distribution.log
+  # - request.log
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 
 distributor:
   replicaCount: 1
@@ -280,7 +343,7 @@ distributor:
 
     accessMode: ReadWriteOnce
     mountPath: "/var/opt/jfrog/distributor"
-    size: 10Gi
+    size: 50Gi
     ## distribution data Persistent Volume Storage Class
     ## If defined, storageClassName: <storageClass>
     ## If set to "-", storageClassName: "", which disables dynamic provisioning
@@ -289,5 +352,14 @@ distributor:
     ##   GKE, AWS & OpenStack)
     ##
     storageClass: general
+  # Add any of the loggers to a sidecar if you want to be able to see them with
+  # kubectl logs or a log collector in your k8s cluster
+  loggers: []
+  # - distributor.log
+  # - foreman.log
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 manifests:
   secret_ingress_tls: true
