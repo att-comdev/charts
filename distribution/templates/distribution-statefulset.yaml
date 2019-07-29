@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ template "distribution.fullname" . }}
@@ -53,7 +53,7 @@ spec:
     {{- end }}
       containers:
       - name: {{ .Values.distribution.name }}
-        image: '{{ .Values.images.tags.distribution }}'
+        image: "{{ .Values.images.tags.distribution }}"
         imagePullPolicy: {{ .Values.distribution.image.imagePullPolicy }}
         securityContext:
           allowPrivilegeEscalation: false
@@ -171,7 +171,7 @@ spec:
           initialDelaySeconds: 60
           periodSeconds: 10
       - name: {{ .Values.distributor.name }}
-        image: '{{ .Values.images.tags.distributor }}'
+        image: "{{ .Values.images.tags.distributor }}"
         imagePullPolicy: {{ .Values.distributor.image.imagePullPolicy }}
         securityContext:
           allowPrivilegeEscalation: false
@@ -203,7 +203,7 @@ spec:
         resources:
 {{ toYaml .Values.distributor.resources | indent 10 }}
       - name: {{ template "redis.name" . }}
-        image: '{{ .Values.images.tags.redis }}'
+        image: "{{ .Values.images.tags.redis }}"
         imagePullPolicy: {{ .Values.redis.image.pullPolicy }}
         env:
         - name: REDIS_REPLICATION_MODE
@@ -237,6 +237,36 @@ spec:
         volumeMounts:
         - name: redis-data
           mountPath: {{ .Values.redis.persistence.path }}
+      {{- $image := .Values.logger.image.repository }}
+      {{- $tag := .Values.logger.image.tag }}
+      {{- $name := .Values.distribution.name }}
+      {{- $mountPath := .Values.distribution.persistence.mountPath }}
+      {{- range .Values.distribution.loggers }}
+      - name: {{ $name }}-{{ . | replace "_" "-" | replace "." "-" }}
+        image: '{{ $image }}:{{ $tag }}'
+        command:
+          - tail
+        args:
+          - '-F'
+          - '{{ $mountPath }}/logs/{{ . }}'
+        volumeMounts:
+          - name: distribution-data
+            mountPath: {{ $mountPath }}
+      {{- end }}
+      {{- $name := .Values.distributor.name }}
+      {{- $mountPath := .Values.distributor.persistence.mountPath }}
+      {{- range .Values.distributor.loggers }}
+      - name: {{ $name }}-{{ . | replace "_" "-" | replace "." "-" }}
+        image: '{{ $image }}:{{ $tag }}'
+        command:
+          - tail
+        args:
+          - '-F'
+          - '{{ $mountPath }}/logs/{{ . }}'
+        volumeMounts:
+          - name: distributor-data
+            mountPath: {{ $mountPath }}
+      {{- end }}
   {{- with .Values.distribution.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
