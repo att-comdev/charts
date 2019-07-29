@@ -1,26 +1,32 @@
-apiVersion: apps/v1beta2
-kind: Deployment
+apiVersion: apps/v1
+kind: StatefulSet
 metadata:
-  name: {{ template "xray-indexer.fullname" . }}
+  name: {{ template "xray-persist.fullname" . }}
   labels:
     app: {{ template "xray.name" . }}
     chart: {{ template "xray.chart" . }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-    component: {{ .Values.indexer.name }}
+    component: {{ .Values.persist.name }}
 spec:
-  replicas: {{ .Values.indexer.replicaCount }}
+  serviceName: {{ template "xray-persist.fullname" . }}
+  replicas: {{ .Values.persist.replicaCount }}
+  updateStrategy:
+    type: {{ .Values.persist.updateStrategy }}
+  podManagementPolicy: {{ .Values.persist.podManagementPolicy }}
   selector:
     matchLabels:
       app: {{ template "xray.name" . }}
       release: {{ .Release.Name }}
-      component: {{ .Values.indexer.name }}
+      component: {{ .Values.persist.name }}
   template:
     metadata:
       labels:
         app: {{ template "xray.name" . }}
         release: {{ .Release.Name }}
-        component: {{ .Values.indexer.name }}
+        component: {{ .Values.persist.name }}
+      annotations:
+        checksum/config: {{ include (print .Template.BasePath "/xray-setup-conf.yaml") . | sha256sum }}
     spec:
     {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -108,12 +114,16 @@ spec:
           mountPath: "{{ .Values.common.xrayConfigPath }}"
         - name: setup
           mountPath: "/scripts"
+        {{- if and .Values.global.postgresqlUrl .Values.global.postgresqlTlsSecret (not .Values.postgresql.enabled) }}
+        - name: tls-volume
+          mountPath: /tmp/tls
+        {{- end }}
       {{- if .Values.common.customInitContainers }}
 {{ tpl .Values.common.customInitContainers . | indent 6 }}
       {{- end }}
       containers:
-      - name: {{ .Values.indexer.name }}
-        image: {{ .Values.images.tags.indexer }}
+      - name: {{ .Values.persist.name }}
+        image: {{ .Values.images.tags.persist }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         env:
         - name: XRAYCONFIGPATH
@@ -128,7 +138,7 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         ports:
-        - containerPort: {{ .Values.indexer.internalPort }}
+        - containerPort: {{ .Values.persist.internalPort }}
         volumeMounts:
         - name: data-volume
           mountPath: "{{ .Values.common.xrayConfigPath }}"
@@ -136,20 +146,35 @@ spec:
           readOnlyRootFilesystem: true
           allowPrivilegeEscalation: false
         resources:
-{{ toYaml .Values.indexer.resources | indent 10 }}
+{{ toYaml .Values.persist.resources | indent 10 }}
         readinessProbe:
           httpGet:
             path: /debug/pprof/
-            port: {{ .Values.indexer.internalPort }}
+            port: {{ .Values.persist.internalPort }}
           initialDelaySeconds: 60
           periodSeconds: 10
           failureThreshold: 10
         livenessProbe:
           httpGet:
             path: /debug/pprof/
-            port: {{ .Values.indexer.internalPort }}
+            port: {{ .Values.persist.internalPort }}
           initialDelaySeconds: 90
           periodSeconds: 10
+      {{- $image := .Values.logger.image.repository }}
+      {{- $tag := .Values.logger.image.tag }}
+      {{- $mountPath := .Values.common.xrayConfigPath }}
+      {{- range .Values.persist.loggers }}
+      - name: {{ . | replace "_" "-" | replace "." "-" }}
+        image: '{{ $image }}:{{ $tag }}'
+        command:
+          - tail
+        args:
+          - '-F'
+          - '{{ $mountPath }}/logs/{{ . }}'
+        volumeMounts:
+          - name: data-volume
+            mountPath: {{ $mountPath }}
+      {{- end }}
     {{- with .Values.analysis.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
@@ -165,10 +190,12 @@ spec:
       volumes:
       - name: data-volume
         emptyDir:
-          sizeLimit: {{ .Values.indexer.storage.sizeLimit }}
-      - name: config-volume
-        emptyDir:
-          sizeLimit: 1Gi
+          sizeLimit: {{ .Values.persist.persistence.size }}
+      {{- if and .Values.global.postgresqlUrl .Values.global.postgresqlTlsSecret (not .Values.postgresql.enabled) }}
+      - name: tls-volume
+        secret:
+          secretName: {{ .Values.global.postgresqlTlsSecret }}
+      {{- end }}
       - name: setup
         configMap:
           name: {{ template "xray.fullname" . }}-setup
