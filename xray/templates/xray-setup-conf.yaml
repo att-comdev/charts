@@ -15,10 +15,19 @@ data:
     SCRIPTS_DIR=/scripts
     XRAYCONFIGPATH={{ .Values.common.xrayConfigPath }}
     XRAY_CONFIG_DIR=${XRAYCONFIGPATH}/config
+    XRAY_TLS_DIR=${XRAYCONFIGPATH}/tls
     XRAY_CONFIG_FILE=${XRAY_CONFIG_DIR}/xray_config.yaml
 
     echo "Creating directories"
     mkdir -pv ${XRAY_CONFIG_DIR}
+
+    # Set Postgres TLS certs
+    {{- if and .Values.global.postgresqlUrl .Values.global.postgresqlTlsSecret (not .Values.postgresql.enabled) }}
+    mkdir -pv ${XRAY_TLS_DIR}
+    echo "Copying Postgres TLS certificates..."
+    cp -fv /tmp/tls/* ${XRAY_TLS_DIR}/
+    chmod 0400 ${XRAY_TLS_DIR}/*
+    {{- end }}
 
     # Wait for DBs to be ready
     {{- if .Values.mongodb.enabled }}
@@ -52,7 +61,7 @@ data:
 
     # Creating Mongodb URL
     {{- if .Values.mongodb.enabled }}
-    MONGODB_URL="mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@{{ .Release.Name }}-mongodb:27017/?authSource=${MONGODB_DATABASE}\&authMechanism=SCRAM-SHA-1"
+    MONGODB_URL="mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@{{ .Release.Name }}-mongodb:27017/?authSource=${MONGODB_DATABASE}&authMechanism=SCRAM-SHA-1"
     {{- else }}
     MONGODB_URL="${MONGODB_URL}"
     {{- end }}
@@ -73,19 +82,16 @@ data:
     {{- end }}
     cp -vf ${SCRIPTS_DIR}/xray_config.yaml ${XRAY_CONFIG_FILE}
 
-    # Preparing xray_config.yaml
-    sed -i "s RABBITMQ_URL ${RABBITMQ_URL} " ${XRAY_CONFIG_FILE}
-    sed -i "s MONGODB_URL ${MONGODB_URL} " ${XRAY_CONFIG_FILE}
-    sed -i "s POSTGRES_URL ${POSTGRES_URL} " ${XRAY_CONFIG_FILE}
+    echo "mqBaseUrl: \"${RABBITMQ_URL}\""     >> ${XRAY_CONFIG_FILE}
+    echo "mongoUrl: \"${MONGODB_URL}\""       >> ${XRAY_CONFIG_FILE}
+    echo "postgresqlUrl: \"${POSTGRES_URL}\"" >> ${XRAY_CONFIG_FILE}
 
   xray_config.yaml: |
     # Generated Xray config
     ---
-        ver:            1.0
-        XrayServerPort: "{{ .Values.server.internalPort }}"
-        mqBaseUrl:      "RABBITMQ_URL"
-        mongoUrl:       "MONGODB_URL"
-        postgresqlUrl:  "POSTGRES_URL"
-        stdOutEnabled:  {{ .Values.common.stdOutEnabled }}
-        skipEntLicCheckForCloud: true
-    # End generated config
+    ver:            1.0
+    XrayServerPort: "{{ .Values.server.internalPort }}"
+    skipEntLicCheckForCloud: true
+{{- with .Values.common.xrayConfig }}
+{{ toYaml . | indent 4 }}
+{{- end }}
