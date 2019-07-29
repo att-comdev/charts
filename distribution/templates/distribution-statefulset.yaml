@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ template "distribution.fullname" . }}
@@ -39,7 +39,7 @@ spec:
         fsGroup: {{ .Values.common.gid }}
       initContainers:
       - name: 'wait-for-db'
-        image: "{{ .Values.images.tags.initContainerImage }}"
+        image: '{{ .Values.images.tags.initContainerImage }}'
         command:
         - '/bin/sh'
         - '-c'
@@ -237,6 +237,34 @@ spec:
         volumeMounts:
         - name: redis-data
           mountPath: {{ .Values.redis.persistence.path }}
+      {{- $name := .Values.distribution.name }}
+      {{- $mountPath := .Values.distribution.persistence.mountPath }}
+      {{- range .Values.distribution.loggers }}
+      - name: {{ $name }}-{{ . | replace "_" "-" | replace "." "-" }}
+        image: '{{ .Values.images.tags.logger }}'
+        command:
+          - tail
+        args:
+          - '-F'
+          - '{{ $mountPath }}/logs/{{ . }}'
+        volumeMounts:
+          - name: distribution-data
+            mountPath: {{ $mountPath }}
+      {{- end }}
+      {{- $name := .Values.distributor.name }}
+      {{- $mountPath := .Values.distributor.persistence.mountPath }}
+      {{- range .Values.distributor.loggers }}
+      - name: {{ $name }}-{{ . | replace "_" "-" | replace "." "-" }}
+        image: '{{ .Values.images.tags.logger }}'
+        command:
+          - tail
+        args:
+          - '-F'
+          - '{{ $mountPath }}/logs/{{ . }}'
+        volumeMounts:
+          - name: distributor-data
+            mountPath: {{ $mountPath }}
+      {{- end }}
   {{- with .Values.distribution.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
