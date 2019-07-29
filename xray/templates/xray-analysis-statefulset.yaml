@@ -1,5 +1,5 @@
-apiVersion: apps/v1beta2
-kind: Deployment
+apiVersion: apps/v1
+kind: StatefulSet
 metadata:
   name: {{ template "xray-analysis.fullname" . }}
   labels:
@@ -9,7 +9,11 @@ metadata:
     release: {{ .Release.Name }}
     component: {{ .Values.analysis.name }}
 spec:
+  serviceName: {{ template "xray-analysis.fullname" . }}
   replicas: {{ .Values.analysis.replicaCount }}
+  updateStrategy:
+    type: {{ .Values.analysis.updateStrategy }}
+  podManagementPolicy: {{ .Values.analysis.podManagementPolicy }}
   selector:
     matchLabels:
       app: {{ template "xray.name" . }}
@@ -21,6 +25,8 @@ spec:
         app: {{ template "xray.name" . }}
         release: {{ .Release.Name }}
         component: {{ .Values.analysis.name }}
+      annotations:
+        checksum/config: {{ include (print .Template.BasePath "/xray-setup-conf.yaml") . | sha256sum }}
     spec:
     {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -108,6 +114,10 @@ spec:
           mountPath: "{{ .Values.common.xrayConfigPath }}"
         - name: setup
           mountPath: "/scripts"
+        {{- if and .Values.global.postgresqlUrl .Values.global.postgresqlTlsSecret (not .Values.postgresql.enabled) }}
+        - name: tls-volume
+          mountPath: /tmp/tls
+        {{- end }}
       {{- if .Values.common.customInitContainers }}
 {{ tpl .Values.common.customInitContainers . | indent 6 }}
       {{- end }}
@@ -150,6 +160,19 @@ spec:
             port: {{ .Values.analysis.internalPort }}
           initialDelaySeconds: 90
           periodSeconds: 10
+      {{- $mountPath := .Values.common.xrayConfigPath }}
+      {{- range .Values.analysis.loggers }}
+      - name: {{ . | replace "_" "-" | replace "." "-" }}
+        image: '{{ .Values.images.tags.logger }}'
+        command:
+          - tail
+        args:
+          - '-F'
+          - '{{ $mountPath }}/logs/{{ . }}'
+        volumeMounts:
+          - name: data-volume
+            mountPath: {{ $mountPath }}
+      {{- end }}
     {{- with .Values.analysis.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
@@ -165,10 +188,12 @@ spec:
       volumes:
       - name: data-volume
         emptyDir:
-          sizeLimit: {{ .Values.analysis.storage.sizeLimit }}
-      - name: config-volume
-        emptyDir:
-          sizeLimit: 1Gi
+          sizeLimit: {{ .Values.analysis.persistence.size }}
+      {{- if and .Values.global.postgresqlUrl .Values.global.postgresqlTlsSecret (not .Values.postgresql.enabled) }}
+      - name: tls-volume
+        secret:
+          secretName: {{ .Values.global.postgresqlTlsSecret }}
+      {{- end }}
       - name: setup
         configMap:
           name: {{ template "xray.fullname" . }}-setup
