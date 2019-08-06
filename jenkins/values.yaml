@@ -241,6 +241,10 @@ secrets:
   identity:
     admin: jenkins-keystone-admin
     jenkins: jenkins-keystone-user
+  tls:
+    jenkins:
+      jenkins:
+        public: jenkins-tls-public
 
 # typically overriden by environmental
 # values, but should include all endpoints
