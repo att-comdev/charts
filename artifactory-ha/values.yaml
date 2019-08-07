@@ -633,7 +633,7 @@ artifactory:
     ## Only used if "affinity" is empty
     podAntiAffinity:
       ## Valid values are "soft" or "hard"; any other value indicates no anti-affinity
-      type: ""
+      type: "hard"
       topologyKey: "kubernetes.io/hostname"
 
   node:
