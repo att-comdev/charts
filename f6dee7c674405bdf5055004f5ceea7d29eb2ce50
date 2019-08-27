@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "355d45e1_6f1680cc",
+        "filename": "distribution/ci/test-values.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1014344
+      },
+      "writtenOn": "2019-08-27T16:56:08Z",
+      "side": 1,
+      "message": "removing the file as its not required. Updated the commit message",
+      "parentUuid": "70000bee_abd6d264",
+      "range": {
+        "startLine": 3,
+        "startChar": 1,
+        "endLine": 3,
+        "endChar": 2
+      },
+      "revId": "f6dee7c674405bdf5055004f5ceea7d29eb2ce50",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3e672134_317ab51f",
         "filename": "distribution/templates/distribution-statefulset.yaml",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "f6dee7c674405bdf5055004f5ceea7d29eb2ce50",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab20f5ab_ccd4eb7e",
+        "filename": "distribution/templates/distribution-statefulset.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1014344
+      },
+      "writtenOn": "2019-08-27T16:56:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e672134_317ab51f",
+      "range": {
+        "startLine": 246,
+        "startChar": 8,
+        "endLine": 246,
+        "endChar": 40
+      },
+      "revId": "f6dee7c674405bdf5055004f5ceea7d29eb2ce50",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "401f0a33_9e081cac",
+        "filename": "distribution/templates/distribution-statefulset.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1014344
+      },
+      "writtenOn": "2019-08-27T16:56:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c2f41df1_1ee14cc5",
+      "range": {
+        "startLine": 260,
+        "startChar": 8,
+        "endLine": 260,
+        "endChar": 40
+      },
+      "revId": "f6dee7c674405bdf5055004f5ceea7d29eb2ce50",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b07ad515_747afedf",
         "filename": "distribution/templates/ingress.yaml",
         "patchSetId": 3
@@ -85,6 +157,24 @@
       "revId": "f6dee7c674405bdf5055004f5ceea7d29eb2ce50",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2731afc6_ce98eb00",
+        "filename": "distribution/templates/ingress.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1014344
+      },
+      "writtenOn": "2019-08-27T16:56:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b07ad515_747afedf",
+      "revId": "f6dee7c674405bdf5055004f5ceea7d29eb2ce50",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     },
     {
       "key": {
@@ -105,6 +195,24 @@
     },
     {
       "key": {
+        "uuid": "fd220876_5cf07863",
+        "filename": "distribution/values.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1014344
+      },
+      "writtenOn": "2019-08-27T16:56:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f70374f9_4852f540",
+      "revId": "f6dee7c674405bdf5055004f5ceea7d29eb2ce50",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "469692c8_7c9e644d",
         "filename": "distribution/values.yaml",
         "patchSetId": 3
@@ -119,6 +227,24 @@
       "revId": "f6dee7c674405bdf5055004f5ceea7d29eb2ce50",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "402e9b41_1b469a5e",
+        "filename": "distribution/values.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1014344
+      },
+      "writtenOn": "2019-08-27T16:56:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "469692c8_7c9e644d",
+      "revId": "f6dee7c674405bdf5055004f5ceea7d29eb2ce50",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
