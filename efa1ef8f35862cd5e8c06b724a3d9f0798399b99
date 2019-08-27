@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "595b6477_873745b7",
+        "filename": "xray/values.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1013390
+      },
+      "writtenOn": "2019-08-27T11:52:23Z",
+      "side": 1,
+      "message": "Wrap line.",
+      "revId": "efa1ef8f35862cd5e8c06b724a3d9f0798399b99",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb7cbed4_ce1da844",
+        "filename": "xray/values.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1013390
+      },
+      "writtenOn": "2019-08-27T11:52:23Z",
+      "side": 1,
+      "message": "Wrap line.",
+      "revId": "efa1ef8f35862cd5e8c06b724a3d9f0798399b99",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2b672234_e31de8b6",
+        "filename": "xray/values.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 1013390
+      },
+      "writtenOn": "2019-08-27T11:52:23Z",
+      "side": 1,
+      "message": "Wrap line.",
+      "revId": "efa1ef8f35862cd5e8c06b724a3d9f0798399b99",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "edbfedb7_836f83de",
+        "filename": "xray/values.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 1013390
+      },
+      "writtenOn": "2019-08-27T11:52:23Z",
+      "side": 1,
+      "message": "Wrap line.",
+      "revId": "efa1ef8f35862cd5e8c06b724a3d9f0798399b99",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
