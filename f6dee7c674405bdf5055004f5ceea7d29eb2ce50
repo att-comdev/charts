@@ -25,6 +25,52 @@
     },
     {
       "key": {
+        "uuid": "3e672134_317ab51f",
+        "filename": "distribution/templates/distribution-statefulset.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1012483
+      },
+      "writtenOn": "2019-08-27T15:29:14Z",
+      "side": 1,
+      "message": "image should be coming from values.images.logger",
+      "range": {
+        "startLine": 246,
+        "startChar": 8,
+        "endLine": 246,
+        "endChar": 40
+      },
+      "revId": "f6dee7c674405bdf5055004f5ceea7d29eb2ce50",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2f41df1_1ee14cc5",
+        "filename": "distribution/templates/distribution-statefulset.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1012483
+      },
+      "writtenOn": "2019-08-27T15:29:14Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 260,
+        "startChar": 8,
+        "endLine": 260,
+        "endChar": 40
+      },
+      "revId": "f6dee7c674405bdf5055004f5ceea7d29eb2ce50",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b07ad515_747afedf",
         "filename": "distribution/templates/ingress.yaml",
         "patchSetId": 3
