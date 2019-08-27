@@ -2,6 +2,69 @@
   "comments": [
     {
       "key": {
+        "uuid": "d7cded09_e42b4fa6",
+        "filename": "xray/ci/test-values-persistence.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1012483
+      },
+      "writtenOn": "2019-08-27T14:48:28Z",
+      "side": 1,
+      "message": "Can we remove this ci files I think these are not required.",
+      "revId": "efa1ef8f35862cd5e8c06b724a3d9f0798399b99",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce335e14_33b226ef",
+        "filename": "xray/templates/xray-indexer-statefulset.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1012483
+      },
+      "writtenOn": "2019-08-27T14:48:28Z",
+      "side": 1,
+      "message": "this should be from values.images.logger with tag also included.",
+      "range": {
+        "startLine": 168,
+        "startChar": 8,
+        "endLine": 168,
+        "endChar": 40
+      },
+      "revId": "efa1ef8f35862cd5e8c06b724a3d9f0798399b99",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd3ba436_3d6bffa4",
+        "filename": "xray/values.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1012483
+      },
+      "writtenOn": "2019-08-27T14:48:28Z",
+      "side": 1,
+      "message": "the other include to remove this and add it to values.images.logger",
+      "range": {
+        "startLine": 267,
+        "startChar": 0,
+        "endLine": 270,
+        "endChar": 15
+      },
+      "revId": "efa1ef8f35862cd5e8c06b724a3d9f0798399b99",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "595b6477_873745b7",
         "filename": "xray/values.yaml",
         "patchSetId": 6
