@@ -79,10 +79,10 @@ pod:
       container:
         seed:
           runAsUser: 0
-          readOnlyRootFilesystem: true
+          readOnlyRootFilesystem: false
         jenkins:
           allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
+          readOnlyRootFilesystem: false
   affinity:
     anti:
       type:
