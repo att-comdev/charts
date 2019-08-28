@@ -123,6 +123,17 @@ spec:
             - name: jenkins-bin
               mountPath: /proxy-config-gen.py
               subPath: proxy-config-gen.py
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                - "sh"
+                - "-c"
+                - >
+                  rm -rf $JENKINS_HOME/test/SBC-Ent-Root-CA.cer;
+                  wget {{.Values.conf.config.jenkins.ldap.cacert_url}} -o $JENKINS_HOME/test/SBC-Ent-Root-CA.cer --user {{.Values.conf.config.jenkins.ldap.artif_username}} --password {{.Values.conf.config.jenkins.ldap.artif_password}};
+                  cp $JAVA_HOME/jre/lib/security/cacerts $JAVA_HOME/jre/lib/security/cacerts.$(date +"%m%d%y");
+                  keytool -import -alias SBC-Ent-Root-CA -keystore $JAVA_HOME/jre/lib/security/cacerts -file $JENKINS_HOME/test/SBC-Ent-Root-CA.cer -storepass changeit -noprompt pass || true;
       volumes:
         - name: pod-tmp
           emptyDir: {}
