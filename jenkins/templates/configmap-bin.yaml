@@ -29,3 +29,5 @@ data:
 {{ tuple "bin/_launch.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
   proxy-config-gen.py: |
 {{ tuple "bin/_proxy-config-gen.py.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+  ldap-cert.sh: |
+{{ tuple "bin/_ldap_cert.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
