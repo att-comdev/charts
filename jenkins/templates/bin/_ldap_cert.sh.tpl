@@ -18,9 +18,17 @@ limitations under the License.
 
 set -x
 
+env_type={{.Values.conf.config.jenkins.ldap.env_type}}
 copy_cert={{.Values.conf.config.jenkins.ldap.copy_cert}}
-certificate_url={{.Values.conf.config.jenkins.ldap.cacert_url}}
+prod_cert_url={{.Values.conf.config.jenkins.ldap.prod_cacert_url}}
+nonprod_cert_url={{.Values.conf.config.jenkins.ldap.nonprod_cacert_url}}
 artifactory_key={{.Values.conf.config.jenkins.ldap.artif_key}}
+
+if [[ "$env_type" = "prod" ]]; then
+  certificate_url=$prod_cert_url
+else
+  certificate_url=$nonprod_cert_url
+fi
 
 if [[ "$copy_cert" = "true" ]]; then
   mkdir -p $JENKINS_HOME/certificate
