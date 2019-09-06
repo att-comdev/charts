@@ -26,6 +26,7 @@ images:
     ks_user: docker.io/openstackhelm/heat:ocata
     dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
     image_repo_sync: docker.io/docker:17.07.0
+    namespace_creator: gcr.io/google_containers/hyperkube-amd64:v1.12.9
   pull_policy: "IfNotPresent"
   local_registry:
     active: false
@@ -329,3 +330,5 @@ manifests:
   configmap_etc: true
   job_ks_user: false
   secret_ingress_tls: true
+  job_create_namespaces: true
+  kubernetes_rbac_rule: true
