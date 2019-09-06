@@ -1,0 +1,82 @@
+{{- if .Values.manifests.job_create_namespaces }}
+{{- $envAll := . }}
+
+{{- $serviceAccountName := printf "create-namespace-%s" .Release.Name }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ $serviceAccountName }}
+  annotations:
+    "helm.sh/hook": "pre-install,pre-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+    "helm.sh/hook-weight": "-10"
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: {{ $serviceAccountName }}
+  annotations:
+    "helm.sh/hook": "pre-install,pre-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+    "helm.sh/hook-weight": "-10"
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - get
+      - create
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ $serviceAccountName }}
+  annotations:
+    "helm.sh/hook": "pre-install,pre-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+    "helm.sh/hook-weight": "-10"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ $serviceAccountName }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ $serviceAccountName }}
+    namespace: {{ $envAll.Release.Namespace }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-namespaces-{{ .Release.Name }}
+  annotations:
+    "helm.sh/hook": "pre-install,pre-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+spec:
+  template:
+    metadata:
+      labels:
+{{ tuple $envAll "rbac-manager" "create-namespaces" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 8 }}
+    spec:
+      serviceAccountName: {{ $serviceAccountName }}
+      restartPolicy: OnFailure
+      nodeSelector:
+        {{ .Values.labels.job.node_selector_key }}: {{ .Values.labels.job.node_selector_value }}
+      containers:
+        - name: namespace-creator
+          image: {{ .Values.images.tags.namespace-creator }}
+          imagePullPolicy: {{ .Values.images.pull_policy }}
+          command:
+            - /create_namespaces.sh
+          volumeMounts:
+          - name: jenkins-bin
+            mountPath: /create_namespaces.sh
+            subPath: create_namespaces.sh
+            readOnly: true
+      volumes:
+      - configMap:
+          name: jenkins-bin
+          defaultMode: 0555
+        name: jenkins-bin
+{{- end -}}
