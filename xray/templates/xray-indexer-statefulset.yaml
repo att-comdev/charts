@@ -26,7 +26,7 @@ spec:
         release: {{ .Release.Name }}
         component: {{ .Values.indexer.name }}
       annotations:
-        checksum/config: {{ include (print .Template.BasePath "/xray-setup-conf.yaml") . | sha256sum }}
+        checksum/config: {{ include (print "xray" "/xray-setup-conf.yaml") . | sha256sum }}
     spec:
     {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
