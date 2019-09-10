@@ -20,6 +20,10 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: jenkins-bin
+  annotations:
+    "helm.sh/hook": "pre-install,pre-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+    "helm.sh/hook-weight": "-10"
 data:
   ks-user.sh: |+
 {{- include "helm-toolkit.scripts.keystone_user" . | indent 4 }}
