@@ -8,13 +8,13 @@
           <configVersion>2</configVersion>
           <userRemoteConfigs>
             <hudson.plugins.git.UserRemoteConfig>
-              <refspec>refs/changes/*:refs/changes/*</refspec>
+              <refspec>+refs/heads/*:refs/remotes/origin/* +refs/changes/*:refs/changes/*</refspec>
               <url>{{ .Values.conf.global_libraries.libraries.upstream_lib.url }}</url>
             </hudson.plugins.git.UserRemoteConfig>
           </userRemoteConfigs>
           <branches>
             <hudson.plugins.git.BranchSpec>
-              <name>{{ .Values.conf.global_libraries.libraries.upstream_lib.branch }}</name>
+              <name><![CDATA[${]]>library.{{ .Values.conf.global_libraries.libraries.upstream_lib.name }}.version<![CDATA[}]]></name>
             </hudson.plugins.git.BranchSpec>
           </branches>
           <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
@@ -35,12 +35,13 @@
             <configVersion>2</configVersion>
             <userRemoteConfigs>
               <hudson.plugins.git.UserRemoteConfig>
+                <refspec>+refs/heads/*:refs/remotes/origin/* +refs/changes/*:refs/changes/*</refspec>
                 <url>{{ .Values.conf.global_libraries.libraries.internal_lib.url }}</url>
               </hudson.plugins.git.UserRemoteConfig>
             </userRemoteConfigs>
             <branches>
               <hudson.plugins.git.BranchSpec>
-                <name>{{ .Values.conf.global_libraries.libraries.internal_lib.branch }}</name>
+                <name><![CDATA[${]]>library.{{ .Values.conf.global_libraries.libraries.internal_lib.name }}.version<![CDATA[}]]></name>
               </hudson.plugins.git.BranchSpec>
             </branches>
             <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
