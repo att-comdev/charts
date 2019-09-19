@@ -36,3 +36,4 @@ if [[ "$copy_cert" = "true" ]]; then
   cp $JAVA_HOME/jre/lib/security/cacerts $JAVA_HOME/jre/lib/security/cacerts.$(date +"%m%d%y")
   keytool -import -alias SBC-Ent-Root-CA -keystore $JAVA_HOME/jre/lib/security/cacerts -file $JENKINS_HOME/certificate/SBC-Ent-Root-CA.cer -storepass changeit -noprompt || true
 fi
+
