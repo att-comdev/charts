@@ -26,6 +26,10 @@ mkdir -p /var/jenkins_home/jobs/CICD/jobs/SuperSeed
 mv -nv /seed/cicdfolderconfig.xml /var/jenkins_home/jobs/CICD/config.xml
 mv -nv /seed/superseedconfig.xml /var/jenkins_home/jobs/CICD/jobs/SuperSeed/config.xml
 
+# copy jenkins css files
+mkdir -p /var/jenkins_home/init.groovy.d/
+cp -fv /tmp/relaxed-CSP.groovy /var/jenkins_home/init.groovy.d/relaxed-CSP.groovy
+
 # the seed runs as root; everything else runs as jenkins so we have to
 # make sure the permissions are as expected
 find /var/jenkins_home/ -not -user jenkins -print0 | xargs -r0 chown -v jenkins:jenkins
