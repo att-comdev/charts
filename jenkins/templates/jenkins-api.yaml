@@ -84,6 +84,9 @@ spec:
             - name: jenkins-etc
               mountPath: /seed/org.jenkinsci.plugins.workflow.libs.GlobalLibraries.xml
               subPath: org.jenkinsci.plugins.workflow.libs.GlobalLibraries.xml
+            - name: jenkins-init
+              mountPath: /tmp/relaxed-CSP.groovy
+              subPath: relaxed-CSP.groovy
 {{ if .Values.manifests.job_ks_user }}
 {{ tuple $envAll "api" $mounts_jenkins_api_init | include "helm-toolkit.snippets.kubernetes_entrypoint_init_container" | indent 8 }}
 {{ end }}
@@ -136,6 +139,10 @@ spec:
         - name: jenkins-bin
           configMap:
             name: jenkins-bin
+            defaultMode: 0555
+        - name: jenkins-init
+          configMap:
+            name: jenkins-init
             defaultMode: 0555
   volumeClaimTemplates:
   - metadata:
