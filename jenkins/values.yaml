@@ -188,6 +188,7 @@ conf:
         prod_cacert_url: artifacts-aic.atlantafoundry.com/artifactory/ldap-certs/cacert.cer
         nonprod_cacert_url: artifacts-aic.atlantafoundry.com/artifactory/ldap-certs/testcacert.cer
         artif_key: amVua2luczpwYXNzd29yZAo=
+      load_css: true
     override: null
   plugins:
     override: null
@@ -206,11 +207,11 @@ conf:
     use_internal_lib: false
     libraries:
         upstream_lib:
-          name: cicd_upstream_libs
+          name: cicd-upstream-libs
           url: https://review.gerrithub.io/att-comdev/cicd
           branch: master
         internal_lib:
-          name: cicd_internal_libs
+          name: cicd-internal-libs
           url: https://internal_url.com/cicd
           branch: master
 

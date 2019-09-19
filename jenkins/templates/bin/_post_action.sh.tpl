@@ -18,6 +18,10 @@ limitations under the License.
 
 set -x
 
+############################################
+# copy cacert from artifactory
+############################################
+
 env_type={{.Values.conf.config.jenkins.ldap.env_type}}
 copy_cert={{.Values.conf.config.jenkins.ldap.copy_cert}}
 prod_cert_url={{.Values.conf.config.jenkins.ldap.prod_cacert_url}}
@@ -35,4 +39,15 @@ if [[ "$copy_cert" = "true" ]]; then
   wget $certificate_url -O $JENKINS_HOME/certificate/SBC-Ent-Root-CA.cer --header="Authorization:Basic $artifactory_key" || true
   cp $JAVA_HOME/jre/lib/security/cacerts $JAVA_HOME/jre/lib/security/cacerts.$(date +"%m%d%y")
   keytool -import -alias SBC-Ent-Root-CA -keystore $JAVA_HOME/jre/lib/security/cacerts -file $JENKINS_HOME/certificate/SBC-Ent-Root-CA.cer -storepass changeit -noprompt || true
+fi
+
+###########################################
+# Copy jenkins css script to init folder
+###########################################
+
+copy_css={{.Values.conf.config.jenkins.load_css}}
+
+if [[ "$copy_css" = "true" ]];then
+  mkdir -p $JENKINS_HOME/init.groovy.d/
+  cp -fv /tmp/relaxed-CSP.groovy $JENKINS_HOME/init.groovy.d/relaxed-CSP.groovy
 fi
