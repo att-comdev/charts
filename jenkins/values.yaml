@@ -188,6 +188,7 @@ conf:
         prod_cacert_url: artifacts-aic.atlantafoundry.com/artifactory/ldap-certs/cacert.cer
         nonprod_cacert_url: artifacts-aic.atlantafoundry.com/artifactory/ldap-certs/testcacert.cer
         artif_key: amVua2luczpwYXNzd29yZAo=
+      load_css: true
     override: null
   plugins:
     override: null

@@ -124,13 +124,13 @@ spec:
               mountPath: /proxy-config-gen.py
               subPath: proxy-config-gen.py
             - name: jenkins-bin
-              mountPath: /tmp/ldap-cert.sh
-              subPath: ldap-cert.sh
+              mountPath: /tmp/post-action.sh
+              subPath: post-action.sh
           lifecycle:
             postStart:
               exec:
                 command:
-                  - /tmp/ldap-cert.sh
+                  - /tmp/post-action.sh
       volumes:
         - name: pod-tmp
           emptyDir: {}
