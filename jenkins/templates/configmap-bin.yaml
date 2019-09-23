@@ -20,10 +20,6 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: jenkins-bin
-  annotations:
-    "helm.sh/hook": "pre-install,pre-upgrade"
-    "helm.sh/hook-delete-policy": "before-hook-creation"
-    "helm.sh/hook-weight": "-10"
 data:
   ks-user.sh: |+
 {{- include "helm-toolkit.scripts.keystone_user" . | indent 4 }}
@@ -35,5 +31,3 @@ data:
 {{ tuple "bin/_proxy-config-gen.py.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
   ldap-cert.sh: |
 {{ tuple "bin/_ldap_cert.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
-  create_namespaces.sh: |
-{{ tuple "bin/_create_namespace.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}

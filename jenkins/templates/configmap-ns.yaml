@@ -1,0 +1,13 @@
+{{- $envAll := . }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jenkins-ns
+  annotations:
+    "helm.sh/hook": "pre-install,pre-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+    "helm.sh/hook-weight": "-10"
+data:
+  create_namespaces.sh: |
+{{ tuple "bin/_create_namespace.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}

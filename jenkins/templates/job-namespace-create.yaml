@@ -70,13 +70,13 @@ spec:
           command:
             - /create_namespaces.sh
           volumeMounts:
-          - name: jenkins-bin
+          - name: jenkins-ns
             mountPath: /create_namespaces.sh
             subPath: create_namespaces.sh
             readOnly: true
       volumes:
       - configMap:
-          name: jenkins-bin
+          name: jenkins-ns
           defaultMode: 0555
-        name: jenkins-bin
+        name: jenkins-ns
 {{- end -}}
