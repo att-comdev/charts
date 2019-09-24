@@ -68,7 +68,7 @@
           <default>
             <comparator class="hudson.util.CaseInsensitiveComparator"/>
           </default>
-          <int>34</int>
+          <int>44</int>
           <string>AIAB_REF</string>
           <string>{{.Values.conf.config.jenkins.global_env_vars.aiab_ref}}</string>
           <string>AQUA_HAPROXY_VIP</string>
@@ -87,12 +87,18 @@
           <string>{{.Values.conf.config.jenkins.global_env_vars.artf_web_url}}</string>
           <string>ARTIFACTORY_ENV</string>
           <string>{{.Values.conf.config.jenkins.global_env_vars.artifactory_env}}</string>
+          <string>ARTIFACTS_URL</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.artf_api_url}}</string>
           <string>CNI_POD_CIDR</string>
           <string>{{.Values.conf.config.jenkins.global_env_vars.cni_pod_cidr}}</string>
+          <string>CODECLOUD_SSH</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.internal_gerrit_ssh}}</string>
           <string>CONF_PACKAGE_PATH</string>
           <string>{{.Values.conf.config.jenkins.global_env_vars.conf_package_path}}</string>
           <string>COR_DE_LDAP_GROUP</string>
           <string>{{.Values.conf.config.jenkins.global_env_vars.cor_de_ldap_group}}</string>
+          <string>CORRIDOR</string>
+          <string>{{.Values.conf.config.jenkins.global_env_vars.corridor}}</string>
           <string>DNS_SERVER_1</string>
           <string>{{.Values.conf.config.jenkins.global_env_vars.dns_server_one}}</string>
           <string>DNS_SERVER_2</string>
