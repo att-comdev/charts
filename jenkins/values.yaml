@@ -161,6 +161,7 @@ conf:
         cni_pod_cidr: 10.10.11.0/24
         conf_package_path: conf_path
         cor_de_ldap_group:
+        corridor: tempcorridor
         dns_server_one: 127.0.0.1
         dns_server_two: 127.0.0.1
         gerrit_ssh: ssh://jenkins@review.gerrithub.io:29418
