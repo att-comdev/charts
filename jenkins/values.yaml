@@ -27,6 +27,7 @@ images:
     dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
     image_repo_sync: docker.io/docker:17.07.0
     namespace_creator: gcr.io/google_containers/hyperkube-amd64:v1.12.9
+    dind: docker.io/docker:18.09.0-dind
   pull_policy: "IfNotPresent"
   local_registry:
     active: false
@@ -39,6 +40,10 @@ jenkinsNodes:
   service:
     namespace: openstack
 
+dind:
+  env:
+  - name: HTTP_PROXY
+    value: http://10.10.10.1:80
 rbac:
   create: true
   role:
