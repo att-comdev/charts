@@ -1,0 +1,42 @@
+{{- $envAll := . }}
+{{- $dind_env_variables := .Values.dind.env }}
+---
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: dindproxy
+  namespace: jenkins-nodes
+spec:
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: dindproxy
+    spec:
+      containers:
+      - name: dindproxy
+        image: {{ .Values.images.tags.dind }}
+        imagePullPolicy: {{ .Values.images.pull_policy }}
+        args:
+          - dockerd
+          - --storage-driver=overlay2
+          - -H unix:///var/run/dindproxy/docker.sock
+        env:
+{{ if $dind_env_variables }}{{ toYaml $dind_env_variables | indent 10 }}{{ end }}
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: varlibdockerproxy
+          mountPath: /var/lib/dockerproxy
+        - name: rundindproxy
+          mountPath: /var/run/dindproxy
+      nodeSelector:
+        {{ .Values.labels.dind.node_selector_key }}: {{ .Values.labels.dind.node_selector_value }}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: varlibdockerproxy
+        emptyDir: {}
+      - name: rundindproxy
+        hostPath:
+          path: /var/run/dindproxy/
