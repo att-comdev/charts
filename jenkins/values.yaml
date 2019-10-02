@@ -154,7 +154,9 @@ conf:
         artf_ubuntu_repo: ubuntu_repo_url
         artf_web_url: artifacts-aic.atlantafoundry.com/artifactory
         artifactory_env: stage/
+        artifacts_url: https://$ARTF_WEB_URL
         cni_pod_cidr: 10.10.11.0/24
+        codecloud_ssh: review.gerrithub.io
         conf_package_path: conf_path
         cor_de_ldap_group:
         corridor: tempcorridor
