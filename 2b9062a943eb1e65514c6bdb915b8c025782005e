@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2abfbcda_1083b970",
+        "filename": "jenkins/values.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1013696
+      },
+      "writtenOn": "2019-10-02T18:00:44Z",
+      "side": 1,
+      "message": "Proxy is always required in this case ?",
+      "revId": "2b9062a943eb1e65514c6bdb915b8c025782005e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
