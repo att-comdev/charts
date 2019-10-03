@@ -1,5 +1,5 @@
 {{- $envAll := . }}
-{{- $dind_env_variables := .Values.dind.env }}
+
 ---
 apiVersion: extensions/v1beta1
 kind: DaemonSet
@@ -22,8 +22,13 @@ spec:
           - dockerd
           - --storage-driver=overlay2
           - -H unix:///var/run/dindproxy/docker.sock
+        {{- if $envAll.Values.pod.env }}
         env:
-{{ if $dind_env_variables }}{{ toYaml $dind_env_variables | indent 10 }}{{ end }}
+          {{- range $envAll.Values.pod.env }}
+          - name: {{ .name | quote }}
+            value: {{ .value | quote }}
+          {{- end }}
+        {{- end }}
         securityContext:
           privileged: true
         volumeMounts:
