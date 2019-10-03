@@ -1,5 +1,5 @@
 {{- $envAll := . }}
-{{- $dind_env_variables := .Values.dind.env }}
+{{- $dind_env_variables := .Values.pod.env }}
 ---
 apiVersion: extensions/v1beta1
 kind: DaemonSet

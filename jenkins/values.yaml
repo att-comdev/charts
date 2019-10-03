@@ -43,10 +43,6 @@ jenkinsNodes:
   service:
     namespace: openstack
 
-dind:
-  env:
-  - name: HTTP_PROXY
-    value: http://10.10.10.1:80
 rbac:
   create: true
   role:
