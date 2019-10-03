@@ -86,7 +86,6 @@ pod:
           runAsUser: 0
           readOnlyRootFilesystem: false
         jenkins:
-          runAsUser: 0
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: false
   affinity:
@@ -187,12 +186,6 @@ conf:
         slack_default_channel: "#test-jenkins"
         slack_url: https://att-comdev.slack.com/services/hooks/jenkins-ci/
         ssh_data: tempsshdata
-      ldap:
-        env_type: non-prod
-        copy_cert: false
-        prod_cacert_url: artifacts-aic.atlantafoundry.com/artifactory/ldap-certs/cacert.cer
-        nonprod_cacert_url: artifacts-aic.atlantafoundry.com/artifactory/ldap-certs/testcacert.cer
-        artif_key: amVua2luczpwYXNzd29yZAo=
     override: null
   plugins:
     override: null
