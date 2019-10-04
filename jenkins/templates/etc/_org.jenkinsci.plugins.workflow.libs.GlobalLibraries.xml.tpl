@@ -10,6 +10,9 @@
             <hudson.plugins.git.UserRemoteConfig>
               <refspec>+refs/heads/*:refs/remotes/origin/* +refs/changes/*:refs/changes/*</refspec>
               <url>{{ .Values.conf.global_libraries.libraries.upstream_lib.url }}</url>
+              {{- if .Values.conf.global_libraries.libraries.upstream_lib.credentials }}
+                <credentialsId>{{ .Values.conf.global_libraries.libraries.upstream_lib.credentials }}</credentialsId>
+              {{ end }}
             </hudson.plugins.git.UserRemoteConfig>
           </userRemoteConfigs>
           <branches>
@@ -37,6 +40,9 @@
               <hudson.plugins.git.UserRemoteConfig>
                 <refspec>+refs/heads/*:refs/remotes/origin/* +refs/changes/*:refs/changes/*</refspec>
                 <url>{{ .Values.conf.global_libraries.libraries.internal_lib.url }}</url>
+                {{- if .Values.conf.global_libraries.libraries.internal_lib.credentials }}
+                  <credentialsId>{{ .Values.conf.global_libraries.libraries.internal_lib.credentials }}</credentialsId>
+                {{ end }}
               </hudson.plugins.git.UserRemoteConfig>
             </userRemoteConfigs>
             <branches>
