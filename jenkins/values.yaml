@@ -137,8 +137,6 @@ pod:
 conf:
   config:
     jenkins:
-      credentials:
-        artifactory: temppassword
       active:
         directory: active.directory.url
 # Global env variables in Jenkins configuration
@@ -165,7 +163,7 @@ conf:
         http_proxy: http://10.10.10.1:80
         https_proxy: http://10.10.10.1:80
         no_proxy: localhost
-        internal_gerrit_key: tempkey
+        internal_gerrit_key: jenkins-ssh-key
         internal_gerrit_port: 29418
         internal_gerrit_ssh: ssh://jenkins-attcomdev@10.24.20.18:29418
         internal_gerrit_url: review.gerrithub.io
@@ -198,6 +196,26 @@ conf:
   cli:
     override: null
   credentials:
+    passphrases:
+      entries:
+        jenkins-artifactory:
+          username: jenkins
+          password: password
+          description: This user is used only be Jenkins to push artifacts
+          scope: GLOBAL
+        jenkins-token:
+          username: jenkins
+          password: password
+          description: Jenkins token for VM creation
+          scope: GLOBAL
+    keys:
+      entries:
+        jenkins-ssh-key:
+          username: jenkins
+          description: Jenkins SSH key
+          scope: GLOBAL
+          passphrase: null
+          privateKey: null
     override: null
   jfrog:
     override: null
@@ -209,10 +227,12 @@ conf:
           name: cicd_upstream_libs
           url: https://review.gerrithub.io/att-comdev/cicd
           branch: master
+          credentials: null
         internal_lib:
           name: cicd_internal_libs
           url: https://internal_url.com/cicd
           branch: master
+          credentials: null
 
 ingress:
   enabled: true
