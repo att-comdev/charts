@@ -138,7 +138,20 @@ conf:
   config:
     jenkins:
       credentials:
-        artifactory: temppassword
+        passphrases:
+          entries:
+            jenkins-artifactory-artifactory:
+              username: jenkins
+              password: password
+              description: This user is used only be Jenkins to push artifacts
+              scope: GLOBAL
+        keys:
+          entries:
+            jenkins-ssh-key:
+              username: jenkins
+              description: Jenkins SSH key
+              scope: GLOBAL
+              passphrase: passphrase
       active:
         directory: active.directory.url
 # Global env variables in Jenkins configuration
