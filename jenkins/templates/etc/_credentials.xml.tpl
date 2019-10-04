@@ -6,13 +6,25 @@
         <specifications/>
       </com.cloudbees.plugins.credentials.domains.Domain>
       <java.util.concurrent.CopyOnWriteArrayList>
+      {{- range .Values.conf.credentials.passphrases.entries }}
         <com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl>
-          <scope>GLOBAL</scope>
-          <id>jenkins-foundry-artifactory</id>
-          <description>This user is used only by Jenkins to push artifacts to artifactory</description>
-          <username>jenkins</username>
-          <password>{{ .Values.conf.config.jenkins.credentials.artifactory }}</password>
+          <scope>{{ .scope }}</scope>
+          <id>{{ .id }}</id>
+          <description>{{ .description }}</description>
+          <username>{{ .username }}</username>
+          <password>{{ .password }}</password>
         </com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl>
+      {{ end -}}
+      {{- range .Values.conf.credentials.keys.entries }}
+        <com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey plugin="ssh-credentials@1.13">
+          <scope>{{ .scope }}</scope>
+          <id>{{ .id }}</id>
+          <description>{{ .description }}</description>
+          <username>{{ .username }}</username>
+          <passphrase>{{ .passphrase }}</passphrase>
+          <privateKeySource class="com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey$UsersPrivateKeySource"/>
+        </com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey>
+      {{ end -}}
       </java.util.concurrent.CopyOnWriteArrayList>
     </entry>
   </domainCredentialsMap>
