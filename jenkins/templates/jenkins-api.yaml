@@ -28,6 +28,8 @@ metadata:
 spec:
   serviceName: jenkins-api
   replicas: {{ .Values.pod.replicas.api }}
+  updateStrategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
