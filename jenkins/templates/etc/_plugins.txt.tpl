@@ -3,7 +3,7 @@ active-directory:2.6
 ansicolor:0.5.2
 ant:1.8
 antisamy-markup-formatter:1.5
-apache-httpcomponents-client-4-api:4.5.3-2.1
+apache-httpcomponents-client-4-api:4.5.10-1.0
 artifactory:2.15.1
 async-http-client:1.9.40.0
 authentication-tokens:1.3
