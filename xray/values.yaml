@@ -81,14 +81,13 @@ ingress:
   defaultBackend:
     enabled: true
   # Used to create an Ingress record.
-  hosts:
-    - xray.domain.example
+  hosts: []
   annotations:
   # kubernetes.io/ingress.class: nginx
   # kubernetes.io/tls-acme: "true"
   tls:
   # Secrets must be manually created in the namespace.
-  # - secretName: xray-secret-tls
+  # - secretName: chart-example-tls
   #   hosts:
   #     - xray.domain.example
 # labels:
@@ -134,13 +133,13 @@ postgresql:
     size: 50Gi
     ## existingClaim: xray-postgresql-pvc
     storageClass: general
-  resources:
-    requests:
-      memory: "1Gi"
-      cpu: "250m"
-    limits:
-      memory: "2Gi"
-      cpu: "1"
+  resources: {}
+  #  requests:
+  #    memory: "1Gi"
+  #    cpu: "250m"
+  #  limits:
+  #    memory: "2Gi"
+  #    cpu: "1"
   nodeSelector: {}
   affinity: {}
   tolerations: []
@@ -178,14 +177,14 @@ mongodb:
     size: 50Gi
     ## existingClaim: xray-mongo-pvc
     storageClass: general
-  resources:
+  resources: {}
   # The following values are suggested to be used when working with mongoDB and Xray. The DB sync in Xray needs more resources than the defaults in mongoDB.
-   requests:
-     memory: "6Gi"
-     cpu: "2"
-   limits:
-      memory: "6Gi"
-      cpu: "4"
+  #  requests:
+  #    memory: "6Gi"
+  #    cpu: "2"
+  #  limits:
+  #    memory: "6Gi"
+  #    cpu: "2"
   ## Make sure the limits.memory value is the same as the requests.memory value!
   ## Make sure the --wiredTigerCacheSizeGB is no more than half the memory limit!
   ## This is critical to protect against OOMKill by Kubernetes!
@@ -266,7 +265,6 @@ rabbitmq:
 
 # Common Xray settings
 common:
-  xrayVersion: 2.8.9
   xrayConfigPath: /var/opt/jfrog/xray/data
   xrayUserId: 1035
   xrayGroupId: 1035
@@ -276,13 +274,26 @@ common:
   ## Pass it to helm with '--set common.masterKey=${MASTER_KEY}'
   ## IMPORTANT: You should NOT use the example masterKey for a production deployment!
   masterKey: FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-
+  # masterKeySecretName:
   # Xray configuration to be written to xray_config.yaml
   xrayConfig:
     stdOutEnabled: true
     indexAllBuilds: false
 
-  ## Add custom init containers
+  ## Add custom init containers execution before predefined init containers
+  customInitContainersBegin: |
+  #  - name: "custom-setup"
+  #    image: "{{ .Values.images.tags.initContainerImage }}"
+  #    imagePullPolicy: "{{ .Values.imagePullPolicy }}"
+  #    command:
+  #      - 'sh'
+  #      - '-c'
+  #      - 'touch {{ .Values.common.xrayConfigPath }}/example-custom-setup'
+  #    volumeMounts:
+  #      - mountPath: "{{ .Values.common.xrayConfigPath }}"
+  #        name: data-volume
+
+  ## Add custom init containers execution after predefined init containers
   customInitContainers: |
   #  - name: "custom-setup"
   #    image: "{{ .Values.images.tags.initContainerImage }}"
@@ -318,13 +329,13 @@ analysis:
   # kubectl logs or a log collector in your k8s cluster
   loggers: []
   # - xray_analysis.log
-  resources:
-    requests:
-      memory: "1Gi"
-      cpu: "100m"
-    limits:
-      memory: "2Gi"
-      cpu: "1"
+  resources: {}
+  #  requests:
+  #    memory: "1Gi"
+  #    cpu: "100m"
+  #  limits:
+  #    memory: "2Gi"
+  #    cpu: "1"
   nodeSelector: {}
   affinity: {}
   tolerations: []
@@ -363,13 +374,13 @@ indexer:
   # kubectl logs or a log collector in your k8s cluster
   loggers: []
   # - xray_indexer.log
-  resources:
-    requests:
-      memory: "1Gi"
-      cpu: "100m"
-    limits:
-      memory: "2Gi"
-      cpu: "1"
+  resources: {}
+  #  requests:
+  #    memory: "1Gi"
+  #    cpu: "100m"
+  #  limits:
+  #    memory: "2Gi"
+  #    cpu: "1"
   nodeSelector: {}
   affinity: {}
   tolerations: []
@@ -390,13 +401,13 @@ persist:
   # kubectl logs or a log collector in your k8s cluster
   loggers: []
   # - xray_persist.log
-  resources:
-    requests:
-      memory: "1Gi"
-      cpu: "100m"
-    limits:
-      memory: "2Gi"
-      cpu: "1"
+  resources: {}
+  #  requests:
+  #    memory: "1Gi"
+  #    cpu: "100m"
+  #  limits:
+  #    memory: "2Gi"
+  #    cpu: "1"
   nodeSelector: {}
   affinity: {}
   tolerations: []
@@ -443,13 +454,13 @@ server:
   # kubectl logs or a log collector in your k8s cluster
   loggers: []
   # - xray_server.log
-  resources:
-    requests:
-      memory: "1Gi"
-      cpu: "100m"
-    limits:
-      memory: "2Gi"
-      cpu: "1"
+  resources: {}
+  #  requests:
+  #    memory: "1Gi"
+  #    cpu: "100m"
+  #  limits:
+  #    memory: "2Gi"
+  #    cpu: "1"
   nodeSelector: {}
   affinity: {}
   tolerations: []
