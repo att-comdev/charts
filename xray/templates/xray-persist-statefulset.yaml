@@ -25,6 +25,8 @@ spec:
         app: {{ template "xray.name" . }}
         release: {{ .Release.Name }}
         component: {{ .Values.persist.name }}
+      annotations:
+        checksum/config: {{ include (print .Template.BasePath "/xray-setup-conf.yaml") . | sha256sum }}
     spec:
     {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -35,6 +37,9 @@ spec:
         runAsUser: {{ .Values.common.xrayUserId }}
         fsGroup: {{ .Values.common.xrayGroupId }}
       initContainers:
+      {{- if .Values.common.customInitContainersBegin }}
+{{ tpl .Values.common.customInitContainersBegin . | indent 6 }}
+      {{- end }}
       - name: init-wait
         image: {{ .Values.images.tags.initContainerImage | quote }}
         env:
@@ -129,7 +134,7 @@ spec:
         - name: XRAY_MASTER_KEY
           valueFrom:
             secretKeyRef:
-              name: {{ template "xray.fullname" . }}-master-key
+              name: "{{ .Values.common.masterKeySecretName | default (include "xray.fullname" .) }}"
               key: master-key
         - name: XRAY_HA_NODE_ID
           valueFrom:
