@@ -8,6 +8,10 @@ metadata:
     component: {{ .Values.missionControl.name }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
+{{- if .Values.missionControl.service.annotations }}
+  annotations:
+{{ toYaml .Values.missionControl.service.annotations | indent 4 }}
+{{- end }}
 spec:
   type: {{ .Values.missionControl.service.type }}
   ports:
@@ -15,6 +19,11 @@ spec:
     port: {{ .Values.missionControl.externalPort }}
     targetPort: {{ .Values.missionControl.internalPort }}
     protocol: TCP
+{{- if .Values.elasticsearch.enabled }}
+  - name: estransport
+    port: {{ .Values.elasticsearch.transportPort }}
+    targetPort: estransport
+{{- end }}
   selector:
     app: {{ template "mission-control.name" . }}
     component: {{ .Values.missionControl.name }}
