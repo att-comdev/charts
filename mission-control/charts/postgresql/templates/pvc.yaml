@@ -1,13 +1,17 @@
-{{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
-apiVersion: v1
+{{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim) -}}
 kind: PersistentVolumeClaim
+apiVersion: v1
 metadata:
-  name: {{ template "elasticsearch.fullname" . }}
+  name: {{ template "postgresql.fullname" . }}
   labels:
-    app: {{ template "elasticsearch.name" . }}
+    app: {{ template "postgresql.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+{{- if .Values.persistence.annotations }}
+  annotations:
+{{ toYaml .Values.persistence.annotations | indent 4 }}
+{{- end }}
 spec:
   accessModes:
     - {{ .Values.persistence.accessMode | quote }}
@@ -21,4 +25,4 @@ spec:
   storageClassName: "{{ .Values.persistence.storageClass }}"
 {{- end }}
 {{- end }}
-{{- end }}
+{{- end -}}
