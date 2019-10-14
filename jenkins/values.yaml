@@ -150,6 +150,7 @@ conf:
         artf_secure_docker_url: docker-aic.atlantafoundry.com
         artf_ubuntu_repo: ubuntu_repo_url
         artf_web_url: artifacts-aic.atlantafoundry.com/artifactory
+        artf_pip_index_url: dummypipcacheurl
         artifactory_env: stage/
         artifacts_url: https://$ARTF_WEB_URL
         cni_pod_cidr: 10.10.11.0/24
