@@ -74,11 +74,11 @@ mongodb:
   usePassword: false
   db:
     adminUser: admin
-    adminPassword: smil3yfc
+    adminPassword: password
     mcUser: mission_platform
-    mcPassword: smil3yfc
+    mcPassword: password
     insightUser: jfrog_insight
-    insightPassword: smil3yfc
+    insightPassword: password
     insightSchedulerDb: insight_scheduler
     insightExecutorDb: insight_executor
     insightServerDb: insight_team

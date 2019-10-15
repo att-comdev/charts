@@ -124,7 +124,7 @@ postgresql:
   imageTag: "9.6.11"
   postgresDatabase: "xraydb"
   postgresUser: "xray"
-  postgresPassword: smil3yfc
+  postgresPassword: password
   postgresConfig:
     maxConnections: "500"
   service:
@@ -192,9 +192,9 @@ mongodb:
   mongodbExtraFlags:
   # The wiredTiger is suggested to be set to 3GB.
   - "--wiredTigerCacheSizeGB=3"
-  mongodbRootPassword: smil3yfc
+  mongodbRootPassword: password
   mongodbUsername: xray
-  mongodbPassword: smil3yfc
+  mongodbPassword: password
   mongodbDatabase: xray
 #  livenessProbe:
 #    initialDelaySeconds: 60
@@ -214,7 +214,7 @@ rabbitmq-ha:
   enabled: true
   replicaCount: 1
   rabbitmqUsername: guest
-  rabbitmqPassword: smil3yfc
+  rabbitmqPassword: password
   customConfigMap: true
   rabbitmqErlangCookie: XRAYRABBITMQCLUSTER
   rabbitmqMemoryHighWatermark: 500MB
