@@ -108,7 +108,7 @@ elasticsearch:
   env:
     clusterName: "es-cluster"
     esUsername: "elastic"
-    esPassword: "smil3yfc"
+    esPassword: "password"
 
 podRestartTime:
 
