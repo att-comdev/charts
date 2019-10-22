@@ -145,7 +145,7 @@ slack-uploader:1.7
 slack:2.3
 sse-gateway:1.15
 ssh-agent:1.15
-ssh-credentials:1.13
+ssh-credentials:1.16
 ssh-slaves:1.26
 ssh-steps:1.1.1
 structs:1.14
