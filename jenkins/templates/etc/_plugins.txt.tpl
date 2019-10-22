@@ -43,7 +43,7 @@ cloudbees-folder:6.4
 command-launcher:1.2
 config-file-provider:2.18
 credentials-binding:1.16
-credentials:2.1.16
+credentials:2.1.17
 disk-usage:0.28
 display-url-api:2.2.0
 docker-build-publish:1.3.2
@@ -145,7 +145,7 @@ slack-uploader:1.7
 slack:2.3
 sse-gateway:1.15
 ssh-agent:1.15
-ssh-credentials:1.13
+ssh-credentials:1.16
 ssh-slaves:1.26
 ssh-steps:1.1.1
 structs:1.14
