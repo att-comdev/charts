@@ -137,6 +137,19 @@ pod:
 conf:
   config:
     jenkins:
+      cloud:
+        enabled: false
+        name: kubernetes
+        server_url: null
+        namespace: null
+        jenkins_url: null
+        jenkins_tunnel: null
+      email:
+        enabled: false
+        suffix: null
+        host: null
+        charset: UTF-8
+        content_type: text/plain
       active:
         directory: active.directory.url
 # Global env variables in Jenkins configuration
