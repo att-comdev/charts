@@ -86,6 +86,12 @@ spec:
             - name: jenkins-etc
               mountPath: /seed/org.jenkinsci.plugins.workflow.libs.GlobalLibraries.xml
               subPath: org.jenkinsci.plugins.workflow.libs.GlobalLibraries.xml
+            - name: jenkins-etc
+              mountPath: /seed/hudson.plugins.emailext.ExtendedEmailPublisher.xml
+              subPath: hudson.plugins.emailext.ExtendedEmailPublisher.xml
+            - name: jenkins-etc
+              mountPath: /seed/hudson.tasks.Mailer.xml
+              subPath: hudson.tasks.Mailer.xml
             - name: jenkins-init
               mountPath: /tmp/relaxed-CSP.groovy
               subPath: relaxed-CSP.groovy
