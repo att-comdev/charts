@@ -35,7 +35,31 @@
   <jdks/>
   <viewsTabBar class="hudson.views.DefaultViewsTabBar"/>
   <myViewsTabBar class="hudson.views.DefaultMyViewsTabBar"/>
-  <clouds/>
+  <clouds>
+    {{- if .Values.conf.config.jenkins.cloud.enabled }}
+      <org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud plugin="kubernetes@1.8.4">
+        <actions/>
+        <name>{{ .Values.conf.config.jenkins.cloud.name }}</name>
+        <defaultsProviderTemplate></defaultsProviderTemplate>
+        <templates/>
+        <serverUrl>{{ .Values.conf.config.jenkins.cloud.server_url }}</serverUrl>
+        <skipTlsVerify>false</skipTlsVerify>
+        <addMasterProxyEnvVars>false</addMasterProxyEnvVars>
+        <capOnlyOnAlivePods>false</capOnlyOnAlivePods>
+        <namespace>{{ .Values.conf.config.jenkins.cloud.namespace }}</namespace>
+        <jenkinsUrl>{{ .Values.conf.config.jenkins.cloud.jenkins_url }}</jenkinsUrl>
+        <jenkinsTunnel>{{ .Values.conf.config.jenkins.cloud.jenkins_tunnel }}</jenkinsTunnel>
+        <containerCap>500</containerCap>
+        <retentionTimeout>5</retentionTimeout>
+        <connectTimeout>0</connectTimeout>
+        <readTimeout>0</readTimeout>
+        <usageRestricted>false</usageRestricted>
+        <maxRequestsPerHost>64</maxRequestsPerHost>
+        <podRetention class="org.csanchez.jenkins.plugins.kubernetes.pod.retention.Never"/>
+      </org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud>
+    {{ end }}
+  </clouds>
+
   <quietPeriod>5</quietPeriod>
   <scmCheckoutRetryCount>0</scmCheckoutRetryCount>
   <views>
