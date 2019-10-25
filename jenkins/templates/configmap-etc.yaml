@@ -87,3 +87,15 @@ data:
 {{- else -}}
 {{ tuple "etc/_org.jenkinsci.plugins.workflow.libs.GlobalLibraries.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
 {{- end }}
+  hudson.plugins.emailext.ExtendedEmailPublisher.xml: |
+{{ if .Values.conf.config.override -}}
+{{ .Values.conf.config.override | indent 4 }}
+{{- else -}}
+{{ tuple "etc/_hudson.plugins.emailext.ExtendedEmailPublisher.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+{{- end }}
+  hudson.tasks.Mailer.xml: |
+{{ if .Values.conf.config.override -}}
+{{ .Values.conf.config.override | indent 4 }}
+{{- else -}}
+{{ tuple "etc/_hudson.tasks.Mailer.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+{{- end }}
