@@ -137,6 +137,12 @@ pod:
 conf:
   config:
     jenkins:
+      email:
+        enabled: false
+        suffix: null
+        host: null
+        charset: UTF-8
+        content_type: text/plain
       active:
         directory: active.directory.url
 # Global env variables in Jenkins configuration

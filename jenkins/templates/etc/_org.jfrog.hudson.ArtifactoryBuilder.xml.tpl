@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<org.jfrog.hudson.ArtifactoryBuilder_-DescriptorImpl plugin="artifactory@2.14.0">
+<org.jfrog.hudson.ArtifactoryBuilder_-DescriptorImpl plugin="artifactory@2.15.1">
   <useCredentialsPlugin>true</useCredentialsPlugin>
   <artifactoryServers>
     <org.jfrog.hudson.ArtifactoryServer>
-      <url>https://artifacts-aic.atlantafoundry.com/artifactory</url>
+      <url>https://{{ .Values.conf.config.jenkins.global_env_vars.artf_web_url }}</url>
       <id>artifactory</id>
       <timeout>300</timeout>
       <bypassProxy>false</bypassProxy>
@@ -13,7 +13,7 @@
           <username/>
           <password/>
         </credentials>
-        <credentialsId>jenkins-foundry-artifactory</credentialsId>
+        <credentialsId>jenkins-artifactory</credentialsId>
         <overridingCredentials>false</overridingCredentials>
         <ignoreCredentialPluginDisabled>false</ignoreCredentialPluginDisabled>
       </deployerCredentialsConfig>
