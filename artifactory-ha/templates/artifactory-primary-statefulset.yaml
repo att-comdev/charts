@@ -213,6 +213,10 @@ spec:
           value: "true"
         - name: HA_MEMBERSHIP_PORT
           value: "{{ .Values.artifactory.membershipPort }}"
+        - name: DB_POOL_MAX_ACTIVE
+          value: "{{ .Values.artifactory.dbpoolmaxactive }}"
+        - name: SERVER_XML_ARTIFACTORY_MAX_THREADS
+          value: "{{ .Values.artifactory.serverxmlartifactorymaxthreads }}"
         - name: HA_NODE_ID
           valueFrom:
             fieldRef:
