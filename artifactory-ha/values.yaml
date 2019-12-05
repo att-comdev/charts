@@ -468,6 +468,8 @@ artifactory:
   externalPortReplicator: 6061
   uid: 1030
   terminationGracePeriodSeconds: 30
+  dbpoolmaxactive: 200
+  serverxmlartifactorymaxthreads: 512
   ## The following settings are to configure the frequency of the liveness and readiness probes
   livenessProbe:
     enabled: true
@@ -624,7 +626,7 @@ artifactory:
     javaOpts:
       xms: "1g"
       xmx: "2g"
-      other: "-Djavax.net.ssl.trustStore=/var/opt/jfrog/artifactory/etc/cacerts"
+      other: "-Dartifactory.async.corePoolSize=128 -Djavax.net.ssl.trustStore=/var/opt/jfrog/artifactory/etc/cacerts"
     nodeSelector: {}
 
     tolerations: []
@@ -657,7 +659,7 @@ artifactory:
     javaOpts:
       xms: "1g"
       xmx: "2g"
-      other: "-Djavax.net.ssl.trustStore=/var/opt/jfrog/artifactory/etc/cacerts"
+      other: "-Dartifactory.async.corePoolSize=128 -Djavax.net.ssl.trustStore=/var/opt/jfrog/artifactory/etc/cacerts"
     nodeSelector: {}
 
     tolerations: []
