@@ -7,6 +7,9 @@ metadata:
   name: dindproxy
   namespace: jenkins-nodes
 spec:
+  selector:
+    matchLabels:
+      {{ .Values.labels.dind.node_selector_key }}: {{ .Values.labels.dind.node_selector_value }}
   updateStrategy:
     type: RollingUpdate
   template:
@@ -36,8 +39,6 @@ spec:
           mountPath: /var/lib/dockerproxy
         - name: rundindproxy
           mountPath: /var/run/dindproxy
-      nodeSelector:
-        {{ .Values.labels.dind.node_selector_key }}: {{ .Values.labels.dind.node_selector_value }}
       terminationGracePeriodSeconds: 30
       volumes:
       - name: varlibdockerproxy

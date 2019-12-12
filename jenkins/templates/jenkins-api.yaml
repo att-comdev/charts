@@ -26,6 +26,9 @@ kind: StatefulSet
 metadata:
   name: jenkins-api
 spec:
+  selector:
+    matchLabels:
+      {{ .Values.labels.api.node_selector_key }}: {{ .Values.labels.api.node_selector_value }}
   serviceName: jenkins-api
   replicas: {{ .Values.pod.replicas.api }}
   updateStrategy:
@@ -39,8 +42,6 @@ spec:
       affinity:
 {{ tuple $envAll "jenkins" "api" | include "helm-toolkit.snippets.kubernetes_pod_anti_affinity" | indent 8 }}
 {{ dict "envAll" $envAll "application" "jenkins" | include "helm-toolkit.snippets.kubernetes_pod_security_context" | indent 6 }}
-      nodeSelector:
-        {{ .Values.labels.api.node_selector_key }}: {{ .Values.labels.api.node_selector_value }}
       terminationGracePeriodSeconds: {{ .Values.pod.lifecycle.termination_grace_period.api.timeout | default "600" }}
       initContainers:
         - name: seed
