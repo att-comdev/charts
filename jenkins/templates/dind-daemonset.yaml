@@ -6,13 +6,18 @@ kind: DaemonSet
 metadata:
   name: dindproxy
   namespace: jenkins-nodes
+  labels:
+{{ tuple $envAll "dind" "proxy" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 4 }}
 spec:
+  selector:
+    matchLabels:
+{{ tuple $envAll "dind" "proxy" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 6 }}
   updateStrategy:
     type: RollingUpdate
   template:
     metadata:
       labels:
-        name: dindproxy
+{{ tuple $envAll "dind" "proxy" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 8 }}
     spec:
       containers:
       - name: dindproxy

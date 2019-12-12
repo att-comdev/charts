@@ -25,9 +25,14 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: jenkins-api
+  labels:
+{{ tuple $envAll "jenkins" "api" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 4 }}
 spec:
   serviceName: jenkins-api
   replicas: {{ .Values.pod.replicas.api }}
+  selector:
+    matchLabels:
+{{ tuple $envAll "jenkins" "api" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 6 }}
   updateStrategy:
     type: RollingUpdate
   template:
