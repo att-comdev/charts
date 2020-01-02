@@ -29,7 +29,7 @@ blueocean-rest-impl:1.5.1
 blueocean-rest:1.5.1
 blueocean-web:1.5.1
 blueocean:1.5.1
-bouncycastle-api:2.16.2
+bouncycastle-api:2.17
 branch-api:2.0.19
 build-history-metrics-plugin:1.2
 build-metrics:1.3
