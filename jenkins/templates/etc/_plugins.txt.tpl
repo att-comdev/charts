@@ -167,3 +167,4 @@ workflow-scm-step:2.6
 workflow-step-api:2.21
 workflow-support:3.3
 ws-cleanup:0.34
+extended-security-settings:1.2
