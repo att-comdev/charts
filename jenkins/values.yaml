@@ -247,6 +247,7 @@ ingress:
   hosts:
   #  - jenkins.domain.example
   annotations:
+  nginx.ingress.kubernetes.io/custom-http-errors: "404,415 
   # kubernetes.io/ingress.class: nginx
   # kubernetes.io/tls-acme: "true"
   tls:
