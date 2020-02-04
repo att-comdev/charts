@@ -19,6 +19,13 @@ limitations under the License.
 # NOTE: no -e by design, some of this can/will fail, and that's OK
 set -x
 
+{{ if .Values.plugins.enabled -}}
+
+curl -o /var/jenkins_home/plugins.tar.gz {{ .Values.plugins.url }}
+tar xzf /var/jenkins_home/plugins.tar.gz -C /var/jenkins_home/
+rm /var/jenkins_home/plugins.tar.gz
+{{- else -}}
+
 if [ -e /plugins.txt ] ; then
 
     # FIXME(cw): transitional, file should never have been there
@@ -29,6 +36,7 @@ if [ -e /plugins.txt ] ; then
     mkdir -p /usr/share/jenkins/ref/plugins/ && touch /usr/share/jenkins/ref/plugins/zzz-dummy.lock
     /usr/local/bin/install-plugins.sh $(cat /plugins.txt)
 fi
+{{- end }}
 
 # proxy.xml configuration from environment variables
 rm -fv /var/jenkins_home/proxy.xml
