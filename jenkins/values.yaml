@@ -133,6 +133,10 @@ pod:
           memory: "1024Mi"
           cpu: "2000m"
 
+plugins:
+  enabled: true
+  url: https://artifacts-nc.aic.atlantafoundry.com/cicd/jenkins
+
 # not all of these work in an entirely intuitive way, this can get
 # cleaned up once the toolkit is updated with a more generic mechanism
 conf:
