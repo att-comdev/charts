@@ -345,7 +345,7 @@ if [[ ! -z ${RELEASE_FILE_PATH} ]]; then
     copy_seed ${RELEASE_LIST}
 else
     lint_whitespaces
-    lint_jenkins_files
+    # lint_jenkins_files
     if [[ &quot;${GERRIT_HOST}&quot; = review ]]; then
         check_sandbox_parameter
     fi
