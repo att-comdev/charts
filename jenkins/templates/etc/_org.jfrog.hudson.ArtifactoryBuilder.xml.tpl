@@ -6,7 +6,7 @@
       <url>https://{{ .Values.conf.config.jenkins.global_env_vars.artf_web_url }}</url>
       <id>artifactory</id>
       <timeout>300</timeout>
-      <bypassProxy>false</bypassProxy>
+      <bypassProxy>true</bypassProxy>
       <connectionRetry>3</connectionRetry>
       <deployerCredentialsConfig>
         <credentials>
