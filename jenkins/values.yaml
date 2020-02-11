@@ -171,8 +171,8 @@ conf:
         dns_server_one: 127.0.0.1
         dns_server_two: 127.0.0.1
         gerrit_ssh: ssh://jenkins@review.gerrithub.io:29418
-        http_proxy: http://10.10.10.1:80
-        https_proxy: http://10.10.10.1:80
+        http_proxy:
+        https_proxy:
         no_proxy: localhost
         internal_gerrit_key: jenkins-ssh-key
         internal_gerrit_port: 29418
