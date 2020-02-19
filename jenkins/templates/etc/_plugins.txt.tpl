@@ -42,6 +42,7 @@ cloudbees-bitbucket-branch-source:2.2.10
 cloudbees-folder:6.10.0
 command-launcher:1.2
 config-file-provider:2.18
+copyartifact:1.43
 credentials-binding:1.20
 credentials:2.3.0
 disk-usage:0.28
