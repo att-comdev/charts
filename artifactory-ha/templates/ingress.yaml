@@ -1,7 +1,11 @@
 {{- if .Values.ingress.enabled -}}
 {{- $serviceName := include "artifactory-ha.fullname" . -}}
 {{- $servicePort := .Values.artifactory.externalPort -}}
+{{- if semverCompare ">=v1.14.0" .Capabilities.KubeVersion.GitVersion }}
+apiVersion: networking.k8s.io/v1beta1
+{{- else }}
 apiVersion: extensions/v1beta1
+{{- end }}
 kind: Ingress
 metadata:
   name: {{ template "artifactory-ha.fullname" . }}
@@ -23,18 +27,21 @@ spec:
     serviceName: {{ $serviceName }}
     servicePort: {{ $servicePort }}
   {{- end -}}
-{{- if .Values.ingress.hosts }}
   rules:
+{{- if .Values.ingress.hosts }}
   {{- range $host := .Values.ingress.hosts }}
   - host: {{ $host | quote }}
     http:
-      paths:
+      paths: {{ $.Values.ingress.path }}
         - path: /
           backend:
             serviceName: {{ $serviceName }}
             servicePort: {{ $servicePort }}
   {{- end -}}
 {{- end -}}
+  {{- with .Values.ingress.additionalRules }}
+{{ tpl . $ | indent 2 }}
+  {{- end }}
   {{- if .Values.ingress.tls }}
   tls:
 {{ toYaml .Values.ingress.tls | indent 4 }}
