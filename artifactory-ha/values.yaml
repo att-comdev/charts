@@ -626,7 +626,7 @@ artifactory:
     javaOpts:
       xms: "1g"
       xmx: "2g"
-      other: "-Dartifactory.async.corePoolSize=128 -Djavax.net.ssl.trustStore=/var/opt/jfrog/artifactory/etc/cacerts"
+      other: "-Dartifactory.async.corePoolSize=128"
     nodeSelector: {}
 
     tolerations: []
@@ -659,7 +659,7 @@ artifactory:
     javaOpts:
       xms: "1g"
       xmx: "2g"
-      other: "-Dartifactory.async.corePoolSize=128 -Djavax.net.ssl.trustStore=/var/opt/jfrog/artifactory/etc/cacerts"
+      other: "-Dartifactory.async.corePoolSize=128"
     nodeSelector: {}
 
     tolerations: []
