@@ -21,6 +21,12 @@ kind: ConfigMap
 metadata:
   name: jenkins-etc
 data:
+  audit-trail.xml: |
+{{ if .Values.conf.config.override -}}
+{{ .Values.conf.config.override | indent 4 }}
+{{- else -}}
+{{ tuple "etc/_audit-trail.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+{{- end }}
   config.xml: |
 {{ if .Values.conf.config.override -}}
 {{ .Values.conf.config.override | indent 4 }}

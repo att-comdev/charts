@@ -6,6 +6,7 @@ antisamy-markup-formatter:1.5
 apache-httpcomponents-client-4-api:4.5.10-1.0
 artifactory:2.15.1
 async-http-client:1.9.40.0
+audit-trail:3.4
 authentication-tokens:1.3
 authorize-project:1.3.0
 blueocean-autofavorite:1.2.2
