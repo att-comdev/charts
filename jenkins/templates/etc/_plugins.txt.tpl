@@ -81,7 +81,7 @@ htmlpublisher:1.15
 http_request:1.8.22
 icon-shim:2.0.3
 ivy:1.28
-jackson2-api:2.10.1
+jackson2-api:2.10.3
 javadoc:1.4
 jclouds-jenkins:2.14
 jenkins-design-language:1.5.1
