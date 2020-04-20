@@ -13,7 +13,6 @@ images:
     repository: docker-open-nc.mtn29.cci.att.com/sb464f/elasticsearch:6.1.1
 
 replicaCount: 1
-
 resources:
   requests:
     memory: "2Gi"
@@ -38,7 +37,6 @@ env:
   maxMapCount: 262144
 
 persistence:
-  enabled: true
   ## A manually managed Persistent Volume and Claim
   ## Requires persistence.enabled: true
   ## If defined, PVC must be created manually before volume will be bound
@@ -47,14 +45,14 @@ persistence:
   mountPath: "/usr/share/elasticsearch/data"
   accessMode: ReadWriteOnce
   size: 100Gi
-  ## artifactory data Persistent Volume Storage Class
+  ## ElasticSearch data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
   ## If undefined (the default) or set to null, no storageClassName spec is
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  # storageClass: "-"
+  storageClass: general
 
 service:
   type: ClusterIP

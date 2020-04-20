@@ -12,12 +12,12 @@ imagePullSecrets:
 
 images:
   tags:
-    createUser: mvertes/alpine-mongo:3.6.3-0
-    initContainerImage: "alpine:3.6"
-    insightExecutor: docker.bintray.io/jfrog/insight-executor:3.3.0
-    insightScheduler: docker.bintray.io/jfrog/insight-scheduler:3.3.0
-    insightServer: docker.bintray.io/jfrog/insight-server:3.3.0
-    missionControl: docker.bintray.io/jfrog/mission-control:3.3.0
+          #createUser: postgres:9.6.11-alpine
+    initContainerImage: "alpine:3.8"
+    insightExecutor: docker.bintray.io/jfrog/insight-executor:3.4.2
+    insightScheduler: docker.bintray.io/jfrog/insight-scheduler:3.4.2
+    insightServer: docker.bintray.io/jfrog/insight-server:3.4.2
+    missionControl: docker.bintray.io/jfrog/mission-control:3.4.2
 
 ## Role Based Access Control
 ## Ref: https://kubernetes.io/docs/admin/authorization/rbac/
@@ -46,18 +46,30 @@ serviceAccount:
   ## If not set and create is true, a name is generated using the fullname template
   name:
 
+## Details required for initialization/setup of database
+dbSetup:
+  mongodb:
+    image:
+      repository: mvertes/alpine-mongo
+      tag: 3.6.3-0
+      pullPolicy: IfNotPresent
+  postgresql:
+    image:
+      repository: postgres
+      tag: 9.6.11-alpine
+      pullPolicy: IfNotPresent
+
 # Sub charts
 ## Configuration values for the mongodb dependency
 ## ref: https://github.com/kubernetes/charts/blob/master/stable/mongodb/README.md
 ##
 mongodb:
-  enabled: true
+  enabled: false
   image:
     tag: 3.6.8-debian-9
     pullPolicy: IfNotPresent
   persistence:
     size: 20Gi
-    enabled: true
     ## existingClaim: jfmc-mongo-pvc
     storageClass: general
   resources:
@@ -88,11 +100,93 @@ mongodb:
   readinessProbe:
     initialDelaySeconds: 30
 
+# PostgreSQL
+## Configuration values for the postgresql dependency
+## ref: https://github.com/kubernetes/charts/blob/master/stable/postgresql/README.md
+##
+postgresql:
+  enabled: true
+  imageTag: "9.6.11"
+  postgresUsername: postgres
+  postgresPassword: postgres
+  postgresConfig:
+    maxConnections: "1500"
+  db:
+    name: mission_control
+    sslmode: "false"
+    tablespace: "pg_default"
+    jfmcUsername: jfmc
+    jfisUsername: jfis
+    jfscUsername: jfsc
+    jfexUsername: jfex
+    jfmcPassword: jfmc
+    jfisPassword: jfis
+    jfscPassword: jfsc
+    jfexPassword: jfex
+    jfmcSchema: jfmc_server
+    jfisSchema: insight_server
+    jfscSchema: insight_scheduler
+    jfexSchema: insight_executor
+  service:
+    port: 5432
+  persistence:
+    ## existingClaim: jfmc-elastic-pvc
+    storageClass: general
+    size: 60Gi
+    existingClaim:
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "250m"
+    limits:
+      memory: "2Gi"
+      cpu: "4"
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+
+### If NOT using the PostgreSQL in this chart (postgresql.enabled=false),
+## specify custom database details here or leave empty
+database:
+  type: postgresql
+  host:
+  port:
+  ## Please make sure these are created under the provided database
+  name: mission_control
+  jfisSchema: insight_server
+  jfmcSchema: jfmc_server
+  jfscSchema: insight_scheduler
+  jfexSchema: insight_executor
+  ## If you would like to use single user and password for all the services
+  user:
+  password:
+  ## If you have existing Kubernetes secrets containing db credentials, use
+  ## these values
+  secrets: {}
+  #  user:
+  #    name: "database-creds"
+  #    key: "db-user"
+  #  password:
+  #    name: "database-creds"
+  #    key: "db-password"
+  ## If you want to use different credentials for each service
+  ## Mission-Control
+  jfmcUsername: jfmc
+  jfmcPassword: jfmc
+  ## Insight-Server
+  jfisUsername: jfis
+  jfisPassword: jfis
+  ## Insight-Scheduler
+  jfscUsername: jfsc
+  jfscPassword: jfsc
+  ## Insight-Executor
+  jfexUsername: jfex
+  jfexPassword: jfex
+
 elasticsearch:
   enabled: true
   persistence:
     size: 60Gi
-    enabled: true
     ## existingClaim: jfmc-elastic-pvc
     storageClass: general
   resources:
@@ -102,6 +196,7 @@ elasticsearch:
     limits:
       memory: "3Gi"
       cpu: "4"
+  ## ElasticSearch xms and xmx should be same!
   javaOpts: {}
   #  xms: "2g"
   #  xmx: "2g"
@@ -109,6 +204,9 @@ elasticsearch:
     clusterName: "es-cluster"
     esUsername: "elastic"
     esPassword: "password"
+
+  service:
+    port: 9200
 
 podRestartTime:
 
@@ -141,15 +239,33 @@ ingress:
   hosts:
     - mission.domain.example
   tls: []
-  #  - secretName: missioncontrol-secret-tls
+  #  - secretName: chart-example-tls
   #    hosts:
-  #      - mission.domain.example
+  #      - chart-example.local
 
 missionControl:
   replicaCount: 1
   name: mission-control
   appName: jfmc-server
   home: /var/opt/jfrog/mission-control
+  # Set this to true if you want to override credentials in mission-control.properties on startup
+  propertyOverride: false
+  ## Note that by default we use appVersion to get image tag
+  # version:
+
+  ## Add custom init containers
+  customInitContainers: |
+  #  - name: "custom-setup"
+  #    image: "{{ .Values.initContainerImage }}"
+  #    imagePullPolicy: "{{ .Values.imagePullPolicy }}"
+  #    command:
+  #      - 'sh'
+  #      - '-c'
+  #      - 'touch {{ .Values.missionControl.persistence.mountPath }}/example-custom-setup'
+  #    volumeMounts:
+  #      - mountPath: "{{ .Values.missionControl.persistence.mountPath }}"
+  #        name: mission-control-data
+
   missionControlUrl:
   podRestartTime:
   repository: jfrog-mission-control
@@ -158,6 +274,7 @@ missionControl:
   osVersion: "NA"
   osType: "NA"
   osDist: "NA"
+
   persistence:
     enabled: true
     ## A manually managed Persistent Volume and Claim
@@ -178,11 +295,11 @@ missionControl:
     storageClass: general
 
   ## Control Java options (JAVA_OPTIONS)
-  ## IMPORTANT: keep javaOpts.xmx no higher than resources.limits.memory
+  ## IMPORTANT: keep resources.limits.memory higher than javaOpts.xmx by 0.5G
   javaOpts:
     other: "-server -XX:+UseG1GC -Dfile.encoding=UTF8"
-    xms:
-    xmx:
+    xms: 
+    xmx: 
   resources:
     requests:
       memory: "2Gi"
@@ -206,29 +323,8 @@ insightServer:
   replicaCount: 1
   name: insight-server
   home: /opt/jfrog
-  persistence:
-    enabled: true
-    ## A manually managed Persistent Volume and Claim
-    ## Requires persistence.enabled: true
-    ## If defined, PVC must be created manually before volume will be bound
-    # existingClaim:
-
-    mountPath: "/opt/jfrog/insight-server/logs"
-    accessMode: ReadWriteOnce
-    size: 100Gi
-    ## Mission Control data Persistent Volume Storage Class
-    ## If defined, storageClassName: <storageClass>
-    ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    ##   GKE, AWS & OpenStack)
-    ##
-    storageClass: general
-
-  service:
-    name: insight-server
-    type: ClusterIP
-  externalHttpPort: 8082
+  ## Note that by default we use appVersion to get image tag
+  # version:
   internalHttpPort: 8082
   ## This can be used to whitelist the range of IPs allowed to be served by Insight Server service
   ## The value must follow CIDR format
@@ -240,40 +336,17 @@ insightServer:
     limits:
       memory: "1Gi"
       cpu: "2"
-  nodeSelector: {}
-
-  tolerations: []
-
-  affinity: {}
 
 insightScheduler:
   replicaCount: 1
   name: insight-scheduler
   home: /opt/jfrog
-  persistence:
-    enabled: true
-    ## A manually managed Persistent Volume and Claim
-    ## Requires persistence.enabled: true
-    ## If defined, PVC must be created manually before volume will be bound
-    # existingClaim:
+  ## Note that by default we use appVersion to get image tag
+  # version:
+  internalPort: 8085
 
-    mountPath: "/opt/jfrog/insight-scheduler/logs"
-    accessMode: ReadWriteOnce
-    size: 100Gi
-    ## Mission Control data Persistent Volume Storage Class
-    ## If defined, storageClassName: <storageClass>
-    ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    ##   GKE, AWS & OpenStack)
-    ##
-    storageClass: general
-  service:
-    type: ClusterIP
-  externalPort: 8080
-  internalPort: 8080
   ## Control Java options (JFMC_EXTRA_JAVA_OPTS)
-  ## IMPORTANT: keep javaOpts.xmx no higher than resources.limits.memory
+  ## IMPORTANT: keep resources.limits.memory higher than javaOpts.xmx by 0.5G
   javaOpts: {}
   #  other:
   #  xms: "500m"
@@ -283,60 +356,30 @@ insightScheduler:
       memory: "500Mi"
       cpu: "100m"
     limits:
-      memory: "3Gi"
+      memory: "3.5Gi"
       cpu: "2"
-  nodeSelector: {}
-
-  tolerations: []
-
-  affinity: {}
 
 insightExecutor:
   replicaCount: 1
   name: insight-executor
   home: /opt/jfrog
-  persistence:
-    size: 5Gi
-    enabled: true
-    ## existingClaim: jfmc-exec-pvc
-    ## A manually managed Persistent Volume and Claim
-    ## Requires persistence.enabled: true
-    ## If defined, PVC must be created manually before volume will be bound
-    # existingClaim:
+  ## Note that by default we use appVersion to get image tag
+  # version:
+  internalPort: 8087
 
-    mountPath: "/opt/jfrog/insight-executor/logs"
-    accessMode: ReadWriteOnce
-    size: 100Gi
-    ## artifactory data Persistent Volume Storage Class
-    ## If defined, storageClassName: <storageClass>
-    ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    ##   GKE, AWS & OpenStack)
-    ##
-    storageClass: general
-
-  service:
-    type: ClusterIP
-  externalPort: 8080
-  internalPort: 8080
+  ## Control Java options (JFMC_EXTRA_JAVA_OPTS)
+  ## IMPORTANT: keep resources.limits.memory higher than javaOpts.xmx by 0.5G
   javaOpts: {}
   #  other:
   #  xms: "500m"
   #  xmx: "3g"
-
   resources:
     requests:
       memory: "500Mi"
       cpu: "100m"
     limits:
-      memory: "3Gi"
+      memory: "3.5Gi"
       cpu: "2"
-  nodeSelector: {}
-
-  tolerations: []
-
-  affinity: {}
 
 manifests:
   secret_ingress_tls: true
