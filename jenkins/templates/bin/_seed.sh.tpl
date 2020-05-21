@@ -30,6 +30,9 @@ mv -nv /seed/superseedconfig.xml /var/jenkins_home/jobs/CICD/jobs/SuperSeed/conf
 mkdir -p /var/jenkins_home/init.groovy.d/
 cp -fv /tmp/relaxed-CSP.groovy /var/jenkins_home/init.groovy.d/relaxed-CSP.groovy
 
+# copy artifactory css issue fix solution
+cp -fv /tmp/artifactory-css.groovy /var/jenkins_home/init.groovy.d/artifactory-css.groovy
+
 # the seed runs as root; everything else runs as jenkins so we have to
 # make sure the permissions are as expected
 find /var/jenkins_home/ -not -user jenkins -print0 | xargs -r0 chown -v jenkins:jenkins
