@@ -3,8 +3,8 @@ active-directory:2.6
 ansicolor:0.5.2
 ant:1.8
 antisamy-markup-formatter:1.5
-apache-httpcomponents-client-4-api:4.5.10-1.0
-artifactory:2.15.1
+apache-httpcomponents-client-4-api:4.5.10-2.0
+artifactory:3.6.2
 async-http-client:1.9.40.0
 audit-trail:3.4
 authentication-tokens:1.3
@@ -57,6 +57,7 @@ docker-traceability:1.2
 docker-workflow:1.15.1
 dockerhub-notification:2.2.1
 durable-task:1.33
+dynamic_extended_choice_parameter:1.0.1
 email-ext:2.62
 envfile:1.2
 envinject-api:1.5
@@ -67,7 +68,7 @@ favorite:2.3.1
 gerrit-trigger:2.27.5
 git-client:2.7.1
 git-server:1.7
-git:3.8.0
+git:4.2.2
 github-api:1.90
 github-branch-source:2.3.3
 github:1.29.0
@@ -92,8 +93,8 @@ jobConfigHistory:2.18
 jquery-detached:1.2.1
 jsch:0.1.54.2
 junit:1.24
-kubernetes-credentials:0.4.1
-kubernetes:1.21.4
+kubernetes-credentials:0.6.2
+kubernetes:1.25.7
 last-changes:2.6.8
 ldap:1.20
 libvirt-slave:1.8.5
@@ -113,7 +114,8 @@ openstack-cloud:2.33
 openstack-heat:1.5
 pam-auth:1.3
 pipeline-build-step:2.7
-pipeline-github:1.0
+pipeline-github:2.5
+pipeline-githubnotify-step:1.0.5
 pipeline-graph-analysis:1.6
 pipeline-input-step:2.8
 pipeline-milestone-step:1.3.1
@@ -134,14 +136,14 @@ publish-over:0.22
 pubsub-light:1.12
 purge-build-queue-plugin:1.0
 quayio-trigger:0.1
-queue-cleanup:1.0
+queue-cleanup:1.4
 rebuild:1.28
 resource-disposer:0.8
 role-strategy:2.9.0
 ruby-runtime:0.12
 saferestart:0.3
 scm-api:2.2.6
-script-security:1.68
+script-security:1.72
 singleuseslave:1.0.0
 slack-uploader:1.7
 slack:2.3
@@ -151,9 +153,9 @@ ssh-credentials:1.18
 ssh-slaves:1.26
 ssh-steps:1.1.1
 structs:1.20
-subversion:2.12.1
+subversion:2.13.1
 uno-choice:2.1
-timestamper:1.8.9
+timestamper:1.11.3
 token-macro:2.5
 variant:1.3
 windows-slaves:1.3.1
@@ -161,7 +163,7 @@ workflow-aggregator:2.5
 workflow-api:2.38
 workflow-basic-steps:2.6
 workflow-cps-global-lib:2.9
-workflow-cps:2.78
+workflow-cps:2.80
 workflow-durable-task-step:2.19
 workflow-job:2.36
 workflow-multibranch:2.17
