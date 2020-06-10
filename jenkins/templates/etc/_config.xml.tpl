@@ -5,8 +5,18 @@
   <numExecutors>2</numExecutors>
   <mode>NORMAL</mode>
   <useSecurity>true</useSecurity>
-  <authorizationStrategy class="hudson.security.FullControlOnceLoggedInAuthorizationStrategy">
-    <denyAnonymousReadAccess>false</denyAnonymousReadAccess>
+  {{- $configStrategy := .Values.conf.config.jenkins.authorizationStrategy -}}
+  {{- $defaultStrategy := "hudson.security.FullControlOnceLoggedInAuthorizationStrategy" -}}
+  {{- $currentStrategy := $configStrategy.strategy | default $defaultStrategy -}}
+
+  <authorizationStrategy class={{ $currentStrategy | quote }}>
+    {{- if eq $currentStrategy $defaultStrategy -}}
+      <denyAnonymousReadAccess>{{ $configStrategy.denyAnonymousReadAccess | default true}}</denyAnonymousReadAccess>
+    {{- else if eq $currentStrategy "hudson.security.ProjectMatrixAuthorizationStrategy" -}}
+      {{- range $configStrategy.permissions }}
+    <permission>{{ . }}</permission>
+      {{- end }}
+    {{- end }}
   </authorizationStrategy>
   <!-- pick a single securityRealm setup not both. If you want to choose AD based authentication
   Please uncomment appropriate section-->
