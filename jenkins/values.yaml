@@ -150,6 +150,10 @@ conf:
         content_type: text/plain
       active:
         directory: active.directory.url
+      authorizationStrategy:
+        strategy: "hudson.security.FullControlOnceLoggedInAuthorizationStrategy"
+        denyAnonymousReadAccess: false
+        permissions: []
 # Global env variables in Jenkins configuration
 # Most of the below env values are just dummy
       global_env_vars:
