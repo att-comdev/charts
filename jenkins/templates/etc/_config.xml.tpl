@@ -5,14 +5,55 @@
   <numExecutors>2</numExecutors>
   <mode>NORMAL</mode>
   <useSecurity>true</useSecurity>
-  <authorizationStrategy class="hudson.security.FullControlOnceLoggedInAuthorizationStrategy">
-    <denyAnonymousReadAccess>false</denyAnonymousReadAccess>
+
+  {{- $configStrategy := .Values.conf.config.jenkins.authorizationStrategy -}}
+  {{- $defaultStrategy := "hudson.security.FullControlOnceLoggedInAuthorizationStrategy" -}}
+  {{- $currentStrategy := $configStrategy.strategy | default $defaultStrategy -}}
+  {{- $securityRealm := .Values.conf.config.jenkins.securityrealm -}}
+  {{- $defaultSecurityRealm := "hudson.security.HudsonPrivateSecurityRealm" -}}
+  {{- $currentSecurityRealm := $securityRealm.class | default $defaultSecurityRealm }}
+  <authorizationStrategy class={{ $currentStrategy | quote }}>
+    {{- if eq $currentStrategy $defaultStrategy -}}
+      <denyAnonymousReadAccess>{{ $configStrategy.denyAnonymousReadAccess | default true}}</denyAnonymousReadAccess>
+    {{- else if eq $currentStrategy "hudson.security.ProjectMatrixAuthorizationStrategy" -}}
+      {{- range $configStrategy.permissions }}
+    <permission>{{ . }}</permission>
+      {{- end }}
+    {{- end }}
   </authorizationStrategy>
   <!-- pick a single securityRealm setup not both. If you want to choose AD based authentication
   Please uncomment appropriate section-->
-  <securityRealm class="hudson.security.HudsonPrivateSecurityRealm">
-    <disableSignup>false</disableSignup>
-    <enableCaptcha>false</enableCaptcha>
+  <securityRealm class={{ $currentSecurityRealm | quote }}>
+  {{- if eq $currentSecurityRealm $defaultSecurityRealm -}}
+  <securityRealm class={{ $currentSecurityRealm | quote }}>
+   <disableSignup>false</disableSignup>
+   <enableCaptcha>false</enableCaptcha>
+  {{- else if eq $currentStrategy "hudson.security.LDAPSecurityRealm" -}}
+  <securityRealm class={{ $currentSecurityRealm | quote }} plugin="ldap@1.20">
+    <disableMailAddressResolver>false</disableMailAddressResolver>
+    <configurations>
+      <jenkins.security.plugins.ldap.LDAPConfiguration>
+        <server>{{ $securityRealm.server }}</server>
+        <rootDN>{{ $securityRealm.root_dn }}</rootDN>
+        <inhibitInferRootDN>false</inhibitInferRootDN>
+        <userSearchBase></userSearchBase>
+        <userSearch>sAMACCOUNTNAME={0}</userSearch>
+        <groupMembershipStrategy class="jenkins.security.plugins.ldap.FromUserRecordLDAPGroupMembershipStrategy">
+          <attributeName>memberOf</attributeName>
+        </groupMembershipStrategy>
+        <managerDN>{{ $securityRealm.manager_dn }}</managerDN>
+        <managerPasswordSecret>{{ $securityRealm.password }}</managerPasswordSecret>
+        <displayNameAttributeName>displayname</displayNameAttributeName>
+        <mailAddressAttributeName>mail</mailAddressAttributeName>
+        <ignoreIfUnavailable>false</ignoreIfUnavailable>
+      </jenkins.security.plugins.ldap.LDAPConfiguration>
+    </configurations>
+    <userIdStrategy class="jenkins.model.IdStrategy$CaseInsensitive"/>
+    <groupIdStrategy class="jenkins.model.IdStrategy$CaseInsensitive"/>
+    <disableRolePrefixing>true</disableRolePrefixing>
+  {{ else }}
+  <securityRealm class=ass={{ $currentSecurityRealm | quote }}>
+  {{- end }}
   </securityRealm>
   <!--
   <securityRealm class="hudson.plugins.active_directory.ActiveDirectorySecurityRealm" plugin="active-directory@2.6">
