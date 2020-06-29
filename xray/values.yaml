@@ -76,6 +76,12 @@ networkpolicy:
   #         matchLabels:
   #           app: xray
 
+pod:
+  mandatory_access_control:
+    type: apparmor
+    xray-analysis.fullname:
+      init-wait: runtime/default
+      xray-analysis: runtime/default
 ingress:
   enabled: false
   defaultBackend:
