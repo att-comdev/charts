@@ -78,6 +78,11 @@ rbac:
       - update
 
 pod:
+  mandatory_access_control:
+    type: apparmor
+    jenkins-api:
+      seed: runtime/default
+      jenkins: runtime/default
   security_context:
     jenkins:
       pod:
