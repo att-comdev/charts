@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "artifactory-ha.node.name" . }}
+  name: artifactory-ha.node.name
   labels:
     app: {{ template "artifactory-ha.name" . }}
     chart: {{ template "artifactory-ha.chart" . }}
@@ -25,6 +25,12 @@ spec:
         role: {{ template "artifactory-ha.node.name" . }}
         component: {{ .Values.artifactory.name }}
         release: {{ .Release.Name }}
+      annotations:
+{{- $containers := "remove-lost-found wait-for-db artifactory-ha"}}
+{{- if eq .Values.artifactory.persistence.type "file-system" }}
+      {{- if .Values.artifactory.persistence.fileSystem.existingSharedClaim.enabled }}
+{{ - $containers = printf "%s create-artifactory-data-dir" $containers }}
+{{ dict "envAll" $envAll "podName" "artifactory-ha.node.name" "containerNames" $containers | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
     spec:
       serviceAccountName: {{ template "artifactory-ha.serviceAccountName" . }}
       terminationGracePeriodSeconds: {{ .Values.artifactory.terminationGracePeriodSeconds}}
@@ -85,7 +91,7 @@ spec:
 {{ tpl .Values.artifactory.customInitContainers . | indent 6 }}
     {{- end }}
       containers:
-      - name: {{ .Values.artifactory.name }}
+      - name: artifactory-ha
         image: '{{ .Values.images.tags.artifactory }}'
         imagePullPolicy: {{ .Values.images.pull_policy }}
         securityContext:
