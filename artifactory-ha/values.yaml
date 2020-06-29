@@ -186,6 +186,18 @@ conf:
     override:
     append:
 pod:
+  mandatory_access_control:
+    type: apparmor
+    artifactory-ha.node.name:
+      remove-lost-found: runtime/default
+      create-artifactory-data-dir: runtime/default
+      wait-for-db: runtime/default
+      artifactory-ha: runtime/default
+    artifactory-ha.primary.name:
+      remove-lost-found: runtime/default
+      create-artifactory-data-dir: runtime/default
+      wait-for-db: runtime/default
+      artifactory-ha: runtime/default
   resources:
     jobs:
       storage_init:
