@@ -49,7 +49,7 @@ subjects:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: create-namespaces-{{ .Release.Name }}
+  name: create-namespaces
   annotations:
     "helm.sh/hook": "pre-install,pre-upgrade"
     "helm.sh/hook-delete-policy": "before-hook-creation"
@@ -58,6 +58,8 @@ spec:
     metadata:
       labels:
 {{ tuple $envAll "rbac-manager" "create-namespaces" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 8 }}
+      annotations:
+{{ dict "envAll" $envAll "podName" "create-namespaces" "containerNames" (list "namespace-creator") | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
     spec:
       serviceAccountName: {{ $serviceAccountName }}
       restartPolicy: OnFailure
