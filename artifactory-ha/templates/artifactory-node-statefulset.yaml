@@ -25,6 +25,8 @@ spec:
         role: {{ template "artifactory-ha.node.name" . }}
         component: {{ .Values.artifactory.name }}
         release: {{ .Release.Name }}
+      annotations:
+{{ dict "envAll" $envAll "podName" "artifactory-ha.node.name" "containerNames" (list "remove-lost-found" "wait-for-db" "artifactory-ha" | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
     spec:
       serviceAccountName: {{ template "artifactory-ha.serviceAccountName" . }}
       terminationGracePeriodSeconds: {{ .Values.artifactory.terminationGracePeriodSeconds}}
@@ -85,7 +87,7 @@ spec:
 {{ tpl .Values.artifactory.customInitContainers . | indent 6 }}
     {{- end }}
       containers:
-      - name: {{ .Values.artifactory.name }}
+      - name: artifactory-ha
         image: '{{ .Values.images.tags.artifactory }}'
         imagePullPolicy: {{ .Values.images.pull_policy }}
         securityContext:
