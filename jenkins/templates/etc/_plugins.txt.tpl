@@ -107,7 +107,7 @@ libvirt-slave:1.8.5
 mailer:1.32
 mapdb-api:1.0.9.0
 mask-passwords:2.12.0
-matrix-auth:2.2
+matrix-auth:2.3
 matrix-project:1.14
 maven-plugin:3.6
 mercurial:2.3
@@ -119,7 +119,7 @@ nexus-jenkins-plugin:3.0.20180214-134325.e135900
 oauth-credentials:0.4
 openstack-cloud:2.33
 openstack-heat:1.5
-pam-auth:1.3
+pam-auth:1.5.1
 pipeline-build-step:2.7
 pipeline-github:2.5
 pipeline-githubnotify-step:1.0.5

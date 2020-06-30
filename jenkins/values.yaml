@@ -76,6 +76,15 @@ rbac:
       - create
       - delete
       - update
+    - apiGroups:
+      - ""
+      resources:
+      - events
+      - pods/log
+      verbs:
+      - get
+      - list
+      - watch
 
 pod:
   security_context:
