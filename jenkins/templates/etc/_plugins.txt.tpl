@@ -163,6 +163,7 @@ ssh-slaves:1.26
 ssh-steps:1.1.1
 structs:1.20
 subversion:2.13.1
+textfinder:1.13
 timestamper:1.11.3
 token-macro:2.12
 trilead-api:1.0.6
