@@ -73,7 +73,14 @@ serviceAccount:
   ## The name of the ServiceAccount to use.
   ## If not set and create is true, a name is generated using the fullname template
   name:
-
+pod:
+  mandatory_access_control:
+    type: apparmor
+    mission-control:
+      mission-control: runtime/default
+      wait-for-db: runtime/default
+      prepare-storage: runtime/default
+      set-password: runtime/default
 # Init containers
 initContainers:
   resources:
