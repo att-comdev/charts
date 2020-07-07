@@ -106,6 +106,12 @@ service:
   ## Requires service.type: NodePort
   # nodePort:
 
+pod:
+  mandatory_access_control:
+    type: apparmor
+    mission-control-postgresql:
+      mission-control-postgresql: runtime/default
+
 networkPolicy:
   ## Enable creation of NetworkPolicy resources.
   ##
