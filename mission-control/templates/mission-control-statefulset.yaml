@@ -1,3 +1,5 @@
+{{- $envAll := . }}
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -24,6 +26,8 @@ spec:
         app: {{ template "mission-control.name" . }}
         component: {{ .Values.missionControl.name }}
         release: {{ .Release.Name }}
+      annotations:
+{{ dict "envAll" $envAll "podName" "mission-control" "containerNames" (list "prepare-storage" "wait-for-db" "mission-control") | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
     spec:
       serviceAccountName: {{ template "mission-control.serviceAccountName" . }}
     {{- if .Values.imagePullSecrets }}
