@@ -77,6 +77,14 @@ serviceAccount:
   ## If not set and create is true, a name is generated using the fullname template
   name:
 
+pod:
+  mandatory_access_control:
+    type: apparmor
+    distribution:
+      distributor: runtime/default
+      wait-for-db: runtime/default
+      redis: runtime/default
+      distribution: runtime/default
 secrets:
   tls:
     distribution:
