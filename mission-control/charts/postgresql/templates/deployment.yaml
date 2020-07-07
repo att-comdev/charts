@@ -1,3 +1,5 @@
+{{- $envAll := . }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,6 +17,9 @@ spec:
     metadata:
       labels:
         app: {{ template "postgresql.fullname" . }}
+       annotations:
+{{ tuple $envAll | include "helm-toolkit.snippets.release_uuid" | indent 8 }}
+{{ dict "envAll" $envAll "podName" "mission-control-postgresql" "containerNames" (list "mission-control-postgresql") | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
     spec:
       {{- if .Values.affinity }}
       affinity:
