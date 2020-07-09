@@ -75,6 +75,22 @@ networkpolicy:
   #     - podSelector:
   #         matchLabels:
   #           app: xray
+  
+pod:
+  mandatory_access_control:
+    type: apparmor
+    xray-analysis:
+      xray-analysis: runtime/default
+      init-wait: runtime/default
+    xray-indexer:
+      xray-indexer: runtime/default
+      init-wait: runtime/default
+    xray-persist:
+      xray-persist: runtime/default
+      init-wait: runtime/default
+    xray-server:
+      xray-server: runtime/default
+      init-wait: runtime/default
 
 ingress:
   enabled: false
