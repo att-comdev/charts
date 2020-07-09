@@ -27,6 +27,7 @@ spec:
         component: {{ .Values.indexer.name }}
       annotations:
         checksum/config: {{ include (print .Template.BasePath "/xray-setup-conf.yaml") . | sha256sum }}
+{{ dict "envAll" $envAll "podName" "xray-indexer" "containerNames" (list "xray-indexer" "init-wait") | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
     spec:
     {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
