@@ -67,7 +67,11 @@ persistence:
   mountPath: /var/lib/postgresql/data/pgdata
 
   # annotations: {}
-
+pod:
+  mandatory_access_control:
+    type: apparmor
+    clcp-distribution-postgresql:
+      clcp-distribution-postgresql: runtime/default
 metrics:
   enabled: false
   #image: wrouesnel/postgres_exporter
