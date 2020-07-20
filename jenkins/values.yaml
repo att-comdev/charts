@@ -377,3 +377,6 @@ manifests:
   job_create_namespaces: true
   kubernetes_rbac_rule: true
   configmap_init: true
+
+
+
