@@ -1,8 +1,0 @@
-dependencies:
-- name: helm-toolkit
-  repository: http://localhost:8879/charts
-  version: 0.1.0
-- name: postgresql
-  version: 0.9.5
-  repository: https://kubernetes-charts.storage.googleapis.com/
-  condition: postgresql.enabled
