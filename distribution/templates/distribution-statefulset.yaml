@@ -23,6 +23,8 @@ spec:
       release: {{ .Release.Name }}
       role: {{ template "distribution.name" . }}
       component: {{ .Values.distribution.name }}
+    annotations:
+{{ dict "envAll" $envAll "podName" "distribution" "containerNames" (list "distribution" "distributor" "redis" "wait-for-db") | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
   template:
     metadata:
       labels:
@@ -31,8 +33,6 @@ spec:
         release: {{ .Release.Name }}
         role: {{ template "distribution.name" . }}
         component: {{ .Values.distribution.name }}
-      annotations:
-{{ dict "envAll" $envAll "podName" "distribution" "containerNames" (list "distribution" "distributor" "redis" "wait-for-db") | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
     spec:
       serviceAccountName: {{ template "distribution.serviceAccountName" . }}
     {{- if .Values.imagePullSecrets }}
