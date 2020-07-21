@@ -8,8 +8,8 @@
 images:
   tags:
     initContainerImage: "alpine:3.8"
-    distribution: docker.bintray.io/jfrog/distribution-distribution:1.6.1
-    distributor: docker.bintray.io/jfrog/distribution-distributor:1.6.1
+    distribution: docker.bintray.io/jfrog/distribution-distribution:1.7.2
+    distributor: docker.bintray.io/jfrog/distribution-distributor:1.7.2
     redis: docker.io/bitnami/redis:4.0.11-debian-9
     logger: busybox:1.30
 
@@ -118,38 +118,9 @@ ingress:
   #   hosts:
   #     - distribution.domain.example
 
-# Sub charts
-## Configuration values for the mongodb dependency
-## ref: https://github.com/kubernetes/charts/blob/master/stable/mongodb/README.md
-##
-mongodb:
-  enabled: false
-  image:
-    tag: 3.6.3
-    pullPolicy: IfNotPresent
-  persistence:
-    enabled: false
-    size: 10Gi
-  resources: {}
-  #  requests:
-  #    memory: "2Gi"
-  #    cpu: "100m"
-  #  limits:
-  #    memory: "2Gi"
-  #    cpu: "250m"
-  ## Make sure the --wiredTigerCacheSizeGB is no more than half the memory limit!
-  ## This is critical to protect against OOMKill by Kubernetes!
-  mongodbExtraFlags:
-  - "--wiredTigerCacheSizeGB=1"
-  mongodbRootPassword: password
-  mongodbUsername: distribution
-  mongodbPassword: password
-  mongodbDatabase: bintray
-  livenessProbe:
-    initialDelaySeconds: 40
-  readinessProbe:
-    initialDelaySeconds: 30
-
+# Postgresql
+## Configuration values for the postgresql dependency
+## ref: https://github.com/kubernetes/charts/blob/master/stable/postgresql/README.md
 postgresql:
   enabled: true
   imageTag: "9.6.11"
@@ -197,10 +168,6 @@ database:
   #    key: "db-password"
 
 ## Configuration values for the redis dependency
-## ref: https://github.com/helm/charts/blob/master/stable/redis/README.md
-##
-
-## Configuration values for the redis dependency
 ## ref: https://github.com/kubernetes/charts/blob/master/stable/redis/README.md
 ##
 redis:
@@ -240,12 +207,6 @@ redis:
 common:
   uid: 1020
   gid: 1020
-
-# For setting up external services, must pass the connection URL for them
-global:
-  mongoUrl:
-  mongoAuditUrl:
-  redisUrl:
 
 distribution:
   replicaCount: 1
