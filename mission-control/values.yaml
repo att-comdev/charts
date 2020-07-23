@@ -360,7 +360,7 @@ missionControl:
   affinity: {}
 
   service:
-    type: LoadBalancer
+    type: ClusterIP
     annotations: {}
   internalPort: 8080
   externalPort: 80
@@ -522,6 +522,6 @@ insightExecutor:
   #  limits:
   #    memory: "128Mi"
   #    cpu: "50m"
-  
+
 manifests:
   secret_ingress_tls: true
