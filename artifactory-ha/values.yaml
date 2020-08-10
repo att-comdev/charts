@@ -342,7 +342,7 @@ artifactory:
   #      target: etc/
 
   # Sidecar containers for tailing Artifactory logs
-  loggers: []
+  loggers: ['acess.log']
   # - request.log
   # - event.log
   # - binarystore.log
