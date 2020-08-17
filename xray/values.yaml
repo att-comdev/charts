@@ -305,13 +305,6 @@ common:
   #      - mountPath: "{{ .Values.common.xrayConfigPath }}"
   #        name: data-volume
 
-# For setting up external services, must pass the connection URL for them
-global:
-  mongoUrl:
-  postgresqlUrl:
-  # Kubernetes secret with Postgres TLS certificates
-  postgresqlTlsSecret:
-
 analysis:
   name: xray-analysis
   updateStrategy: RollingUpdate
@@ -466,3 +459,10 @@ server:
 
 manifests:
   secret_ingress_tls: true
+
+# For setting up external services, must pass the connection URL for them
+global:
+  mongoUrl:
+  postgresqlUrl:
+  # Kubernetes secret with Postgres TLS certificates
+  postgresqlTlsSecret:
