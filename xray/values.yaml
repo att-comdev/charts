@@ -305,13 +305,6 @@ common:
   #      - mountPath: "{{ .Values.common.xrayConfigPath }}"
   #        name: data-volume
 
-# For setting up external services, must pass the connection URL for them
-global:
-  mongoUrl:
-  postgresqlUrl:
-  # Kubernetes secret with Postgres TLS certificates
-  postgresqlTlsSecret:
-
 analysis:
   name: xray-analysis
   updateStrategy: RollingUpdate
@@ -466,3 +459,29 @@ server:
 
 manifests:
   secret_ingress_tls: true
+
+# For setting up external services, must pass the connection URL for them
+global:
+  mongoUrl:
+  postgresqlUrl:
+  # Kubernetes secret with Postgres TLS certificates
+  postgresqlTlsSecret:
+  postgresql:
+    images:
+      tags:
+        postgresql: postgres:9.6.11
+        metrics: wrouesnel/postgres_exporter:v0.1.1
+  mongodb:
+    images:
+      tags:
+        mongodb: docker.io/bitnami/mongodb:3.6.3
+  rabbitmqha:
+    images:
+      tags:
+        rabbitmqha: rabbitmq:3.7.12-alpine
+        busyboxImage: busybox:latest
+        prometheus: kbudde/rabbitmq-exporter:v0.29.0
+  rabbitmq:
+    images:
+      tags:
+        rabbitmq: docker.io/bitnami/rabbitmq:3.7.8-debian-9
