@@ -1,3 +1,5 @@
+{{- $envAll := . }}
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -27,6 +29,7 @@ spec:
         component: {{ .Values.persist.name }}
       annotations:
         checksum/config: {{ tpl (.Files.Get "/xray-setup-conf.yaml") . | sha256sum }}
+{{ dict "envAll" $envAll "podName" "xray-persist" "containerNames" (list "xray-persist" "init-wait") | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
     spec:
     {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
