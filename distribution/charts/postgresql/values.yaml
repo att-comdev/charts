@@ -105,6 +105,13 @@ service:
   ## Manually set NodePort value
   ## Requires service.type: NodePort
   # nodePort:
+  
+pod:
+  mandatory_access_control:
+    type: apparmor
+    clcp-distribution-postgresql:
+      clcp-distribution-postgresql: runtime/default
+
 networkPolicy:
   ## Enable creation of NetworkPolicy resources.
   ##
