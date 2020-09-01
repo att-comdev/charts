@@ -101,7 +101,11 @@ service:
   ## Manually set NodePort value
   ## Requires service.type: NodePort
   # nodePort:
-
+pod:
+  mandatory_access_control:
+    type: apparmor
+    clcp-xray-postgresql:
+      clcp-xray-postgresql: runtime/default
 networkPolicy:
   ## Enable creation of NetworkPolicy resources.
   ##

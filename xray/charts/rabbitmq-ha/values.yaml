@@ -262,6 +262,12 @@ ingress:
   annotations:
   #  kubernetes.io/ingress.class: nginx
 
+pod:
+  mandatory_access_control:
+    type: apparmor
+    clcp-xray-rabbitmq-ha:
+      copy-rabbitmq-config: runtime/default
+      rabbitmq-ha: runtime/default
 livenessProbe:
   initialDelaySeconds: 120
   timeoutSeconds: 5

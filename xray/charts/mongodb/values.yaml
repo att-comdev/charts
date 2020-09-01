@@ -83,6 +83,11 @@ resources:
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
 nodeSelector: {}
 
+pod:
+  mandatory_access_control:
+    type: apparmor
+    clcp-xray-mongodb:
+      clcp-xray-mongodb: runtime/default
 ## Configure extra options for liveness and readiness probes
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes)
 livenessProbe:
