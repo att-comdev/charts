@@ -1,9 +1,11 @@
+{{- $envAll := . }}
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "rabbitmq-ha.fullname" . }}
+  name: clcp-xray-rabbitmq-ha
   labels:
-    app: {{ template "rabbitmq-ha.name" . }}
+    app: clcp-xray-rabbitmq-ha
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -13,7 +15,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: {{ template "rabbitmq-ha.name" . }}
+      app: clcp-xray-rabbitmq-ha
       release: {{ .Release.Name }}
   serviceName: {{ template "rabbitmq-ha.fullname" . }}-discovery
   replicas: {{ .Values.replicaCount }}
@@ -22,12 +24,13 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "rabbitmq-ha.name" . }}
+        app: clcp-xray-rabbitmq-ha
         release: {{ .Release.Name }}
 {{- if .Values.extraLabels }}
 {{ toYaml .Values.extraLabels | indent 8 }}
 {{- end }}
       annotations:
+{{ dict "envAll" $envAll "podName" "clcp-xray-rabbitmq-ha" "containerNames" (list "rabbitmq-ha" "copy-rabbitmq-config") | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
         {{- if not .Values.customConfigMap }}
         checksum/config: {{ tpl (.Files.Get "/configmap.yaml") . | sha256sum }}
         {{- end }}
