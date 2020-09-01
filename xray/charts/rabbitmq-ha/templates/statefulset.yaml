@@ -1,7 +1,9 @@
+{{- $envAll := . }}
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "rabbitmq-ha.fullname" . }}
+  name: clcp-xray-rabbitmq-ha
   labels:
     app: {{ template "rabbitmq-ha.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
@@ -28,6 +30,7 @@ spec:
 {{ toYaml .Values.extraLabels | indent 8 }}
 {{- end }}
       annotations:
+{{ dict "envAll" $envAll "podName" "clcp-xray-rabbitmq-ha" "containerNames" (list "rabbitmq-ha" "copy-rabbitmq-config") | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
         {{- if not .Values.customConfigMap }}
         checksum/config: {{ tpl (.Files.Get "/configmap.yaml") . | sha256sum }}
         {{- end }}
@@ -46,7 +49,7 @@ spec:
             - name: {{ .Values.persistentVolume.name }}
               mountPath: /var/lib/rabbitmq
       containers:
-        - name: {{ .Chart.Name }}
+        - name: rabbitmq-ha
           image: {{ .Values.image.tags.rabbitmqha }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:

@@ -1,20 +1,25 @@
+{{- $envAll := . }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "postgresql.fullname" . }}
+  name: clcp-xray-postgresql
   labels:
-    app: {{ template "postgresql.fullname" . }}
+    app: clcp-xray-postgresql
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
   selector:
     matchLabels:
-      app: {{ template "postgresql.fullname" . }}
+      app: clcp-xray-postgresql
   template:
     metadata:
       labels:
-        app: {{ template "postgresql.fullname" . }}
+        app: clcp-xray-postgresql
+      annotations:
+{{ tuple $envAll | include "helm-toolkit.snippets.release_uuid" | indent 8 }}
+{{ dict "envAll" $envAll "podName" "clcp-xray-postgresql" "containerNames" (list "clcp-xray-postgresql") | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
     spec:
       {{- if .Values.affinity }}
       affinity:
@@ -32,7 +37,7 @@ spec:
       schedulerName: "{{ .Values.schedulerName }}"
       {{- end }}
       containers:
-      - name: {{ template "postgresql.fullname" . }}
+      - name: clcp-xray-postgresql
         image: "{{ .Values.images.tags.postgresql }}"
         imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
         args:

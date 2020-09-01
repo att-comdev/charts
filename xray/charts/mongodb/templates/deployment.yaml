@@ -1,7 +1,9 @@
+{{- $envAll := . }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "mongodb.fullname" . }}
+  name: clcp-xray-mongodb
   labels:
     app: {{ template "mongodb.name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -17,6 +19,9 @@ spec:
       labels:
         app: {{ template "mongodb.name" . }}
         release: "{{ .Release.Name }}"
+      annotations:
+{{ tuple $envAll | include "helm-toolkit.snippets.release_uuid" | indent 8 }}
+{{ dict "envAll" $envAll "podName" "clcp-xray-mongodb" "containerNames" (list "clcp-xray-mongodb") | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
     spec:
       {{- if .Values.nodeSelector }}
       nodeSelector:
@@ -29,7 +34,7 @@ spec:
       {{- end}}
       {{- end }}
       containers:
-      - name: {{ template "mongodb.fullname" . }}
+      - name: clcp-xray-mongodb
         image: {{ template "mongodb.image" . }}
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
         env:
