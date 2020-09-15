@@ -44,6 +44,8 @@ spec:
           mountPath: /var/lib/dockerproxy
         - name: rundindproxy
           mountPath: /var/run/dindproxy
+        - mountPath: /data/srv/
+          name: jenkinsmount
       nodeSelector:
         {{ .Values.labels.dind.node_selector_key }}: {{ .Values.labels.dind.node_selector_value }}
       terminationGracePeriodSeconds: 30
@@ -53,3 +55,6 @@ spec:
       - name: rundindproxy
         hostPath:
           path: /var/run/dindproxy/
+      - hostPath:
+          path: /tmp/jenkinsdata
+        name: jenkinsmount
