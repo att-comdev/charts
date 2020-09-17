@@ -325,7 +325,7 @@ logger:
   # image:
   #  repository: busybox
   #  tag: 1.30
-
+  # names: ['artifactory','request']  
 # Artifactory
 artifactory:
   name: artifactory-ha
