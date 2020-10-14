@@ -252,11 +252,21 @@ conf:
           url: https://review.gerrithub.io/att-comdev/cicd
           branch: master
           credentials: null
+          shallow: true
+          noTags: false
+          reference: null
+          depth: 1
+          honorRefspec: false
         internal_lib:
           name: cicd_internal_libs
           url: https://internal_url.com/cicd
           branch: master
           credentials: null
+          shallow: true
+          noTags: false
+          reference: null
+          depth: 1
+          honorRefspec: false
 
 ingress:
   enabled: true
