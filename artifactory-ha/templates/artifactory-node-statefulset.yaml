@@ -29,6 +29,10 @@ spec:
         component: {{ .Values.artifactory.name }}
         release: {{ .Release.Name }}
       annotations:
+        checksum/binarystore: {{ include (print $.Template.BasePath "/artifactory-binarystore.yaml") . | sha256sum }}
+      {{- range $key, $value := .Values.artifactory.annotations }}
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
 {{ dict "envAll" $envAll "podName" "artifactory-ha-member" "containerNames" (list "remove-lost-found" "wait-for-db" "artifactory-ha") | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
     spec:
       serviceAccountName: {{ template "artifactory-ha.serviceAccountName" . }}
@@ -195,6 +199,18 @@ spec:
       {{- if .Values.artifactory.replicator.enabled }}
           -Dartifactory.releasebundle.feature.enabled=true
       {{- end }}
+      {{- if .Values.artifactory.node.javaOpts.jmx.enabled }}
+        -Dcom.sun.management.jmxremote
+        -Dcom.sun.management.jmxremote.port={{ .Values.artifactory.node.javaOpts.jmx.port }}
+        -Dcom.sun.management.jmxremote.rmi.port={{ .Values.artifactory.node.javaOpts.jmx.port }}
+        -Dcom.sun.management.jmxremote.ssl={{ .Values.artifactory.node.javaOpts.jmx.ssl }}
+      {{- if .Values.artifactory.node.javaOpts.jmx.host }}
+        -Djava.rmi.server.hostname={{ tpl .Values.artifactory.node.javaOpts.jmx.host $ }}
+      {{- else }}
+        -Djava.rmi.server.hostname={{ template "artifactory-ha.fullname" $ }}
+      {{- end }}
+        -Dcom.sun.management.jmxremote.authenticate=false
+      {{- end }}
             "
         {{- if .Values.artifactory.replicator.enabled }}
         - name: START_LOCAL_REPLICATOR
@@ -235,6 +251,9 @@ spec:
       {{- end }}
         ports:
         - containerPort: {{ .Values.artifactory.internalPort }}
+        {{- if .Values.artifactory.node.javaOpts.jmx.enabled }}
+        - containerPort: {{ .Values.artifactory.node.javaOpts.jmx.port }}
+        {{- end }}
         volumeMounts:
         - name: artifactory-extra-etc
           mountPath: "/artifactory_extra_conf/db.properties"

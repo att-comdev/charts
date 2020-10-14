@@ -39,9 +39,11 @@ labels:
     node_selector_value: enabled
 images:
   tags:
-    artifactory: quay.io/attcomdev/artifactory-pro-mysql:6.9.2
+    #artifactory: quay.io/attcomdev/artifactory-pro-mysql:6.9.2
+    artifacotry: docker.bintray.io/jfrog/artifactory-pro:6.10.4
     initContainerImage: "alpine:3.6"
-    nginx: docker.bintray.io/jfrog/nginx-artifactory-pro:6.9.2
+    #nginx: docker.bintray.io/jfrog/nginx-artifactory-pro:6.9.2
+    nginx: docker.bintray.io/jfrog/nginx-artifactory-pro:6.10.4
     db_init: docker.io/openstackhelm/heat:ocata
     ceph_key_placement: docker.io/port/ceph-config-helper:v1.10.3
     s3_bucket: docker.io/openstackhelm/ceph-daemon:latest
@@ -329,7 +331,9 @@ logger:
 # Artifactory
 artifactory:
   name: artifactory-ha
-
+  image:
+    # Note that by default we use appVersion to get image tag
+    version: 6.10.4
   # Files to copy to ARTIFACTORY_HOME/ on each Artifactory startup
   copyOnEveryStartup:
   #     # absolute path
@@ -506,6 +510,7 @@ artifactory:
     accessMode: ReadWriteOnce
     size: 200Gi
     maxCacheSize: 50000000000
+    cacheProviderDir: cache
     eventual:
       numberOfThreads: 10
     ## artifactory data Persistent Volume Storage Class
@@ -637,6 +642,12 @@ artifactory:
       xms: "1g"
       xmx: "2g"
       other: "-Dartifactory.async.corePoolSize=128"
+      jmx:
+        enabled: false
+        port: 9010
+        host:
+        ssl: false
+      other: "-Dartifactory.async.corePoolSize=128"
     nodeSelector: {}
 
     tolerations: []
@@ -670,6 +681,11 @@ artifactory:
       xms: "1g"
       xmx: "2g"
       other: "-Dartifactory.async.corePoolSize=128"
+      jmx:
+        enabled: false
+        port: 9010
+        host:
+        ssl: false
     nodeSelector: {}
 
     tolerations: []
