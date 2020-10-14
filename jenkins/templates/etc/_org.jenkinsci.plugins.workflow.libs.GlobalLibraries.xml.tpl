@@ -22,7 +22,15 @@
           </branches>
           <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
           <submoduleCfg class="list"/>
-          <extensions/>
+          <extensions>
+            <hudson.plugins.git.extensions.impl.CloneOption>
+              <shallow>{{ .Values.conf.global_libraries.libraries.upstream_lib.shallow }}</shallow>
+              <noTags>{{ .Values.conf.global_libraries.libraries.upstream_lib.noTags }}</noTags>
+              <reference>{{ .Values.conf.global_libraries.libraries.upstream_lib.reference }}</reference>
+              <depth>{{ .Values.conf.global_libraries.libraries.upstream_lib.depth }}</depth>
+              <honorRefspec>{{ .Values.conf.global_libraries.libraries.upstream_lib.honorRefspec }}</honorRefspec>
+            </hudson.plugins.git.extensions.impl.CloneOption>
+          </extensions>
         </scm>
       </retriever>
       <defaultVersion>master</defaultVersion>
@@ -52,7 +60,15 @@
             </branches>
             <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
             <submoduleCfg class="list"/>
-            <extensions/>
+            <extensions>
+              <hudson.plugins.git.extensions.impl.CloneOption>
+                <shallow>{{ .Values.conf.global_libraries.libraries.internal_lib.shallow }}</shallow>
+                <noTags>{{ .Values.conf.global_libraries.libraries.internal_lib.noTags }}</noTags>
+                <reference>{{ .Values.conf.global_libraries.libraries.internal_lib.reference }}</reference>
+                <depth>{{ .Values.conf.global_libraries.libraries.internal_lib.depth }}</depth>
+                <honorRefspec>{{ .Values.conf.global_libraries.libraries.internal_lib.honorRefspec }}</honorRefspec>
+              </hudson.plugins.git.extensions.impl.CloneOption>
+            </extensions>
           </scm>
         </retriever>
         <defaultVersion>master</defaultVersion>
