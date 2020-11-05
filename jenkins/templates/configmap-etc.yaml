@@ -105,3 +105,11 @@ data:
 {{- else -}}
 {{ tuple "etc/_hudson.tasks.Mailer.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
 {{- end }}
+{{ if .Values.conf.location_config.enable }}
+  jenkins.model.JenkinsLocationConfiguration.xml: |
+{{ if .Values.conf.location_config.override -}}
+{{ .Values.conf.location_config.override | indent 4 }}
+{{- else -}}
+{{ tuple "etc/_jenkins.model.JenkinsLocationConfiguration.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+{{- end }}
+{{- end }}
