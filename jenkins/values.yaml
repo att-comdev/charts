@@ -267,6 +267,11 @@ conf:
           reference: null
           depth: 1
           honorRefspec: false
+  location_config:
+    override: null
+    enable: false
+    jenkinsUrl: null
+    email: null
 
 ingress:
   enabled: true
