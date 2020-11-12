@@ -21,7 +21,7 @@
         <hudson.model.StringParameterDefinition>
           <name>GERRIT_REFSPEC</name>
           <description>Gerrit refspec</description>
-          <defaultValue>origin/master</defaultValue>
+          <defaultValue>origin/main</defaultValue>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
@@ -39,7 +39,7 @@
         <hudson.model.StringParameterDefinition>
           <name>GERRIT_BRANCH</name>
           <description></description>
-          <defaultValue>master</defaultValue>
+          <defaultValue>main</defaultValue>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
@@ -250,7 +250,7 @@ copy_seed(){
 find_seed(){
 
     if [ -z &quot;${SEED_PATH}&quot; ]; then
-        if [ &quot;${GERRIT_REFSPEC}&quot; = &quot;origin/master&quot; ]; then
+        if [[ &quot;${GERRIT_REFSPEC}&quot; == &quot;origin*&quot; ]]; then
             echo &quot;ERROR: empty SEED_PATH parameter.&quot;
             exit 1
         fi
