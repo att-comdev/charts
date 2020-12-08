@@ -102,9 +102,11 @@ spec:
             - name: jenkins-etc
               mountPath: /seed/audit-trail.xml
               subPath: audit-trail.xml
+            {{- if Values.conf.location_config.enable }}
             - name: jenkins-etc
               mountPath: /seed/jenkins.model.JenkinsLocationConfiguration.xml
               subPath: jenkins.model.JenkinsLocationConfiguration.xml
+            {{- end}}
             - name: jenkins-init
               mountPath: /tmp/relaxed-CSP.groovy
               subPath: relaxed-CSP.groovy
