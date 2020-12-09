@@ -91,7 +91,7 @@
         <onUnstable>false</onUnstable>
         <onNotBuilt>false</onNotBuilt>
       </skipVote>
-      <silentMode>false</silentMode>
+      <silentMode>true</silentMode>
       <notificationLevel></notificationLevel>
       <silentStartMode>false</silentStartMode>
       <escapeQuotes>true</escapeQuotes>
