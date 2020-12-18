@@ -107,6 +107,16 @@ spec:
               mountPath: /seed/jenkins.model.JenkinsLocationConfiguration.xml
               subPath: jenkins.model.JenkinsLocationConfiguration.xml
             {{- end}}
+            {{- if .Values.conf.gerrit_trigger.enable }}
+            - name: jenkins-etc
+              mountPath: /seed/gerrit-trigger.xml
+              subPath: gerrit-trigger.xml
+            {{- range .Values.conf.gerrit_trigger.servers }}
+            - name: jenkins-secret
+              mountPath: /seed/.ssh/id_rsa_{{ .name }}
+              subPath: id_rsa_{{ .name }}
+            {{- end }}
+            {{- end }}
             - name: jenkins-init
               mountPath: /tmp/relaxed-CSP.groovy
               subPath: relaxed-CSP.groovy
