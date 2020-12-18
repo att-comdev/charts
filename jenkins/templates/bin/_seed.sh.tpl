@@ -26,6 +26,18 @@ mkdir -p /var/jenkins_home/jobs/CICD/jobs/SuperSeed
 mv -nv /seed/cicdfolderconfig.xml /var/jenkins_home/jobs/CICD/config.xml
 mv -nv /seed/superseedconfig.xml /var/jenkins_home/jobs/CICD/jobs/SuperSeed/config.xml
 
+{{- if .Values.conf.gerrit_trigger.enable }}
+# Add ssh keys for gerrit trigger.
+mkdir -p /var/jenkins_home/.ssh
+{{- range .Values.conf.gerrit_trigger.servers }}
+{{- if .gerrit_authkey_path }}
+cp -nvpL /keys/id_rsa_{{ .name }} /var/jenkins_home/.ssh/{{ .gerrit_authkey_path }}
+{{- else }}
+cp -nvpL /keys/id_rsa_{{ .name }} /var/jenkins_home/.ssh/id_rsa_{{ .name }}
+{{- end }}
+{{- end }}
+{{- end }}
+
 # copy jenkins css file
 mkdir -p /var/jenkins_home/init.groovy.d/
 cp -fv /tmp/relaxed-CSP.groovy /var/jenkins_home/init.groovy.d/relaxed-CSP.groovy
