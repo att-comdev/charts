@@ -1,0 +1,95 @@
+{{/*
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/}}
+
+{{- if and .Values.conf.gerrit_trigger.enable .Values.conf.gerrit_trigger.servers }}
+{{- $envAll := . }}
+
+{{- $jobName := "jenkins-ssh-key" }}
+
+{{- $serviceAccountName := $jobName }}
+{{ tuple $envAll "job_ssh_key" $serviceAccountName | include "helm-toolkit.snippets.kubernetes_pod_rbac_serviceaccount" }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ $serviceAccountName }}
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+      - create
+      - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ $serviceAccountName }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ $serviceAccountName }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ $serviceAccountName }}
+    namespace: {{ $envAll.Release.Namespace }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ $jobName }}
+  annotations:
+    {{ tuple $envAll | include "helm-toolkit.snippets.release_uuid" }}
+spec:
+  template:
+    metadata:
+      labels:
+{{ tuple $envAll "jenkins" $jobName | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 8 }}
+    spec:
+      serviceAccountName: {{ $serviceAccountName }}
+      restartPolicy: OnFailure
+      nodeSelector:
+        {{ $envAll.Values.labels.job.node_selector_key }}: {{ $envAll.Values.labels.job.node_selector_value }}
+      initContainers:
+{{ tuple $envAll "job_ssh_key" list | include "helm-toolkit.snippets.kubernetes_entrypoint_init_container" | indent 8 }}
+        - name: "prepare-keys"
+{{ tuple $envAll "jenkins" | include "helm-toolkit.snippets.image" | indent 10 }}
+          command:
+            - /tmp/add_ssh_keys.sh
+          volumeMounts:
+            - name: jenkins-bin
+              mountPath: /tmp/add_ssh_keys.sh
+              subPath: add_ssh_keys.sh
+      containers:
+        - name: {{ $jobName }}
+{{ tuple $envAll "namespace_creator" | include "helm-toolkit.snippets.image" | indent 10 }}
+          command:
+            - kubectl
+            - create
+            - secret
+            - generic
+            - jenkins-secret
+            - "--from-file=/tmp/.ssh"
+          volumeMounts:
+            - name: jenkins-bin
+              mountPath: /tmp/add_ssh_keys.sh
+              subPath: add_ssh_keys.sh
+      volumes:
+        - name: jenkins-bin
+          configMap:
+            name: jenkins-bin
+            defaultMode: 0555
+{{- end }}
