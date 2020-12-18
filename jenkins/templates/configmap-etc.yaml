@@ -113,3 +113,11 @@ data:
 {{ tuple "etc/_jenkins.model.JenkinsLocationConfiguration.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
 {{- end }}
 {{- end }}
+{{ if .Values.conf.gerrit_trigger.enable }}
+  gerrit-trigger.xml: |
+{{ if .Values.conf.gerrit_trigger.override -}}
+{{ .Values.conf.gerrit_trigger.override | indent 4 }}
+{{- else -}}
+{{ tuple "etc/_gerrit-trigger.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+{{- end }}
+{{- end }}
