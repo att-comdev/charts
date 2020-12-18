@@ -272,6 +272,51 @@ conf:
     enable: false
     jenkinsUrl: null
     email: null
+  gerrit_trigger:
+    override: null
+    enable: false
+    servers:
+      - name: "Gerrit-server"
+        gerrit_hostname: ""
+        gerrit_port: "29418"
+        gerrit_proxy: ""
+        gerrit_username: ""
+        gerrit_email: ""
+        gerrit_authkey: null
+        gerrit_authkey_path: ""
+        gerrit_authkey_password: ""
+        gerrit_frontend_url: ""
+        no_connection_on_startup: "false"
+        use_rest_api: "false"
+        rest_codereview: "false"
+        rest_verified: "fasle"
+        gerrit_verified_cmd_successful: null
+        gerrit_verified_cmd_unstable: null
+        gerrit_verified_cmd_failed: null
+        gerrit_verified_cmd_started: null
+        gerrit_verified_cmd_not_built: null
+        gerrit_build_started_verified: 0
+        gerrit_build_successful_verified: 1
+        gerrit_build_failed_verified: -1
+        gerrit_build_unstable_verified: 0
+        gerrit_build_not_built_verified: 0
+        gerrit_build_started_codereview: 0
+        gerrit_build_successful_codereview: 0
+        gerrit_build_failed_codereview: 0
+        gerrit_build_unstable_codereview: -1
+        gerrit_build_not_built_codereview: 0
+        enable_manual_trigger: "true"
+        enable_plugin_messages: "true"
+        trigger_on_all_comments: "false"
+        schedule_delay: "3"
+        dynamic_config_refresh_interval: "30"
+        project_auto_completion: "true"
+        project_list_fetch_interval: "3600"
+        project_list_fetch_delay: "0"
+        build_current_patches_only: "false"
+        abort_new_patch_sets: "false"
+        abort_manual_patch_sets: "false"
+        abort_same_topic: "false"
 
 ingress:
   enabled: true
@@ -380,6 +425,7 @@ dependencies:
     api:
       jobs:
         - jenkins-ks-user
+        - jenkins-ssh-key
       services:
         - service: identity
           endpoint: internal
