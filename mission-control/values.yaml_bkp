@@ -337,7 +337,7 @@ elasticsearch:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    storageClass: general
+    storageClass: standard
 
   ## ElasticSearch xms and xmx should be same!
   javaOpts: {}
@@ -543,7 +543,7 @@ missionControl:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    storageClass: general
+    storageClass: standard
 
   ## Control Java options (JAVA_OPTIONS)
   ## IMPORTANT: keep resources.limits.memory higher than javaOpts.xmx by 0.5G
@@ -646,7 +646,7 @@ insightServer:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    storageClass: general
+    storageClass: standard
 
   ## Add any of the loggers to a sidecar if you want to be able to see them with kubectl logs or a log collector in your k8s cluster
   loggers: []
@@ -730,7 +730,7 @@ insightScheduler:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    storageClass: general
+    storageClass: standard
 
   ## Add any of the loggers to a sidecar if you want to be able to see them with kubectl logs or a log collector in your k8s cluster
   loggers: []
