@@ -1,6 +1,7 @@
 {{- if .Values.ingress.enabled -}}
 {{- $serviceName := include "mission-control.fullname" . -}}
 {{- $servicePort := .Values.missionControl.externalPort -}}
+{{- $routerPort := .Values.router.externalPort -}}
 {{- if semverCompare ">=v1.14.0" .Capabilities.KubeVersion.GitVersion }}
 apiVersion: networking.k8s.io/v1beta1
 {{- else }}
@@ -32,7 +33,7 @@ spec:
           - path: {{ $.Values.ingress.path }}
             backend:
               serviceName: {{ $serviceName }}
-              servicePort: {{ $servicePort }}
+              servicePort: {{ $routerPort }}
   {{- end -}}
   {{- with .Values.ingress.additionalRules }}
 {{ tpl . $ | indent 2 }}
