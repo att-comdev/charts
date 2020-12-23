@@ -32,7 +32,7 @@ spec:
           - path: {{ $.Values.ingress.path }}
             backend:
               serviceName: {{ $serviceName }}
-              servicePort: {{ $servicePort }}
+              servicePort: {{ $.Values.router.externalPort }}
   {{- end -}}
   {{- with .Values.ingress.additionalRules }}
 {{ tpl . $ | indent 2 }}
