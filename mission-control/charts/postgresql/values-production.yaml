@@ -13,9 +13,9 @@ global:
 ## ref: https://hub.docker.com/r/bitnami/postgresql/tags/
 ##
 image:
-  postgresql: docker.io/bitnami/postgresql:12.3.0-debian-10-r71
-  volumePermissions: docker.io/bitnami/minideb:buster
-  metrics: docker.io/bitnami/postgres-exporter:0.8.0-debian-10-r188
+  registry: docker.io
+  repository: bitnami/postgresql
+  tag: 11.9.0-debian-10-r1
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -105,16 +105,16 @@ rbac:
   create: false
 
 replication:
-  enabled: false
+  enabled: true
   user: repl_user
   password: repl_password
-  slaveReplicas: 1
+  slaveReplicas: 2
   ## Set synchronous commit mode: on, off, remote_apply, remote_write and local
   ## ref: https://www.postgresql.org/docs/9.6/runtime-config-wal.html#GUC-WAL-LEVEL
-  synchronousCommit: 'off'
+  synchronousCommit: 'on'
   ## From the number of `slaveReplicas` defined above, set the number of those that will have synchronous replication
   ## NOTE: It cannot be > slaveReplicas
-  numSynchronousReplicas: 0
+  numSynchronousReplicas: 1
   ## Replication Cluster application name. Useful for defining multiple replication policies
   applicationName: my_application
 
@@ -210,6 +210,10 @@ extraEnv: []
 #      #!/bin/sh
 #      echo "Do something."
 
+## Specify the PostgreSQL username and password to execute the initdb scripts
+# initdbUser:
+# initdbPassword:
+
 ## ConfigMap with scripts to be run at first boot
 ## NOTE: This will override initdbScripts
 # initdbScriptsConfigMap:
@@ -217,10 +221,6 @@ extraEnv: []
 ## Secret with scripts to be run at first boot (in case it contains sensitive information)
 ## NOTE: This can work along initdbScripts or initdbScriptsConfigMap
 # initdbScriptsSecret:
-
-## Specify the PostgreSQL username and password to execute the initdb scripts
-# initdbUser:
-# initdbPassword:
 
 ## Optional duration in seconds the pod needs to terminate gracefully.
 ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
@@ -340,15 +340,6 @@ master:
   podLabels: {}
   podAnnotations: {}
   priorityClassName: ''
-  ## Extra init containers
-  ## Example
-  ##
-  ## extraInitContainers:
-  ##   - name: do-something
-  ##     image: busybox
-  ##     command: ['do', 'something']
-  extraInitContainers: []
-
   ## Additional PostgreSQL Master Volume mounts
   ##
   extraVolumeMounts: []
@@ -391,10 +382,14 @@ slave:
   podLabels: {}
   podAnnotations: {}
   priorityClassName: ''
-  extraInitContainers: |
-    # - name: do-something
-    #   image: busybox
-    #   command: ['do', 'something']
+  ## Extra init containers
+  ## Example
+  ##
+  ## extraInitContainers:
+  ##   - name: do-something
+  ##     image: busybox
+  ##     command: ['do', 'something']
+  extraInitContainers: []
   ## Additional PostgreSQL Slave Volume mounts
   ##
   extraVolumeMounts: []
@@ -509,7 +504,7 @@ tls:
 ## Configure metrics exporter
 ##
 metrics:
-  enabled: false
+  enabled: true
   # resources: {}
   service:
     type: ClusterIP
@@ -558,7 +553,7 @@ metrics:
   ## ref: https://github.com/wrouesnel/postgres_exporter#adding-new-metrics-via-a-config-file
   # customMetrics:
   #   pg_database:
-  #     query: "SELECT d.datname AS name, CASE WHEN pg_catalog.has_database_privilege(d.datname, 'CONNECT') THEN pg_catalog.pg_database_size(d.datname) ELSE 0 END AS size_bytes FROM pg_catalog.pg_database d where datname not in ('template0', 'template1', 'postgres')"
+  #     query: "SELECT d.datname AS name, CASE WHEN pg_catalog.has_database_privilege(d.datname, 'CONNECT') THEN pg_catalog.pg_database_size(d.datname) ELSE 0 END AS size FROM pg_catalog.pg_database d where datname not in ('template0', 'template1', 'postgres')"
   #     metrics:
   #       - name:
   #           usage: "LABEL"
@@ -566,7 +561,6 @@ metrics:
   #       - size_bytes:
   #           usage: "GAUGE"
   #           description: "Size of the database in bytes"
-  #
   ## An array to add extra env vars to configure postgres-exporter
   ## see: https://github.com/wrouesnel/postgres_exporter#environment-variables
   ## For example:
