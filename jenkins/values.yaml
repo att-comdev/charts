@@ -245,6 +245,7 @@ conf:
     libraries:
         upstream_lib:
           name: cicd_upstream_libs
+          default_version: master
           url: https://review.gerrithub.io/att-comdev/cicd
           branch: master
           credentials: null
@@ -255,6 +256,7 @@ conf:
           honorRefspec: false
         internal_lib:
           name: cicd_internal_libs
+          default_version: master
           url: https://internal_url.com/cicd
           branch: master
           credentials: null
