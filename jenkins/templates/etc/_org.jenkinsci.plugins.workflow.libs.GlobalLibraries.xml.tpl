@@ -33,7 +33,7 @@
           </extensions>
         </scm>
       </retriever>
-      <defaultVersion>master</defaultVersion>
+      <defaultVersion>{{ .Values.conf.global_libraries.libraries.upstream_lib.default_version }}</defaultVersion>
       <implicit>true</implicit>
       <allowVersionOverride>true</allowVersionOverride>
       <includeInChangesets>true</includeInChangesets>
@@ -71,7 +71,7 @@
             </extensions>
           </scm>
         </retriever>
-        <defaultVersion>master</defaultVersion>
+        <defaultVersion>{{ .Values.conf.global_libraries.libraries.internal_lib.default_version }}</defaultVersion>
         <implicit>true</implicit>
         <allowVersionOverride>true</allowVersionOverride>
         <includeInChangesets>true</includeInChangesets>
