@@ -32,7 +32,7 @@ blueocean-rest:1.5.1
 blueocean-web:1.5.1
 blueocean:1.5.1
 bouncycastle-api:2.17
-branch-api:2.0.19
+branch-api:2.6.2
 build-history-metrics-plugin:1.2
 build-metrics:1.3
 build-name-setter:1.6.9
@@ -41,14 +41,14 @@ build-user-vars-plugin:1.5
 buildresult-trigger:0.17
 cloud-stats:0.18
 cloudbees-bitbucket-branch-source:2.2.10
-cloudbees-folder:6.12
+cloudbees-folder:6.15
 command-launcher:1.2
 config-file-provider:2.18
 copyartifact:1.43
 credentials-binding:1.20
-credentials:2.3.7
+credentials:2.3.11
 disk-usage:0.28
-display-url-api:2.3.2
+display-url-api:2.3.4
 docker-build-publish:1.3.2
 docker-commons:1.15
 docker-java-api:3.0.14
@@ -86,7 +86,7 @@ htmlpublisher:1.15
 http_request:1.8.22
 icon-shim:2.0.3
 ivy:1.28
-jackson2-api:2.10.3
+jackson2-api:2.11.1
 javadoc:1.4
 jclouds-jenkins:2.14
 jdk-tool:1.0
@@ -150,7 +150,7 @@ role-strategy:2.9.0
 ruby-runtime:0.12
 run-condition:1.3
 saferestart:0.3
-scm-api:2.6.3
+scm-api:2.6.4
 script-security:1.72
 singleuseslave:1.0.0
 slack-uploader:1.7
@@ -163,7 +163,7 @@ ssh-slaves:1.26
 ssh-steps:1.1.1
 structs:1.20
 subversion:2.13.1
-text-finder:1.12
+text-finder:1.15
 timestamper:1.11.3
 token-macro:2.12
 trilead-api:1.0.6
@@ -179,6 +179,10 @@ workflow-durable-task-step:2.19
 workflow-job:2.39
 workflow-multibranch:2.17
 workflow-scm-step:2.11
-workflow-step-api:2.22
+workflow-step-api:2.23
 workflow-support:3.3
 ws-cleanup:0.34
+plugin-util-api:1.6.1
+checks-api:1.2.0
+code-coverage-api:1.2.0
+cobertura:1.16
