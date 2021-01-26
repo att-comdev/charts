@@ -20,11 +20,7 @@ set -ex
 
 # seed the (jenkins home) PVC with files *iff* they do not exist (-n
 # avoids replacing files)
-cp -nv /seed/* /var/jenkins_home/
-#Create the SuperSeed job config structure and put the config.xml in respective places
-mkdir -p /var/jenkins_home/jobs/CICD/jobs/SuperSeed
-mv -nv /seed/cicdfolderconfig.xml /var/jenkins_home/jobs/CICD/config.xml
-mv -nv /seed/superseedconfig.xml /var/jenkins_home/jobs/CICD/jobs/SuperSeed/config.xml
+cp -nrv /seed/* /var/jenkins_home/
 
 {{- if .Values.conf.gerrit_trigger.enable }}
 # Add ssh keys for gerrit trigger.
