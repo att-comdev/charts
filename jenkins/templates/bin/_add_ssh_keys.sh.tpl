@@ -17,6 +17,7 @@ limitations under the License.
 set -ex
 
 function generate_keys () {
+  echo "Preparing keys ..."
 {{- range .Values.conf.gerrit_trigger.servers }}
 {{- if not .gerrit_authkey }}
   ssh-keygen -N "{{ .gerrit_authkey_password }}" -t rsa -m pem -b 4096 -f /tmp/.ssh/id_rsa_{{ .name }}
@@ -25,6 +26,7 @@ function generate_keys () {
 }
 
 function add_keys () {
+  echo "Adding keys ..."
 {{- range .Values.conf.gerrit_trigger.servers }}
 {{- if not .gerrit_authkey }}
   kubectl patch secret -n ${NAMESPACE} jenkins-secret -p="{\"data\": {\"id_rsa_{{ .name }}\": \"`base64 -w 0 /tmp/.ssh/id_rsa_{{ .name }}`\"}}"
