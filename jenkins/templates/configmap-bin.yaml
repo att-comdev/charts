@@ -21,8 +21,10 @@ kind: ConfigMap
 metadata:
   name: jenkins-bin
 data:
+{{- if .Values.manifests.job_ks_user }}
   ks-user.sh: |+
 {{- include "helm-toolkit.scripts.keystone_user" . | indent 4 }}
+{{- end }}
   seed.sh: |
 {{ tuple "bin/_seed.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
   launch.sh: |
