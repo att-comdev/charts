@@ -104,10 +104,6 @@ pod:
         default: preferredDuringSchedulingIgnoredDuringExecution
       topologyKey:
         default: kubernetes.io/hostname
-  mounts:
-    jenkins_api:
-      init_container: null
-      jenkins_api:
   replicas:
     api: 1
   lifecycle:
@@ -423,12 +419,9 @@ dependencies:
         - service: identity
           endpoint: internal
     api:
-      jobs:
-        - jenkins-ks-user
-        - jenkins-ssh-key
-      services:
-        - service: identity
-          endpoint: internal
+      jobs: null
+      # NOTE (Kabanov, Dmitrii): The job should be added if gerrit_trigger enabled.
+      # - jenkins-ssh-key
 
 manifests:
   configmap_bin: true
