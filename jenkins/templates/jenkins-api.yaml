@@ -15,8 +15,6 @@ limitations under the License.
 */}}
 
 {{- $envAll := . }}
-{{- $mounts_jenkins_api := .Values.pod.mounts.jenkins_api.jenkins_api }}
-{{- $mounts_jenkins_api_init := .Values.pod.mounts.jenkins_api.init_container }}
 
 {{- $serviceAccountName := "jenkins-api" }}
 {{ tuple $envAll "api" $serviceAccountName | include "helm-toolkit.snippets.kubernetes_pod_rbac_serviceaccount" }}
@@ -50,6 +48,7 @@ spec:
         {{ .Values.labels.api.node_selector_key }}: {{ .Values.labels.api.node_selector_value }}
       terminationGracePeriodSeconds: {{ .Values.pod.lifecycle.termination_grace_period.api.timeout | default "600" }}
       initContainers:
+{{ tuple $envAll "api" list | include "helm-toolkit.snippets.kubernetes_entrypoint_init_container" | indent 8 }}
         - name: seed
           image: {{ .Values.images.tags.jenkins }}
           imagePullPolicy: {{ .Values.images.pull_policy }}
@@ -120,9 +119,6 @@ spec:
             - name: jenkins-init
               mountPath: /tmp/artifactory-css.groovy
               subPath: artifactory-css.groovy
-{{ if .Values.manifests.job_ks_user }}
-{{ tuple $envAll "api" $mounts_jenkins_api_init | include "helm-toolkit.snippets.kubernetes_entrypoint_init_container" | indent 8 }}
-{{ end }}
       containers:
         - name: jenkins
           image: {{ .Values.images.tags.jenkins }}
