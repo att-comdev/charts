@@ -93,7 +93,7 @@ icon-shim:2.0.3
 ivy:2.1
 jackson2-api:2.12.1
 javadoc:1.6
-jclouds-jenkins:2.20
+jclouds-jenkins:2.14
 jdk-tool:1.4
 jenkins-design-language:1.24.4
 jira:3.1.3
