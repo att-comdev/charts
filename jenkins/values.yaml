@@ -78,6 +78,15 @@ rbac:
       - update
 
 pod:
+  probes:
+    api:
+      jenkins:
+        startup:
+          enabled: true
+          params:
+            failureThreshold: 60
+            periodSeconds: 5
+            successThreshold: 1
   mandatory_access_control:
     type: apparmor
     jenkins-api:
