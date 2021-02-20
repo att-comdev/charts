@@ -14,6 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */}}
 
+{{- define "jenkinsProbe" }}
+httpGet:
+  path: /login
+  port: 8080
+  scheme: HTTP
+{{- end }}
+
 {{- $envAll := . }}
 
 {{- $serviceAccountName := "jenkins-api" }}
@@ -146,6 +153,7 @@ spec:
           {{- end }}
           ports:
             - containerPort: {{ .Values.containers.ports.containerPort }}
+{{ dict "envAll" . "component" "api" "container" "jenkins" "type" "startup" "probeTemplate" (include "jenkinsProbe" . | fromYaml) | include "helm-toolkit.snippets.kubernetes_probe" | indent 10 }}
           volumeMounts:
             - name: pod-tmp
               mountPath: /tmp
