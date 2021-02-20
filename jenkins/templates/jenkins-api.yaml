@@ -139,6 +139,15 @@ spec:
           {{- end }}
           ports:
             - containerPort: {{ .Values.containers.ports.containerPort }}
+          startupProbe:
+            httpGet:
+              path: /login
+              port: 8080
+              scheme: HTTP
+            failureThreshold: 60
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
           volumeMounts:
             - name: pod-tmp
               mountPath: /tmp
