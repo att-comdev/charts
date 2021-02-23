@@ -429,5 +429,6 @@ manifests:
   job_ks_user: false
   secret_ingress_tls: true
   job_create_namespaces: true
+  job_backup: false
   kubernetes_rbac_rule: true
   configmap_init: true
