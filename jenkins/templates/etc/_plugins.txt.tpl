@@ -104,9 +104,9 @@ jquery-detached:1.2.1
 jquery3-api:3.5.1-2
 jsch:0.1.55.2
 junit:1.48
-kubernetes:1.28.7
-kubernetes-client-api:4.11.1
-kubernetes-credentials:0.8.0
+kubernetes:1.25.7
+kubernetes-client-api:4.9.2-1
+kubernetes-credentials:0.6.2
 last-changes:2.7.10
 ldap:1.26
 libvirt-slave:1.9.0
