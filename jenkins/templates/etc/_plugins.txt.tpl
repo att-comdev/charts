@@ -174,7 +174,7 @@ subversion:2.14.0
 timestamper:1.11.8
 token-macro:2.13
 trilead-api:1.0.13
-uno-choice:2.5.1
+uno-choice:2.5.4
 variant:1.4
 windows-slaves:1.7
 workflow-aggregator:2.6
