@@ -162,6 +162,7 @@ endpoints:
       default: null
     scheme:
       default: http
+    endpoint: http://ceph-rgw.openstack.svc.cluster.local
     port:
       api:
         default: 8088
