@@ -167,7 +167,7 @@ data:
         <provider id="s3" type="s3">
             <identity>{{ .Values.endpoints.ceph_object_store.auth.artifactory.access_key }}</identity>
             <credential>{{ .Values.endpoints.ceph_object_store.auth.artifactory.secret_key }}</credential>
-            <endpoint>http://ceph-rgw.{{ .Values.namespace }}.svc.cluster.local</endpoint>
+            <endpoint>{{ .Values.endpoints.ceph_object_store.endpoint }}</endpoint>
             <port>{{ .Values.endpoints.ceph_object_store.port.api.default }}</port>
             <bucketName>{{ .Values.conf.artifactory.snapshots.bucket }}</bucketName>
             <property name="s3service.disable-dns-buckets" value="true"></property>
