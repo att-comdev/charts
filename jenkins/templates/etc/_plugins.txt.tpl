@@ -114,7 +114,7 @@ lockable-resources:2.10
 mailer:1.32.1
 mapdb-api:1.0.9.0
 mask-passwords:2.13
-matrix-auth:2.6.5
+matrix-auth:2.6.6
 matrix-project:1.18
 maven-plugin:3.8
 mercurial:2.12
@@ -156,7 +156,7 @@ quayio-trigger:0.1
 queue-cleanup:1.4
 rebuild:1.31
 resource-disposer:0.14
-role-strategy:3.1
+role-strategy:3.1.1
 ruby-runtime:0.12
 run-condition:1.3
 saferestart:0.3
