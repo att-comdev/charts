@@ -41,7 +41,7 @@ build-timestamp:1.0.3
 build-user-vars-plugin:1.6
 buildresult-trigger:0.17
 checks-api:1.3.0
-cloud-stats:0.26
+cloud-stats:0.27
 cloudbees-bitbucket-branch-source:2.9.7
 cloudbees-folder:6.15
 command-launcher:1.5
