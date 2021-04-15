@@ -25,6 +25,10 @@ metadata:
   name: jenkins-api
   labels:
 {{ tuple $envAll "jenkins" "api" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 4 }}
+  annotations:
+    configmap-bin-hash: {{ tuple "configmap-bin.yaml" . | include "helm-toolkit.utils.hash" }}
+    configmap-etc-hash: {{ tuple "configmap-etc.yaml" . | include "helm-toolkit.utils.hash" }}
+    configmap-init-hash: {{ tuple "configmap-init.yaml" . | include "helm-toolkit.utils.hash" }}
 spec:
   serviceName: jenkins-api
   replicas: {{ .Values.pod.replicas.api }}
@@ -38,6 +42,9 @@ spec:
       labels:
 {{ tuple $envAll "jenkins" "api" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 8 }}
       annotations:
+        configmap-bin-hash: {{ tuple "configmap-bin.yaml" . | include "helm-toolkit.utils.hash" }}
+        configmap-etc-hash: {{ tuple "configmap-etc.yaml" . | include "helm-toolkit.utils.hash" }}
+        configmap-init-hash: {{ tuple "configmap-init.yaml" . | include "helm-toolkit.utils.hash" }}
 {{ dict "envAll" $envAll "podName" "jenkins-api" "containerNames" (list "seed" "jenkins") | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
     spec:
       serviceAccountName: {{ $serviceAccountName }}
