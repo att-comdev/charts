@@ -129,18 +129,20 @@ data:
     <!-- AWS S3 -->
     <config version="2">
         <chain>
-            <provider id="sharding-cluster" type="sharding-cluster">
-                <readBehavior>crossNetworkStrategy</readBehavior>
-                <writeBehavior>crossNetworkStrategy</writeBehavior>
-                <redundancy>{{ .Values.artifactory.persistence.redundancy }}</redundancy>
-                <minSpareUploaderExecutor>2</minSpareUploaderExecutor>
-                <sub-provider id="eventual-cluster" type="eventual-cluster">
-                    <provider id="retry" type="retry">
-                        <provider id="s3" type="s3"/>
-                    </provider>
-                </sub-provider>
-                <dynamic-provider id="remote" type="remote"/>
-                <property name="zones" value="local,remote"/>
+            <provider id="cache-fs" type="cache-fs">
+                <provider id="sharding-cluster" type="sharding-cluster">
+                    <readBehavior>crossNetworkStrategy</readBehavior>
+                    <writeBehavior>crossNetworkStrategy</writeBehavior>
+                    <redundancy>{{ .Values.artifactory.persistence.redundancy }}</redundancy>
+                    <minSpareUploaderExecutor>2</minSpareUploaderExecutor>
+                    <sub-provider id="eventual-cluster" type="eventual-cluster">
+                        <provider id="retry" type="retry">
+                            <provider id="s3" type="s3"/>
+                        </provider>
+                    </sub-provider>
+                    <dynamic-provider id="remote" type="remote"/>
+                    <property name="zones" value="local,remote"/>
+                </provider>
             </provider>
         </chain>
 
