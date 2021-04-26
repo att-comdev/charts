@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8f10d4a2_e9f5f2b2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1018997
+      },
+      "writtenOn": "2021-04-26T18:34:25Z",
+      "side": 1,
+      "message": "Default parameter question.",
+      "revId": "6f759166e1417a93984943703e443ec968d6fcfc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b6dc96f_8f0ff353",
+        "filename": "artifactory-ha/templates/artifactory-binarystore.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1018997
+      },
+      "writtenOn": "2021-04-26T18:34:25Z",
+      "side": 1,
+      "message": "Do we need to customize either cacheProviderDir (cache) or maxCacheSize (5 GB): \nhttps://www.jfrog.com/confluence/display/JFROG/Configuring+the+Filestore#ConfiguringtheFilestore-CachedFilesystemBinaryProvider",
+      "range": {
+        "startLine": 132,
+        "startChar": 12,
+        "endLine": 132,
+        "endChar": 52
+      },
+      "revId": "6f759166e1417a93984943703e443ec968d6fcfc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
