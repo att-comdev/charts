@@ -333,10 +333,10 @@ artifactory:
 
   # Files to copy to ARTIFACTORY_HOME/ on each Artifactory startup
   copyOnEveryStartup:
-  #     # absolute path
-  #    - source: /artifactory_extra_conf/binarystore.xml
-  #     # relative to ARTIFACTORY_HOME/
-  #      target: etc/
+    # absolute path
+  - source: /artifactory_extra_conf/binarystore.xml
+    # relative to ARTIFACTORY_HOME/
+    target: etc/
   #     # absolute path
   #    - source: /artifactory_extra_conf/artifactory.lic
   #     # relative to ARTIFACTORY_HOME/
