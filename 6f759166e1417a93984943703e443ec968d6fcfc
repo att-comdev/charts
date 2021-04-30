@@ -39,6 +39,53 @@
       },
       "revId": "6f759166e1417a93984943703e443ec968d6fcfc",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "45c5ed41_fb78994d",
+        "filename": "artifactory-ha/templates/artifactory-binarystore.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1015253
+      },
+      "writtenOn": "2021-04-30T22:54:03Z",
+      "side": 1,
+      "message": "We already define maxCacheSize below to 50GB. Default cache dir is relative to baseDataDir and seems fine to me.",
+      "parentUuid": "1b6dc96f_8f0ff353",
+      "range": {
+        "startLine": 132,
+        "startChar": 12,
+        "endLine": 132,
+        "endChar": 52
+      },
+      "revId": "6f759166e1417a93984943703e443ec968d6fcfc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97bd9c01_3e89bc51",
+        "filename": "artifactory-ha/templates/artifactory-binarystore.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1015253
+      },
+      "writtenOn": "2021-04-30T22:54:03Z",
+      "side": 1,
+      "message": "@Jared",
+      "range": {
+        "startLine": 151,
+        "startChar": 26,
+        "endLine": 151,
+        "endChar": 37
+      },
+      "revId": "6f759166e1417a93984943703e443ec968d6fcfc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
