@@ -315,6 +315,10 @@ conf:
         abort_new_patch_sets: "false"
         abort_manual_patch_sets: "false"
         abort_same_topic: "false"
+  node_labels:
+    # The labels for the node should be separated by space.
+    # "controller" is reserved for Jenkins
+    controller: "controller"
 
 ingress:
   enabled: true

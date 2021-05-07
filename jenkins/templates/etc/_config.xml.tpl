@@ -94,7 +94,7 @@
     <string>JNLP-connect</string>
     <string>JNLP2-connect</string>
   </disabledAgentProtocols>
-  <label/>
+  <label>{{ .Values.conf.node_labels.controller | default "controller" }}</label>
   <crumbIssuer class="hudson.security.csrf.DefaultCrumbIssuer">
     <excludeClientIPFromCrumb>false</excludeClientIPFromCrumb>
   </crumbIssuer>
