@@ -126,7 +126,6 @@ nexus-jenkins-plugin:3.0.20180214-134325.e135900
 oauth-credentials:0.4
 okhttp-api:3.14.9
 openstack-cloud:2.56
-openstack-heat:1.5
 pam-auth:1.6
 pipeline-build-step:2.13
 pipeline-github:2.7
@@ -157,12 +156,10 @@ queue-cleanup:1.4
 rebuild:1.31
 resource-disposer:0.14
 role-strategy:3.1.1
-ruby-runtime:0.12
 run-condition:1.3
 saferestart:0.3
 scm-api:2.6.4
 script-security:1.75
-singleuseslave:1.0.0
 snakeyaml-api:1.27.0
 sse-gateway:1.24
 ssh-agent:1.20
