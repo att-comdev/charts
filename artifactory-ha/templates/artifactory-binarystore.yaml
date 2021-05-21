@@ -171,7 +171,7 @@ data:
             <port>{{ .Values.endpoints.ceph_object_store.port.api.default }}</port>
             <bucketName>{{ .Values.conf.artifactory.snapshots.bucket }}</bucketName>
             <property name="s3service.disable-dns-buckets" value="true"></property>
-            <httpsOnly>false</httpsOnly>
+            <httpsOnly>{{ .Values.endpoints.ceph_object_store.https }}</httpsOnly>
         </provider>
     </config>
 {{- end }}
