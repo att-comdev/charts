@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1861bc40_9abfb08b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1017588
+      },
+      "writtenOn": "2021-05-21T15:14:36Z",
+      "side": 1,
+      "message": "Git commit is modified as asked. please review.",
+      "revId": "859c9967d7c3d87b0876324c58fb6b1e77acd32f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
