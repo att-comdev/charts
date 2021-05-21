@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8192ea6e_4c755af9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1016322
+      },
+      "writtenOn": "2021-05-21T15:02:55Z",
+      "side": 1,
+      "message": "I hate to say that, but please make it right:\nThe first line should be limited to 50 characters (https://wiki.openstack.org/wiki/GitCommitMessages)",
+      "revId": "15bcdbd3028f5dc83acbaa3a27be49059dedb82a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
