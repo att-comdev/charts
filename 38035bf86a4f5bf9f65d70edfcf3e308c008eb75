@@ -39,6 +39,30 @@
       },
       "revId": "38035bf86a4f5bf9f65d70edfcf3e308c008eb75",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aafb98f5_51eb2ef5",
+        "filename": "jenkins/templates/etc/_plugins.txt.tpl",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1013469
+      },
+      "writtenOn": "2021-05-26T16:02:11Z",
+      "side": 1,
+      "message": "Dinesh said that 2.1 version of plugin works on 2.263.4 Jenkins",
+      "parentUuid": "b552f5a1_6af2a76a",
+      "range": {
+        "startLine": 172,
+        "startChar": 21,
+        "endLine": 172,
+        "endChar": 24
+      },
+      "revId": "38035bf86a4f5bf9f65d70edfcf3e308c008eb75",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
