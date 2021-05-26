@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8648e9d_832080d3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1013469
+      },
+      "writtenOn": "2021-05-26T14:31:49Z",
+      "side": 1,
+      "message": "How do we separate Jenkins versions?",
+      "revId": "38035bf86a4f5bf9f65d70edfcf3e308c008eb75",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b552f5a1_6af2a76a",
+        "filename": "jenkins/templates/etc/_plugins.txt.tpl",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1013469
+      },
+      "writtenOn": "2021-05-26T14:31:49Z",
+      "side": 1,
+      "message": "latest version 2.2 \nfor current Jenkins  2.263.4 it is 2.0.2",
+      "range": {
+        "startLine": 172,
+        "startChar": 21,
+        "endLine": 172,
+        "endChar": 24
+      },
+      "revId": "38035bf86a4f5bf9f65d70edfcf3e308c008eb75",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
