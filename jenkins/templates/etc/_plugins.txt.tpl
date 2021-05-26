@@ -169,6 +169,7 @@ ssh-steps:2.0.0
 structs:1.20
 subversion:2.14.0
 text-finder:1.15
+throttle-concurrents:2.1
 timestamper:1.11.8
 token-macro:2.13
 trilead-api:1.0.13
