@@ -126,7 +126,7 @@ data:
 {{- end }}
 
 {{- if eq .Values.artifactory.persistence.type "ceph-s3" }}
-    <!-- AWS S3 -->
+    <!-- AWS S3 Testing -->
     <config version="2">
         <chain>
             <provider id="cache-fs" type="cache-fs">
