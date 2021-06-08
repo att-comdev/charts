@@ -11,6 +11,8 @@ metadata:
     component: {{ .Values.artifactory.name }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
+  annotations:
+    artifactory-binarystore-hash: {{ tuple "artifactory-binarystore.yaml" . | include "helm-toolkit.utils.hash" }}
 spec:
   serviceName: {{ template "artifactory-ha.primary.name" . }}
   replicas: 1
@@ -29,6 +31,7 @@ spec:
         component: {{ .Values.artifactory.name }}
         release: {{ .Release.Name }}
       annotations:
+        artifactory-binarystore-hash: {{ tuple "artifactory-binarystore.yaml" . | include "helm-toolkit.utils.hash" }}
 {{ dict "envAll" $envAll "podName" "artifactory-ha-primary" "containerNames" (list "remove-lost-found" "wait-for-db" "artifactory-ha") | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
     spec:
       serviceAccountName: {{ template "artifactory-ha.serviceAccountName" . }}
