@@ -188,7 +188,7 @@ conf:
         internal_gerrit_ssh: ssh://jenkins-attcomdev@10.24.20.18:29418
         internal_gerrit_url: review.gerrithub.io
         jenkins_cli: /home/jenkins/integration/jenkins-cli.jar
-        jenkins_cli_url: http://localhost:8081
+        jenkins_cli_url: localhost:8081
         known_hosts: 10.10.10.1
         mirror_key: tempmirrorkey
         mirror_key_orig: tempmirrorkeyorig
