@@ -38,6 +38,21 @@ images:
       - dep_check
       - image_repo_sync
 
+imageCredentials:
+  name: "docker-config-secret"
+  registries:
+      # image.registry is the Docker registry
+    - registry: docker-open-nc.auk3.cci.att.com
+      # image.username is the Docker user's username
+      username: "admin"
+      # image.accessToken is the Docker user's access token (recommened) or password
+      accessToken: "e31Xsi5PNdw3"
+    - registry: docker-nc.auk3.cci.att.com
+      # image.username is the Docker user's username
+      username: "admin"
+      # image.accessToken is the Docker user's access token (recommened) or password
+      accessToken: "e31Xsi5PNdw3"
+
 jenkinsNodes:
   namespace: jenkins-nodes
   service:
