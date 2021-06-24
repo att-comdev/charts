@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: '{{ template "dockerconfigjson.name" . }}'
+  namespace: {{ .Values.jenkinsNodes.namespace }}
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: {{ template "dockerconfigjson.b64enc" . }}
+
+---
+apiVersion: v1
+imagePullSecrets:
+- name: '{{ template "dockerconfigjson.name" . }}'
+kind: ServiceAccount
+metadata:
+  name: default
+  namespace: {{ .Values.jenkinsNodes.namespace }}
