@@ -45,9 +45,9 @@ cloud-stats:0.27
 cloudbees-bitbucket-branch-source:2.9.7
 cloudbees-folder:6.15
 command-launcher:1.5
-config-file-provider:3.7.0
+config-file-provider:3.8.0
 copyartifact:1.46
-credentials:2.3.14
+credentials:2.5
 credentials-binding:1.24
 disk-usage:0.28
 display-url-api:2.3.4
@@ -93,7 +93,8 @@ icon-shim:2.0.3
 ivy:2.1
 jackson2-api:2.12.1
 javadoc:1.6
-jclouds-jenkins:2.14
+jaxb:2.3.0.1
+jclouds-jenkins:2.23
 jdk-tool:1.4
 jenkins-design-language:1.24.4
 jira:3.1.3
@@ -109,7 +110,7 @@ kubernetes-client-api:4.11.1
 kubernetes-credentials:0.8.0
 last-changes:2.7.10
 ldap:1.26
-libvirt-slave:1.9.0
+libvirt-slave:1.9.2
 lockable-resources:2.10
 mailer:1.32.1
 mapdb-api:1.0.9.0
@@ -166,7 +167,7 @@ ssh-agent:1.20
 ssh-credentials:1.18.1
 ssh-slaves:1.31.5
 ssh-steps:2.0.0
-structs:1.20
+structs:1.23
 subversion:2.14.0
 text-finder:1.15
 throttle-concurrents:2.1
