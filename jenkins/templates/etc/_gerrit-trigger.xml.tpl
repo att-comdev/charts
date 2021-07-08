@@ -75,8 +75,8 @@
   {{- end }}
   </servers>
   <pluginConfig>
-    <numberOfReceivingWorkerThreads>3</numberOfReceivingWorkerThreads>
-    <numberOfSendingWorkerThreads>1</numberOfSendingWorkerThreads>
+    <numberOfReceivingWorkerThreads>{{ .Values.conf.gerrit_trigger.receiving_workers | default "3" }}</numberOfReceivingWorkerThreads>
+    <numberOfSendingWorkerThreads>{{ .Values.conf.gerrit_trigger.sending_workers | default "1" }}</numberOfSendingWorkerThreads>
     <replicationCacheExpirationInMinutes>360</replicationCacheExpirationInMinutes>
   </pluginConfig>
 </com.sonyericsson.hudson.plugins.gerrit.trigger.PluginImpl>
