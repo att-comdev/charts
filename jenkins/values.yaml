@@ -315,6 +315,8 @@ conf:
   gerrit_trigger:
     override: null
     enable: false
+    receiving_workers: "3"
+    sending_workers: "1"
     servers:
       - name: "Gerrit-server"
         gerrit_hostname: ""
