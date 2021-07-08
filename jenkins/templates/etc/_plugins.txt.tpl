@@ -104,7 +104,7 @@ jclouds-jenkins:2.23
 jdk-tool:1.4
 jenkins-design-language:1.24.4
 jira:3.1.3
-job-dsl:1.68
+job-dsl:1.77
 jobConfigHistory:2.26
 jquery:1.12.4-1
 jquery-detached:1.2.1
