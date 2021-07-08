@@ -98,7 +98,7 @@ jclouds-jenkins:2.23
 jdk-tool:1.4
 jenkins-design-language:1.24.4
 jira:3.1.3
-job-dsl:1.68
+job-dsl:1.77
 jobConfigHistory:2.26
 jquery:1.12.4-1
 jquery-detached:1.2.1
@@ -157,10 +157,12 @@ queue-cleanup:1.4
 rebuild:1.31
 resource-disposer:0.14
 role-strategy:3.1.1
+ruby-runtime:0.12
 run-condition:1.3
 saferestart:0.3
 scm-api:2.6.4
 script-security:1.75
+singleuseslave:1.0.0
 snakeyaml-api:1.27.0
 sse-gateway:1.24
 ssh-agent:1.20
