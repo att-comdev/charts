@@ -22,6 +22,8 @@ set -x
 {{ if .Values.plugins.enabled -}}
 
 curl -o /var/jenkins_home/plugins.tar.gz {{ .Values.plugins.url }}
+rm -rf /var/jenkins_home/plugins_bkp || true
+mv /var/jenkins_home/plugins /var/jenkins_home/plugins_bkp || true
 tar xzf /var/jenkins_home/plugins.tar.gz -C /var/jenkins_home/
 rm /var/jenkins_home/plugins.tar.gz
 {{- else -}}
@@ -34,6 +36,8 @@ if [ -e /plugins.txt ] ; then
     # put a dummy-lock file in place so that if install-plugins.sh finds
     # at least something to cleanup and doesn't error out
     mkdir -p /usr/share/jenkins/ref/plugins/ && touch /usr/share/jenkins/ref/plugins/zzz-dummy.lock
+    rm -rf /var/jenkins_home/plugins_bkp || true
+    mv /var/jenkins_home/plugins /var/jenkins_home/plugins_bkp || true
     /usr/local/bin/install-plugins.sh $(cat /plugins.txt)
 fi
 {{- end }}
