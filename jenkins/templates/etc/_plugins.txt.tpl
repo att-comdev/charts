@@ -36,7 +36,6 @@ bootstrap5-api:5.0.1-2
 bouncycastle-api:2.18
 branch-api:2.6.4
 build-history-metrics-plugin:1.2
-build-metrics:1.3
 build-name-setter:2.1.0
 build-timestamp:1.0.3
 build-user-vars-plugin:1.6
@@ -104,7 +103,7 @@ jclouds-jenkins:2.23
 jdk-tool:1.4
 jenkins-design-language:1.24.4
 jira:3.1.3
-job-dsl:1.68
+job-dsl:1.77
 jobConfigHistory:2.26
 jquery:1.12.4-1
 jquery-detached:1.2.1
