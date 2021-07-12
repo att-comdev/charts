@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c3cf684c_cfb85230",
+        "filename": "jenkins/templates/etc/_plugins.txt.tpl",
+        "patchSetId": 3
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1018997
+      },
+      "writtenOn": "2021-07-12T14:27:50Z",
+      "side": 1,
+      "message": "Are these plugins needed in order to upgrade job-dsl?",
+      "range": {
+        "startLine": 165,
+        "startChar": 0,
+        "endLine": 165,
+        "endChar": 20
+      },
+      "revId": "2a9ea3786eb3155667b95bb4f5f6c57a50729c57",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
