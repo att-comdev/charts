@@ -22,6 +22,30 @@
       },
       "revId": "2a9ea3786eb3155667b95bb4f5f6c57a50729c57",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d5b4aa5_9fb5d6fc",
+        "filename": "jenkins/templates/etc/_plugins.txt.tpl",
+        "patchSetId": 3
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1017588
+      },
+      "writtenOn": "2021-07-16T14:13:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3cf684c_cfb85230",
+      "range": {
+        "startLine": 165,
+        "startChar": 0,
+        "endLine": 165,
+        "endChar": 20
+      },
+      "revId": "2a9ea3786eb3155667b95bb4f5f6c57a50729c57",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
