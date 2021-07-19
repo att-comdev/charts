@@ -36,7 +36,6 @@ bootstrap5-api:5.0.1-2
 bouncycastle-api:2.18
 branch-api:2.6.4
 build-history-metrics-plugin:1.2
-build-metrics:1.3
 build-name-setter:2.1.0
 build-timestamp:1.0.3
 build-user-vars-plugin:1.6
