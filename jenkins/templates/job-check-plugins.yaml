@@ -1,0 +1,23 @@
+{{- $envAll := . }}
+
+{{- $serviceAccountName := printf "create-namespace-%s" .Release.Name }}
+{{- $DeletePlugins := printf "check-plugins-%s" .Release.Name }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ $DeletePlugins }}
+  namespace: {{ .Values.jenkinsNodes.service.namespace }}
+  annotations:
+    "helm.sh/hook": "post-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      serviceAccount: {{ $serviceAccountName }}
+      containers:
+      - name: check-plugins
+        image: {{ .Values.images.tags.namespace_creator }}
+        imagePullPolicy: {{ .Values.images.pull_policy }}
+        command: ["/bin/sh","-c", "kubectl exec jenkins-api-0 -n {{ .Values.jenkinsNodes.service.namespace }} -- bash -c 'if [ ! -d '/var/jenkins_home/plugins' ]; then echo \"Copying plugins backup to plugins folder\"; cp -r /var/jenkins_home/plugins_bkp /var/jenkins_home/plugins; fi'"]

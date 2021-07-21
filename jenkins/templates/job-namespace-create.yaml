@@ -27,6 +27,8 @@ rules:
       - namespaces
       - serviceaccounts
       - secrets
+      - pods
+      - pods/exec
     verbs:
       - get
       - create
