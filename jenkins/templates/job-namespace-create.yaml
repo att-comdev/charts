@@ -26,6 +26,8 @@ rules:
     resources:
       - namespaces
       - serviceaccounts
+      - pods
+      - pods/exec
     verbs:
       - get
       - create
