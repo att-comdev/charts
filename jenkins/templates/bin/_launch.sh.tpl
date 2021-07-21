@@ -19,6 +19,14 @@ limitations under the License.
 # NOTE: no -e by design, some of this can/will fail, and that's OK
 set -x
 
+if [ -d '/var/jenkins_home/plugins_bkp' ]; then
+    rm -rf /var/jenkins_home/plugins_bkp
+fi
+
+if [ -d '/var/jenkins_home/plugins' ]; then
+    mv /var/jenkins_home/plugins /var/jenkins_home/plugins_bkp
+fi
+
 {{ if .Values.plugins.enabled -}}
 
 curl -o /var/jenkins_home/plugins.tar.gz {{ .Values.plugins.url }}
