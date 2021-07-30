@@ -182,7 +182,7 @@ throttle-concurrents:2.1
 timestamper:1.11.8
 token-macro:2.13
 trilead-api:1.0.13
-uno-choice:2.5.4
+uno-choice:2.5.6
 variant:1.4
 windows-slaves:1.7
 workflow-aggregator:2.6
