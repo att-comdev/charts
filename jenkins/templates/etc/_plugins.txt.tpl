@@ -4,7 +4,7 @@ ansicolor:0.5.2
 ant:1.11
 antisamy-markup-formatter:2.1
 apache-httpcomponents-client-4-api:4.5.10-2.0
-artifactory:3.10.6
+artifactory:3.12.5
 async-http-client:1.9.40.0
 audit-trail:3.8
 authentication-tokens:1.4
