@@ -39,6 +39,30 @@
       },
       "revId": "a3a470946a1ccd4babb90bcb97600c8eb29cb00f",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bbd7583c_802e7871",
+        "filename": "jenkins/templates/bin/_launch.sh.tpl",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1017588
+      },
+      "writtenOn": "2021-08-06T03:39:02Z",
+      "side": 1,
+      "message": "Yes. It would not be good to have multiple copy of plugins as it would consume disk space unnecessary.",
+      "parentUuid": "1b43eefe_98bea78c",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 1
+      },
+      "revId": "a3a470946a1ccd4babb90bcb97600c8eb29cb00f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
