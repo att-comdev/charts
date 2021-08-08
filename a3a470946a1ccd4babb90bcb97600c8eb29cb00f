@@ -63,6 +63,30 @@
       },
       "revId": "a3a470946a1ccd4babb90bcb97600c8eb29cb00f",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86cb3a3b_e50e0f1d",
+        "filename": "jenkins/templates/bin/_launch.sh.tpl",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1013469
+      },
+      "writtenOn": "2021-08-08T04:45:26Z",
+      "side": 1,
+      "message": "no my question was related to part that we are going to make backup and delete previous each time when we start a pod. Do we have separate script for upgrade, or it works each start?",
+      "parentUuid": "bbd7583c_802e7871",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 1
+      },
+      "revId": "a3a470946a1ccd4babb90bcb97600c8eb29cb00f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
