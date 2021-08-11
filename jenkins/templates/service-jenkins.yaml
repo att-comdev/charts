@@ -23,19 +23,27 @@ metadata:
 spec:
   selector:
 {{ tuple $envAll "jenkins" "api" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 4 }}
-{{ if or .Values.ports.http.nodePort .Values.ports.slave.nodePort }}
+{{- if or .Values.ports.http.nodePort .Values.ports.slave.nodePort }}
   type: NodePort
-{{ else }}
+{{- else }}
   type: ClusterIP
-{{ end }}
+{{- end }}
   ports:
+{{- if .Values.manifests.certificates }}
+    - name: https
+      port: {{ .Values.ports.https.port }}
+{{- else }}
     - name: http
       port: {{ .Values.ports.http.port }}
-{{ if .Values.ports.http.nodePort }}
+{{- end }}
+{{- if .Values.manifests.certificates }}
+      nodePort: {{ .Values.ports.https.nodePort }}
+{{- end }}
+{{- if .Values.ports.http.nodePort }}
       nodePort: {{ .Values.ports.http.nodePort }}
-{{ end }}
+{{- end }}
     - name: slave
       port: {{ .Values.ports.slave.port }}
-{{ if .Values.ports.slave.nodePort }}
+{{- if .Values.ports.slave.nodePort }}
       nodePort: {{ .Values.ports.slave.nodePort }}
-{{ end }}
+{{- end }}
