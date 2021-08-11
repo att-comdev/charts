@@ -126,6 +126,31 @@ spec:
             - name: jenkins-init
               mountPath: /tmp/artifactory-css.groovy
               subPath: artifactory-css.groovy
+        - name: cert-add
+          image: {{ .Values.images.tags.jenkins }}
+          imagePullPolicy: {{ .Values.images.pull_policy }}
+{{ tuple $envAll $envAll.Values.pod.resources.api | include "helm-toolkit.snippets.kubernetes_resources" | indent 10 }}
+{{ dict "envAll" $envAll "application" "jenkins" "container" "cert-add" | include "helm-toolkit.snippets.kubernetes_container_security_context" | indent 10 }}
+          command:
+            - /tmp/cert-add.sh
+          volumeMounts:
+            - name: jenkins-home
+              mountPath: /var/jenkins_home
+            - name: jenkins-cert-bin
+              mountPath: /tmp/cert-add.sh
+              subPath: cert-add.sh
+            - name: jenkins-cert
+              readOnly: true
+              mountPath: /tmp/tls.crt
+              subPath: tls.crt
+            - name: jenkins-cert
+              readOnly: true
+              mountPath: /tmp/tls.key
+              subPath: tls.key
+            - name: jenkins-cert
+              readOnly: true
+              mountPath: /tmp/ca.crt
+              subPath: ca.crt
       containers:
         - name: jenkins
           image: {{ .Values.images.tags.jenkins }}
@@ -186,6 +211,14 @@ spec:
             secretName: jenkins-secret
             defaultMode: 0600
         {{- end }}
+        - name: jenkins-cert
+          secret:
+            secretName: jenkins-internal-tls
+            defaultMode: 0600
+        - name: jenkins-cert-bin
+          configMap:
+            name: jenkins-bin
+            defaultMode: 0555
   volumeClaimTemplates:
   - metadata:
       name: jenkins-home
