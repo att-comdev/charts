@@ -48,6 +48,9 @@ imageCredentials:
       # image.accessToken is the Docker user's access token (recommened) or password
       accessToken: "password"
 
+tls:
+  keystorePwd: changeit
+
 jenkinsNodes:
   namespace: jenkins-nodes
   service:
@@ -93,6 +96,7 @@ pod:
     jenkins-api:
       seed: runtime/default
       jenkins: runtime/default
+      cert-add: runtime/default
     create-namespaces:
       namespace-creator: runtime/default
     dindproxy:
@@ -103,6 +107,9 @@ pod:
         runAsUser: 1000
       container:
         seed:
+          runAsUser: 0
+          readOnlyRootFilesystem: false
+        cert-add:
           runAsUser: 0
           readOnlyRootFilesystem: false
         jenkins:
@@ -199,6 +206,7 @@ conf:
         internal_gerrit_url: review.gerrithub.io
         jenkins_cli: /home/jenkins/integration/jenkins-cli.jar
         jenkins_cli_url: localhost:8081
+        jenkins_tls_enabled: false
         known_hosts: 10.10.10.1
         mirror_key: tempmirrorkey
         mirror_key_orig: tempmirrorkeyorig
@@ -338,6 +346,7 @@ ingress:
   annotations:
   # kubernetes.io/ingress.class: nginx
   # kubernetes.io/tls-acme: "true"
+  # nginx.ingress.kubernetes.io/backend-protocol: https
   tls:
   # Secrets must be manually created in the namespace.
   # - secretName: chart-example-tls
@@ -353,6 +362,9 @@ volume:
   size: 2Gi
 
 ports:
+  https:
+    port: 8443
+    nodePort: 30081
   http:
     port: 8080
     nodePort: 30081
@@ -369,6 +381,7 @@ secrets:
     jenkins:
       jenkins:
         public: jenkins-tls-public
+        internal: jenkins-internal-tls
 
 # typically overriden by environmental
 # values, but should include all endpoints
@@ -410,7 +423,26 @@ endpoints:
   cluster_domain_suffix: cluster.local
   jenkins:
     host_fqdn_override:
-      default: null
+      default:
+        tls:
+          secretName: jenkins-internal-tls
+          issuerRef:
+            name: ca-clusterissuer
+            kind: ClusterIssuer
+          privateKey:
+            rotationPolicy: Always
+          keySize: 2048
+          duration: 8760h
+          renewBefore: 360h
+          dnsNames:
+            - jenkins.openstack.svc.cluster.local
+          usages:
+          - server auth
+          - client auth
+
+    hosts:
+      default: jenkins
+
     # NOTE(SaiBattina): this chart supports TLS for fqdn over-ridden public
     # endpoints using the following format:
     #   public:
@@ -440,6 +472,7 @@ dependencies:
       # - jenkins-ssh-key
 
 manifests:
+  certificates: false
   configmap_bin: true
   configmap_etc: true
   job_ks_user: false
