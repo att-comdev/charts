@@ -48,6 +48,9 @@ imageCredentials:
       # image.accessToken is the Docker user's access token (recommened) or password
       accessToken: "password"
 
+tls:
+  keystorePwd: changeit
+
 jenkinsNodes:
   namespace: jenkins-nodes
   service:
@@ -147,6 +150,9 @@ pod:
         limits:
           memory: "1024Mi"
           cpu: "2000m"
+  #env:
+  #- name: JENKINS_OPTS
+  #   value: --httpPort=-1 --httpsKeyStore=/var/jenkins_home/jenkins.jks --httpsKeyStorePassword=changeit --httpsPort=8443 --httpListenAddress=0.0.0.0
 
 plugins:
   enabled: false
@@ -338,6 +344,7 @@ ingress:
   annotations:
   # kubernetes.io/ingress.class: nginx
   # kubernetes.io/tls-acme: "true"
+  # nginx.ingress.kubernetes.io/backend-protocol: https
   tls:
   # Secrets must be manually created in the namespace.
   # - secretName: chart-example-tls
@@ -353,6 +360,9 @@ volume:
   size: 2Gi
 
 ports:
+  https:
+    port: 8443
+    nodePort: 30081
   http:
     port: 8080
     nodePort: 30081
@@ -369,6 +379,7 @@ secrets:
     jenkins:
       jenkins:
         public: jenkins-tls-public
+        internal: jenkins-internal-tls
 
 # typically overriden by environmental
 # values, but should include all endpoints
@@ -410,7 +421,19 @@ endpoints:
   cluster_domain_suffix: cluster.local
   jenkins:
     host_fqdn_override:
-      default: null
+      default:
+        tls:
+          secretName: jenkins-internal-tls
+          issuerRef:
+            name: ca-issuer
+            kind: ClusterIssuer
+          keySize: 2048
+          dnsNames:
+            - jenkins.openstack.svc.cluster.local
+
+    hosts:
+      default: jenkins
+
     # NOTE(SaiBattina): this chart supports TLS for fqdn over-ridden public
     # endpoints using the following format:
     #   public:
@@ -440,6 +463,7 @@ dependencies:
       # - jenkins-ssh-key
 
 manifests:
+  certificates: false
   configmap_bin: true
   configmap_etc: true
   job_ks_user: false
