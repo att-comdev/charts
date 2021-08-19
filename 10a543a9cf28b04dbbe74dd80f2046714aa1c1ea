@@ -3,6 +3,46 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "29993328_a1d88517",
+        "filename": "jenkins/templates/bin/_cert-add.sh.tpl",
+        "patchSetId": 8
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1013469
+      },
+      "writtenOn": "2021-08-19T13:30:35Z",
+      "side": 1,
+      "message": "Can we involve for review anyone who work with solution in other components?\nI just scary to have separate certificate creation procedure for each component.",
+      "revId": "10a543a9cf28b04dbbe74dd80f2046714aa1c1ea",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c3be33a9_e333b736",
+        "filename": "jenkins/templates/copy-certificate-to-agent.yaml",
+        "patchSetId": 8
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1013469
+      },
+      "writtenOn": "2021-08-19T13:30:35Z",
+      "side": 1,
+      "message": "do we store a certificate in secrets?",
+      "range": {
+        "startLine": 24,
+        "startChar": 43,
+        "endLine": 24,
+        "endChar": 74
+      },
+      "revId": "10a543a9cf28b04dbbe74dd80f2046714aa1c1ea",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6cfbef1e_fec16d83",
         "filename": "jenkins/templates/service-jenkins.yaml",
         "patchSetId": 8
