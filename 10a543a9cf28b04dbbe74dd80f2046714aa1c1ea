@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6cfbef1e_fec16d83",
+        "filename": "jenkins/templates/service-jenkins.yaml",
+        "patchSetId": 8
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1016322
+      },
+      "writtenOn": "2021-08-19T04:14:35Z",
+      "side": 1,
+      "message": "Why are you adding nodePort without .Values.ports.http.nodePort ?",
+      "range": {
+        "startLine": 40,
+        "startChar": 6,
+        "endLine": 40,
+        "endChar": 14
+      },
+      "revId": "10a543a9cf28b04dbbe74dd80f2046714aa1c1ea",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d43ca97_4bb8db04",
+        "filename": "jenkins/values.yaml",
+        "patchSetId": 8
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1016322
+      },
+      "writtenOn": "2021-08-19T04:14:35Z",
+      "side": 1,
+      "message": "Why are you adding this?",
+      "range": {
+        "startLine": 157,
+        "startChar": 3,
+        "endLine": 157,
+        "endChar": 6
+      },
+      "revId": "10a543a9cf28b04dbbe74dd80f2046714aa1c1ea",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
