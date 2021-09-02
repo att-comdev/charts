@@ -64,7 +64,6 @@ docker-traceability:1.2
 docker-workflow:1.25
 dockerhub-notification:2.5.0
 durable-task:1.35
-dynamic_extended_choice_parameter:1.0.1
 echarts-api:5.1.2-2
 email-ext:2.81
 envfile:1.2
