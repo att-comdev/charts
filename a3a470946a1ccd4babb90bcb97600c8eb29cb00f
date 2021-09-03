@@ -135,6 +135,30 @@
       },
       "revId": "a3a470946a1ccd4babb90bcb97600c8eb29cb00f",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "06870861_66cbdd59",
+        "filename": "jenkins/templates/bin/_launch.sh.tpl",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1017588
+      },
+      "writtenOn": "2021-09-03T14:30:03Z",
+      "side": 1,
+      "message": "made the change to delete the plugin folder in the case of Jenkins upgrade only.",
+      "parentUuid": "97940cfd_77be8477",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 1
+      },
+      "revId": "a3a470946a1ccd4babb90bcb97600c8eb29cb00f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
