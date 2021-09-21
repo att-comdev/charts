@@ -19,6 +19,10 @@ limitations under the License.
 # NOTE: no -e by design, some of this can/will fail, and that's OK
 set -x
 
+if [ -e /var/jenkins_home/plugins_downloaded ] ; then
+   rm /var/jenkins_home/plugins_downloaded
+fi
+
 {{ if .Values.plugins.enabled -}}
 
 curl -o /var/jenkins_home/plugins.tar.gz {{ .Values.plugins.url }}
@@ -37,6 +41,9 @@ if [ -e /plugins.txt ] ; then
     /usr/local/bin/install-plugins.sh $(cat /plugins.txt)
 fi
 {{- end }}
+
+# Plugins downloaded
+touch /var/jenkins_home/plugins_downloaded
 
 # proxy.xml configuration from environment variables
 rm -fv /var/jenkins_home/proxy.xml

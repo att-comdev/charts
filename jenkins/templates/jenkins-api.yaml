@@ -188,6 +188,18 @@ spec:
           {{- end }}
           ports:
             - containerPort: {{ .Values.containers.ports.containerPort }}
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: {{ .Values.containers.ports.containerPort }}
+              {{- if .Values.manifests.certificates }}
+              scheme: HTTPS
+              {{- end }}
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 1
           volumeMounts:
             - name: pod-tmp
               mountPath: /tmp
