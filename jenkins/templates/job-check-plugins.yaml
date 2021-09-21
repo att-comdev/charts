@@ -20,4 +20,4 @@ spec:
       - name: check-plugins
         image: {{ .Values.images.tags.namespace_creator }}
         imagePullPolicy: {{ .Values.images.pull_policy }}
-        command: ["/bin/sh","-c", "kubectl exec jenkins-api-0 -n {{ .Values.jenkinsNodes.service.namespace }} -- bash -c 'if [ ! -d '/var/jenkins_home/plugins' ]; then echo \"Copying plugins backup to plugins folder\"; cp -r /var/jenkins_home/plugins_bkp /var/jenkins_home/plugins; fi'"]
+        command: ["/bin/sh","-c", "sleep 2m; kubectl exec jenkins-api-0 -n {{ .Values.jenkinsNodes.service.namespace }} -- bash -c 'if [ ! -d '/var/jenkins_home/plugins' ]; then echo \"Copying plugins backup to plugins folder\"; cp -r /var/jenkins_home/plugins_bkp /var/jenkins_home/plugins; fi'"]
