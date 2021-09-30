@@ -93,6 +93,30 @@
       },
       "revId": "7cc878b65a7e143e3fa4f171fbd9aff2a9b6c232",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1ea93e9_b3e339b5",
+        "filename": "jenkins/templates/job-check-plugins.yaml",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1013469
+      },
+      "writtenOn": "2021-09-30T15:56:37Z",
+      "side": 1,
+      "message": "yes, but maybe be affected by absent of space and not easy to read.\nIt is always better to avoid it. If there are no easy way do not use it then it is Ok for now.",
+      "parentUuid": "12fdf248_3fbda855",
+      "range": {
+        "startLine": 23,
+        "startChar": 340,
+        "endLine": 23,
+        "endChar": 342
+      },
+      "revId": "7cc878b65a7e143e3fa4f171fbd9aff2a9b6c232",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
