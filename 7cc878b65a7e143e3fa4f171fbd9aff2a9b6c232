@@ -45,6 +45,54 @@
       },
       "revId": "7cc878b65a7e143e3fa4f171fbd9aff2a9b6c232",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12fdf248_3fbda855",
+        "filename": "jenkins/templates/job-check-plugins.yaml",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1017588
+      },
+      "writtenOn": "2021-09-30T14:52:48Z",
+      "side": 1,
+      "message": "but whats the issue? it is used to emulate \"NOT\"",
+      "parentUuid": "4f929a51_a1893f4b",
+      "range": {
+        "startLine": 23,
+        "startChar": 340,
+        "endLine": 23,
+        "endChar": 342
+      },
+      "revId": "7cc878b65a7e143e3fa4f171fbd9aff2a9b6c232",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2ad9dec_739fa700",
+        "filename": "jenkins/templates/job-check-plugins.yaml",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1017588
+      },
+      "writtenOn": "2021-09-30T14:52:48Z",
+      "side": 1,
+      "message": "but whats the issue? it is used to emulate \"NOT\"",
+      "parentUuid": "94c629a3_2df39fed",
+      "range": {
+        "startLine": 23,
+        "startChar": 476,
+        "endLine": 23,
+        "endChar": 478
+      },
+      "revId": "7cc878b65a7e143e3fa4f171fbd9aff2a9b6c232",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
