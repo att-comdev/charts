@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "94c629a3_2df39fed",
+        "filename": "jenkins/templates/job-check-plugins.yaml",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1013469
+      },
+      "writtenOn": "2021-09-30T14:07:08Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 23,
+        "startChar": 476,
+        "endLine": 23,
+        "endChar": 478
+      },
+      "revId": "7cc878b65a7e143e3fa4f171fbd9aff2a9b6c232",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f929a51_a1893f4b",
+        "filename": "jenkins/templates/job-check-plugins.yaml",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1013469
+      },
+      "writtenOn": "2021-09-30T14:07:08Z",
+      "side": 1,
+      "message": "I do not like exclamation marks. Can we use opposite condition?",
+      "range": {
+        "startLine": 23,
+        "startChar": 340,
+        "endLine": 23,
+        "endChar": 342
+      },
+      "revId": "7cc878b65a7e143e3fa4f171fbd9aff2a9b6c232",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
