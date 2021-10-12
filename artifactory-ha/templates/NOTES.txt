@@ -1,6 +1,8 @@
 Congratulations. You have just deployed JFrog Artifactory HA!
 
-{{- if (not .Values.artifactory.masterKeySecretName) and eq .Values.artifactory.masterKey "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF" }}
+
+{{- if .Values.artifactory.masterKey }}
+{{- if and (not .Values.artifactory.masterKeySecretName) (eq .Values.artifactory.masterKey "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF") }}
 
 
 ***************************************** WARNING ******************************************
@@ -16,6 +18,7 @@ Congratulations. You have just deployed JFrog Artifactory HA!
 * Alternatively, you can use a pre-existing secret with a key called master-key with       *
 * '--set artifactory.masterKeySecretName=${SECRET_NAME}'                                   *
 ********************************************************************************************
+{{- end }}
 {{- end }}
 
 {{- if .Values.postgresql.enabled }}
