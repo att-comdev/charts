@@ -126,7 +126,11 @@
       <addMasterProxyEnvVars>false</addMasterProxyEnvVars>
       <capOnlyOnAlivePods>false</capOnlyOnAlivePods>
       <namespace>{{.Values.jenkinsNodes.namespace}}</namespace>
+      {{- if .Values.manifests.certificates }}
+      <jenkinsUrl>https://jenkins.{{.Values.jenkinsNodes.service.namespace}}.svc.cluster.local:8443</jenkinsUrl>
+      {{- else }}
       <jenkinsUrl>http://jenkins.{{.Values.jenkinsNodes.service.namespace}}.svc.cluster.local:8080</jenkinsUrl>
+      {{- end }}
       <jenkinsTunnel>jenkins.{{.Values.jenkinsNodes.service.namespace}}.svc.cluster.local:50000</jenkinsTunnel>
       <containerCap>500</containerCap>
       <retentionTimeout>5</retentionTimeout>
