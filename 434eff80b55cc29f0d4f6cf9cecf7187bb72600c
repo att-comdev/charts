@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8482832_ba29f135",
+        "filename": "distribution/values.yaml",
+        "patchSetId": 10
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1017588
+      },
+      "writtenOn": "2021-12-22T14:51:44Z",
+      "side": 1,
+      "message": "Please do make corresponding changes on the charts as per these changes.",
+      "revId": "434eff80b55cc29f0d4f6cf9cecf7187bb72600c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
