@@ -1,0 +1,25 @@
+{{- if and .Values.manifests.job_create_namespaces .Values.manifests.certificates }}
+{{- $envAll := . }}
+
+{{- $serviceAccountName := printf "create-namespace-%s" .Release.Name }}
+{{- $configChange := printf "config-change-while-upgrade-%s" .Release.Name }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ $configChange }}
+  namespace: {{ .Values.jenkinsNodes.service.namespace }}
+  annotations:
+    "helm.sh/hook": "pre-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      serviceAccount: {{ $serviceAccountName }}
+      containers:
+      - name: config-change-while-upgrade
+        image: {{ .Values.images.tags.namespace_creator }}
+        imagePullPolicy: {{ .Values.images.pull_policy }}
+        command: ["/bin/sh","-c", "kubectl exec jenkins-api-0 -n {{ .Values.jenkinsNodes.service.namespace }} -c jenkins -- bash -c 'cp /var/jenkins_home/config.xml /var/jenkins_home/config.xml_before_upgrade && if [ ! $(cat /var/jenkins_home/config.xml | grep \"JENKINS_TLS_ENABLED\") ]; then echo \"Adding JENKINS_TLS_ENABLED env variable\"; sed -i -e \"s/<string>http:\\/\\/localhost:8080<\\/string>/&\\n          <string>JENKINS_TLS_ENABLED<\\/string>\\n          <string>true<\\/string>/\" /var/jenkins_home/config.xml;fi && if [ $(cat /var/jenkins_home/config.xml | grep \"localhost:8080\") ]; then echo \"Updating jenkins_cli_url env variable\"; sed -i -e \"s/http:\\/\\/localhost:8080/https:\\/\\/localhost:8443/\" /var/jenkins_home/config.xml; fi && if [ $(cat /var/jenkins_home/config.xml | grep \"http://jenkins.artifactory.svc.cluster.local:8080\") ]; then echo \"Updating Jenkins URL env variable\"; sed -i -e \"s/http:\\/\\/jenkins.artifactory.svc.cluster.local:8080/https:\\/\\/jenkins.artifactory.svc.cluster.local:8443/\" /var/jenkins_home/config.xml; fi'"]
+{{- end -}}
