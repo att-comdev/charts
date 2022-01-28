@@ -19,6 +19,9 @@ limitations under the License.
 # NOTE: no -e by design, some of this can/will fail, and that's OK
 set -x
 
+keytool -delete -alias JENKINS-CONTROLLER-CERT -keystore /var/jenkins_home/JenkinsKeystore -storepass changeit || true
+keytool -import -alias JENKINS-CONTROLLER-CERT -keystore /var/jenkins_home/JenkinsKeystore -file /var/jenkins_home/ca.crt -storepass changeit -noprompt
+
 if [ -e /var/jenkins_home/plugins_downloaded ] ; then
    rm /var/jenkins_home/plugins_downloaded
 fi
