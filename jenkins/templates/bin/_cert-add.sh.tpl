@@ -30,3 +30,6 @@ keytool -importkeystore -srckeystore jenkins.p12 -srcstorepass {{ .Values.tls.ke
 
 cp /tmp/jenkins.jks /var/jenkins_home/jenkins.jks
 chown jenkins:jenkins /var/jenkins_home/jenkins.jks
+
+cp /tmp/ca.crt /var/jenkins_home/ca.crt
+chown jenkins:jenkins /var/jenkins_home/ca.crt
