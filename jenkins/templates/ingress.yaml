@@ -24,9 +24,12 @@ spec:
     http:
       paths:
         - path: /
+          pathType: ImplementationSpecific
           backend:
-            serviceName: jenkins
-            servicePort: {{ $servicePort }}
+            service:
+              name: jenkins
+              port:
+                number: {{ $servicePort }}
   {{- end -}}
 {{- end -}}
   {{- if .Values.ingress.tls }}

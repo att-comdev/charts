@@ -22,9 +22,12 @@ spec:
     {{- end }}
         paths:
           - path: {{ .Values.ingress.path }}
+            pathType: ImplementationSpecific
             backend:
-              serviceName: {{ template "rabbitmq-ha.fullname" . }}
-              servicePort: {{ .Values.rabbitmqManagerPort }}
+              service:
+                name: {{ template "rabbitmq-ha.fullname" . }}
+                port:
+                  number: {{ .Values.rabbitmqManagerPort }}
 {{- if .Values.ingress.tls }}
   tls:
     - secretName: {{  .Values.ingress.tlsSecret }}
