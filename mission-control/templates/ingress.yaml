@@ -35,7 +35,11 @@ spec:
               service:
                 name: {{ $serviceName }}
                 port:
-                  number: {{ $servicePort }}
+{{- if or (kindIs "int" $servicePort) (regexMatch "^[0-9]{1,5}$" $servicePort) }}
+                  number: {{ $servicePort | int }}
+{{ - else }}
+                  name: {{ $servicePort | quote }}
+{{- end }}
   {{- end -}}
   {{- with .Values.ingress.additionalRules }}
 {{ tpl . $ | indent 2 }}
