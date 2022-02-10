@@ -1,6 +1,6 @@
 {{- if .Values.ingress.enabled -}}
 {{- $serviceName := include "mission-control.fullname" . -}}
-{{- $servicePort := .Values.missionControl.externalPort -}}
+{{- $servicePort := printf "%1.f" .Values.missionControl.externalPort -}}
 {{- if semverCompare ">=v1.14.0" .Capabilities.KubeVersion.GitVersion }}
 apiVersion: networking.k8s.io/v1beta1
 {{- else }}
@@ -35,7 +35,11 @@ spec:
               service:
                 name: {{ $serviceName }}
                 port:
-                  number: {{ $servicePort }}
+{{- if or (kindIs "int" $servicePort) (regexMatch "^[0-9]{1,5}$" $servicePort) }}
+                  number: {{ $servicePort | int }}
+{{- else }}
+                  name: {{ $servicePort | quote }}
+{{- end }}
   {{- end -}}
   {{- with .Values.ingress.additionalRules }}
 {{ tpl . $ | indent 2 }}
