@@ -16,6 +16,24 @@
       "message": "Why are you deleting postgress charts?",
       "revId": "30eba4bd5c180d3dbc39b20fc7976cdc432f9d5b",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9170d242_28c6f30b",
+        "filename": "distribution/charts/postgresql/Chart.yaml",
+        "patchSetId": 9
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1017588
+      },
+      "writtenOn": "2022-02-15T06:27:17Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "0f148dbd_226e1a78",
+      "revId": "30eba4bd5c180d3dbc39b20fc7976cdc432f9d5b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
