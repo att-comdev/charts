@@ -1,6 +1,6 @@
 {{- if .Values.ingress.enabled -}}
-{{- $servicePort := printf "%1.f" .Values.containers.ports.containerPort -}}
-apiVersion: networking.k8s.io/v1
+{{- $servicePort := .Values.containers.ports.containerPort -}}
+apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: jenkins-nc
@@ -24,16 +24,9 @@ spec:
     http:
       paths:
         - path: /
-          pathType: ImplementationSpecific
           backend:
-            service:
-              name: jenkins
-              port:
-{{- if or (kindIs "int" $servicePort) (regexMatch "^[0-9]{1,5}$" $servicePort) }}
-                number: {{ $servicePort | int }}
-{{- else }}
-                name: {{ $servicePort | quote }}
-{{- end }}
+            serviceName: jenkins
+            servicePort: {{ $servicePort }}
   {{- end -}}
 {{- end -}}
   {{- if .Values.ingress.tls }}

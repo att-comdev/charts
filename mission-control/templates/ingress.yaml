@@ -1,10 +1,10 @@
 {{- if .Values.ingress.enabled -}}
 {{- $serviceName := include "mission-control.fullname" . -}}
-{{- $servicePort := printf "%1.f" .Values.missionControl.externalPort -}}
+{{- $servicePort := .Values.missionControl.externalPort -}}
 {{- if semverCompare ">=v1.14.0" .Capabilities.KubeVersion.GitVersion }}
 apiVersion: networking.k8s.io/v1beta1
 {{- else }}
-apiVersion: networking.k8s.io/v1
+apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
@@ -30,16 +30,9 @@ spec:
       http:
         paths:
           - path: {{ $.Values.ingress.path }}
-            pathType: ImplementationSpecific
             backend:
-              service:
-                name: {{ $serviceName }}
-                port:
-{{- if or (kindIs "int" $servicePort) (regexMatch "^[0-9]{1,5}$" $servicePort) }}
-                  number: {{ $servicePort | int }}
-{{- else }}
-                  name: {{ $servicePort | quote }}
-{{- end }}
+              serviceName: {{ $serviceName }}
+              servicePort: {{ $servicePort }}
   {{- end -}}
   {{- with .Values.ingress.additionalRules }}
 {{ tpl . $ | indent 2 }}
@@ -49,4 +42,3 @@ spec:
 {{ toYaml .Values.ingress.tls | indent 4 }}
   {{- end -}}
 {{- end -}}
-
