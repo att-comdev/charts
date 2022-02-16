@@ -1,6 +1,5 @@
 {{- if .Values.ingress.enabled }}
-{{- $servicePort := printf "%1.f" .Values.rabbitmqManagerPort -}}
-apiVersion: networking.k8s.io/v1
+apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ template "rabbitmq-ha.fullname" . }}
@@ -23,16 +22,9 @@ spec:
     {{- end }}
         paths:
           - path: {{ .Values.ingress.path }}
-            pathType: ImplementationSpecific
             backend:
-              service:
-                name: {{ template "rabbitmq-ha.fullname" . }}
-                port:
-{{- if or (kindIs "int" $servicePort) (regexMatch "^[0-9]{1,5}$" $servicePort) }}
-                  number: {{ $servicePort | int }}
-{{- else }}
-                  name: {{ $servicePort | quote }}
-{{- end }}
+              serviceName: {{ template "rabbitmq-ha.fullname" . }}
+              servicePort: {{ .Values.rabbitmqManagerPort }}
 {{- if .Values.ingress.tls }}
   tls:
     - secretName: {{  .Values.ingress.tlsSecret }}
