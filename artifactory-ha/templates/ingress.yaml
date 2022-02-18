@@ -1,14 +1,14 @@
 {{- if .Values.ingress.enabled -}}
 {{- $serviceName := include "artifactory-ha.fullname" . -}}
-{{- $servicePort := .Values.artifactory.externalPort -}}
-{{- $artifactoryServicePort := .Values.artifactory.externalArtifactoryPort -}}
+{{- $servicePort := printf "%1.f" .Values.artifactory.externalPort -}}
+{{- $artifactoryServicePort := printf "%1.f" .Values.artifactory.externalArtifactoryPort -}}
 {{- $length := len .Values.ingress.hosts -}}
 {{- if ge ( len .Values.ingress.hosts ) 1 }}
 {{- $host := index .Values.ingress.hosts 0 -}}
 {{- $eachHost := split "." $host -}}
 {{- $ingressNameF := default ( include "artifactory-ha.fullname" . ) .Values.ingress.name -}}
 {{- $ingressName := printf "%s-%s" $ingressNameF $eachHost._0 -}}
-{{- if semverCompare ">=v1.14.0-0" $.Capabilities.KubeVersion.GitVersion }}
+{{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1
 {{- else }}
 apiVersion: extensions/v1beta1
@@ -39,13 +39,41 @@ spec:
     http:
       paths:
         - path: {{ $.Values.ingress.routerPath }}
+          {{- if (semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion) }}
+          pathType: ImplementationSpecific
+          {{- end }}
           backend:
+          {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+            service:
+              name: {{ $serviceName }}
+              port:
+                {{- if or (kindIs "int" $servicePort) (regexMatch "^[0-9]{1,5}$" $servicePort) }}
+                number: {{ $servicePort | int }}
+                {{- else }}
+                name: {{ $servicePort | quote }}
+                {{- end }}
+          {{- else }}
             serviceName: {{ $serviceName }}
             servicePort: {{ $servicePort }}
+          {{- end }}
         - path: {{ $.Values.ingress.artifactoryPath }}
+          {{- if (semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion) }}
+          pathType: ImplementationSpecific
+          {{- end }}
           backend:
+          {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+            service:
+              name: {{ $serviceName }}
+              port:
+                {{- if or (kindIs "int" $artifactoryServicePort) (regexMatch "^[0-9]{1,5}$" $artifactoryServicePort) }}
+                number: {{ $artifactoryServicePort | int }}
+                {{- else }}
+                name: {{ $artifactoryServicePort | quote }}
+                {{- end }}
+          {{- else }}
             serviceName: {{ $serviceName }}
             servicePort: {{ $artifactoryServicePort }}
+          {{- end }}
   {{- with .Values.ingress.additionalRules }}
 {{ tpl . $ | indent 2 }}
   {{- end }}
@@ -60,8 +88,8 @@ spec:
 {{- $eachHost := split "." $host -}}
 {{- $ingressNameF := default ( include "artifactory-ha.fullname" . ) .Values.ingress.name -}}
 {{- $ingressName := printf "%s-%s" $ingressNameF $eachHost._0 -}}
-{{- if semverCompare ">=v1.14.0-0" $.Capabilities.KubeVersion.GitVersion }}
-apiVersion: networking.k8s.io/v1beta1
+{{- if (semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion) }}
+apiVersion: networking.k8s.io/v1
 {{- else }}
 apiVersion: extensions/v1beta1
 {{- end }}
@@ -91,13 +119,41 @@ spec:
     http:
       paths:
         - path: {{ $.Values.ingress.routerPath }}
+          {{- if (semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion) }}
+          pathType: ImplementationSpecific
+          {{- end }}
           backend:
+          {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+            service:
+              name: {{ $serviceName }}
+              port:
+                {{- if or (kindIs "int" $servicePort) (regexMatch "^[0-9]{1,5}$" $servicePort) }}
+                number: {{ $servicePort | int }}
+                {{- else }}
+                name: {{ $servicePort | quote }}
+                {{- end }}
+          {{- else }}
             serviceName: {{ $serviceName }}
             servicePort: {{ $servicePort }}
+          {{- end }}
         - path: {{ $.Values.ingress.artifactoryPath }}
+          {{- if (semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion) }}
+          pathType: ImplementationSpecific
+          {{- end }}
           backend:
+          {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+            service:
+              name: {{ $serviceName }}
+              port:
+                {{- if or (kindIs "int" $artifactoryServicePort) (regexMatch "^[0-9]{1,5}$" $artifactoryServicePort) }}
+                number: {{ $artifactoryServicePort | int }}
+                {{- else }}
+                name: {{ $artifactoryServicePort | quote }}
+                {{- end }}
+          {{- else }}
             serviceName: {{ $serviceName }}
             servicePort: {{ $artifactoryServicePort }}
+          {{- end }}
   {{- with .Values.ingress.additionalRules }}
 {{ tpl . $ | indent 2 }}
   {{- end }}
@@ -112,8 +168,8 @@ spec:
 {{- $eachHost := split "." $host -}}
 {{- $ingressNameF := default ( include "artifactory-ha.fullname" . ) .Values.ingress.name -}}
 {{- $ingressName := printf "%s-%s" $ingressNameF $eachHost._0 -}}
-{{- if semverCompare ">=v1.14.0-0" $.Capabilities.KubeVersion.GitVersion }}
-apiVersion: networking.k8s.io/v1beta1
+{{- if (semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion) }}
+apiVersion: networking.k8s.io/v1
 {{- else }}
 apiVersion: extensions/v1beta1
 {{- end }}
@@ -143,13 +199,41 @@ spec:
     http:
       paths:
         - path: {{ $.Values.ingress.routerPath }}
+          {{- if (semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion) }}
+          pathType: ImplementationSpecific
+          {{- end }}
           backend:
+          {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+            service:
+              name: {{ $serviceName }}
+              port:
+                {{- if or (kindIs "int" $servicePort) (regexMatch "^[0-9]{1,5}$" $servicePort) }}
+                number: {{ $servicePort | int }}
+                {{- else }}
+                name: {{ $servicePort | quote }}
+                {{- end }}
+          {{- else }}
             serviceName: {{ $serviceName }}
             servicePort: {{ $servicePort }}
+          {{- end }}
         - path: {{ $.Values.ingress.artifactoryPath }}
+          {{- if (semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion) }}
+          pathType: ImplementationSpecific
+          {{- end }}
           backend:
+          {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+            service:
+              name: {{ $serviceName }}
+              port:
+                {{- if or (kindIs "int" $artifactoryServicePort) (regexMatch "^[0-9]{1,5}$" $artifactoryServicePort) }}
+                number: {{ $artifactoryServicePort | int }}
+                {{- else }}
+                name: {{ $artifactoryServicePort | quote }}
+                {{- end }}
+          {{- else }}
             serviceName: {{ $serviceName }}
             servicePort: {{ $artifactoryServicePort }}
+          {{- end }}
   {{- with .Values.ingress.additionalRules }}
 {{ tpl . $ | indent 2 }}
   {{- end }}
@@ -161,8 +245,8 @@ spec:
 {{- if .Values.artifactory.replicator.enabled }}
 ---
 {{- $replicationIngressName := default ( include "artifactory-ha.replicator.fullname" . ) .Values.artifactory.replicator.ingress.name -}}
-{{- if semverCompare ">=v1.14.0-0" .Capabilities.KubeVersion.GitVersion }}
-apiVersion: networking.k8s.io/v1beta1
+{{- if (semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion) }}
+apiVersion: networking.k8s.io/v1
 {{- else }}
 apiVersion: extensions/v1beta1
 {{- end }}
@@ -191,13 +275,41 @@ spec:
     http:
       paths:
         - path: /replicator/
+          {{- if (semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion) }}
+          pathType: ImplementationSpecific
+          {{- end }}
           backend:
+          {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+            service:
+              name: {{ $serviceName }}
+              port:
+                {{- if or (kindIs "int" $servicePort) (regexMatch "^[0-9]{1,5}$" $servicePort) }}
+                number: {{ $servicePort | int }}
+                {{- else }}
+                name: {{ $servicePort | quote }}
+                {{- end }}
+          {{- else }}
             serviceName: {{ $serviceName }}
             servicePort: {{ $servicePort }}
+          {{- end }}
         - path: /artifactory/api/replication/replicate/file/streaming
+          {{- if (semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion) }}
+          pathType: ImplementationSpecific
+          {{- end }}
           backend:
+          {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+            service:
+              name: {{ $serviceName }}
+              port:
+                {{- if or (kindIs "int" $servicePort) (regexMatch "^[0-9]{1,5}$" $servicePort) }}
+                number: {{ $servicePort | int }}
+                {{- else }}
+                name: {{ $servicePort | quote }}
+                {{- end }}
+          {{- else }}
             serviceName: {{ $serviceName }}
             servicePort: {{ $servicePort }}
+          {{- end }}
   {{- end -}}
 {{- end -}}
   {{- if .Values.artifactory.replicator.ingress.tls }}
@@ -208,8 +320,8 @@ spec:
 {{- if and .Values.artifactory.replicator.enabled .Values.artifactory.replicator.trackerIngress.enabled }}
 ---
 {{- $replicatorTrackerIngressName := default ( include "artifactory-ha.replicator.tracker.fullname" . ) .Values.artifactory.replicator.trackerIngress.name -}}
-  {{- if semverCompare ">=v1.14.0-0" .Capabilities.KubeVersion.GitVersion }}
-apiVersion: networking.k8s.io/v1beta1
+  {{- if (semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion) }}
+apiVersion: networking.k8s.io/v1
   {{- else }}
 apiVersion: extensions/v1beta1
   {{- end }}
@@ -238,9 +350,23 @@ spec:
     http:
       paths:
         - path: /
+          {{- if (semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion) }}
+          pathType: ImplementationSpecific
+          {{- end }}
           backend:
+          {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+            service:
+              name: {{ $serviceName }}
+              port:
+                {{- if or (kindIs "int" $servicePort) (regexMatch "^[0-9]{1,5}$" $servicePort) }}
+                number: {{ $servicePort | int }}
+                {{- else }}
+                name: {{ $servicePort | quote }}
+                {{- end }}
+          {{- else }}
             serviceName: {{ $serviceName }}
             servicePort: {{ $servicePort }}
+          {{- end }}
   {{- end -}}
 {{- end -}}
   {{- if .Values.artifactory.replicator.trackerIngress.tls }}
