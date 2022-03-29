@@ -93,6 +93,12 @@ data:
 {{- else -}}
 {{ tuple "etc/_org.jenkinsci.plugins.workflow.libs.GlobalLibraries.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
 {{- end }}
+  com.orctom.jenkins.plugin.buildtimestamp.BuildTimestampWrapper.xml: |
+{{ if .Values.conf.build_timestamp.override -}}
+{{ .Values.conf.build_timestamp.override | indent 4 }}
+{{- else -}}
+{{ tuple "etc/_com.orctom.jenkins.plugin.buildtimestamp.BuildTimestampWrapper.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+{{- end }}
   hudson.plugins.emailext.ExtendedEmailPublisher.xml: |
 {{ if .Values.conf.config.override -}}
 {{ .Values.conf.config.override | indent 4 }}
