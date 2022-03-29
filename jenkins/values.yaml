@@ -257,6 +257,11 @@ conf:
     override: null
   jfrog:
     override: null
+  build_timestamp:
+    override: null
+    enable: true
+    timezone: America/New_York
+    pattern: yyyy-MM-dd_HH-mm-ss
   global_libraries:
     override: null
     use_internal_lib: false
