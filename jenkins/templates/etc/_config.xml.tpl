@@ -36,7 +36,15 @@
         <rootDN>{{ $securityRealm.root_dn }}</rootDN>
         <inhibitInferRootDN>false</inhibitInferRootDN>
         <userSearchBase></userSearchBase>
+        {{/* Keep the default for user_search if nothing is defined in the values */}}
+        {{- if not (hasKey $securityRealm "user_search") -}}
         <userSearch>sAMACCOUNTNAME={0}</userSearch>
+        {{- else  -}}
+        <userSearch>{{ $securityRealm.user_search }}</userSearch>
+        {{- end }}
+        {{- if $securityRealm.group_search }}
+        <groupSearchFilter>{{ $securityRealm.group_search }}</groupSearchFilter>
+        {{- end }}
         <groupMembershipStrategy class="jenkins.security.plugins.ldap.FromUserRecordLDAPGroupMembershipStrategy">
           <attributeName>memberOf</attributeName>
         </groupMembershipStrategy>
