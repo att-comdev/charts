@@ -16,6 +16,24 @@
       "message": "The very first line in this file should be:\n\u003c?xml version\u003d\u00271.1\u0027 encoding\u003d\u0027UTF-8\u0027?\u003e\n\nAlthough it works without the line, it\u0027s better to be consistent with the original plugin config output.",
       "revId": "0658787c23a0f63544dc29dd0de75626bcdd7d2f",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f042e9d_c0d67991",
+        "filename": "jenkins/templates/etc/_com.orctom.jenkins.plugin.buildtimestamp.BuildTimestampWrapper.xml.tpl",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1019811
+      },
+      "writtenOn": "2022-03-30T22:05:18Z",
+      "side": 1,
+      "message": "thanks for the pointing it out i have added that line.",
+      "parentUuid": "1884da4e_e00735d8",
+      "revId": "0658787c23a0f63544dc29dd0de75626bcdd7d2f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
