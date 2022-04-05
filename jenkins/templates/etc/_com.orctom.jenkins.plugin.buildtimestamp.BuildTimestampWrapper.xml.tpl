@@ -5,5 +5,7 @@
   <timezone>{{ .Values.conf.build_timestamp.timezone }}</timezone>
   <pattern>{{ .Values.conf.build_timestamp.pattern }}</pattern>
   <extraProperties/>
+{{- else }}
+  <enableBuildTimestamp>{{ .Values.conf.build_timestamp.enable }}</enableBuildTimestamp>
 {{- end }}
 </com.orctom.jenkins.plugin.buildtimestamp.BuildTimestampWrapper_-DescriptorImpl>
