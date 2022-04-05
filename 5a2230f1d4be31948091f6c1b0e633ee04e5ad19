@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "db07fab6_c57f565f",
+        "filename": "jenkins/templates/etc/_com.orctom.jenkins.plugin.buildtimestamp.BuildTimestampWrapper.xml.tpl",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1016322
+      },
+      "writtenOn": "2022-04-05T19:17:35Z",
+      "side": 1,
+      "message": "Please add indents",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 6,
+        "endChar": 18
+      },
+      "revId": "5a2230f1d4be31948091f6c1b0e633ee04e5ad19",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
