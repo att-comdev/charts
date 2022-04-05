@@ -101,11 +101,9 @@ spec:
             - name: jenkins-etc
               mountPath: /seed/org.jenkinsci.plugins.workflow.libs.GlobalLibraries.xml
               subPath: org.jenkinsci.plugins.workflow.libs.GlobalLibraries.xml
-            {{- if .Values.conf.build_timestamp.enable }}
             - name: jenkins-etc
               mountPath: /seed/com.orctom.jenkins.plugin.buildtimestamp.BuildTimestampWrapper.xml
               subPath: com.orctom.jenkins.plugin.buildtimestamp.BuildTimestampWrapper.xml
-            {{- end }}
             - name: jenkins-etc
               mountPath: /seed/hudson.plugins.emailext.ExtendedEmailPublisher.xml
               subPath: hudson.plugins.emailext.ExtendedEmailPublisher.xml
