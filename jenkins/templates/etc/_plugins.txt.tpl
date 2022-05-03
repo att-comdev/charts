@@ -50,7 +50,7 @@ code-coverage-api:2.0.4
 command-launcher:1.6
 config-file-provider:3.8.2
 copyartifact:1.46.2
-credentials:1074.v60e6c29b_b_44b_
+credentials:1087.v16065d268466
 credentials-binding:1.27.1
 data-tables-api:1.11.3-6
 disk-usage:0.28
@@ -76,7 +76,7 @@ external-monitor-job:1.7
 favorite:2.3.3
 font-awesome-api:5.15.4-5
 forensics-api:1.7.0
-gerrit-trigger:2.35.2
+gerrit-trigger:2.35.4
 git:4.10.3
 git-client:3.11.0
 git-server:1.10
@@ -94,13 +94,13 @@ handy-uri-templates-2-api:2.1.8-1.0
 htmlpublisher:1.28
 http_request:1.13
 ivy:2.1
-jackson2-api:2.13.1-246.va8a9f3eaf46a
+jackson2-api:2.13.2.20220328-273.v11d70a_b_a_1a_52
 javadoc:1.6
 jaxb:2.3.0.1
 jclouds-jenkins:2.25
 jdk-tool:1.5
 jenkins-design-language:1.25.2
-jira:3.6
+jira:3.6.1
 job-dsl:1.78.3
 jobConfigHistory:2.31-rc1098.b666422863b2
 jquery:1.12.4-1
@@ -117,7 +117,7 @@ libvirt-slave:1.9.2
 lockable-resources:2.13
 mailer:408.vd726a_1130320
 mapdb-api:1.0.9.0
-mask-passwords:3.0
+mask-passwords:3.1
 matrix-auth:3.0
 matrix-project:1.20
 maven-plugin:3.16
@@ -170,7 +170,7 @@ ssh-credentials:1.19
 ssh-slaves:1.33.0
 ssh-steps:2.0.0
 structs:308.v852b473a2b8c
-subversion:2.15.2
+subversion:2.15.3
 text-finder:1.18
 throttle-concurrents:2.6
 timestamper:1.16
