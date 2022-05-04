@@ -803,8 +803,8 @@ artifactory:
   ## DO NOT use port lower than 1024 as Artifactory runs as non-root and cannot bind to ports lower than 1024!
   externalPort: 8082
   internalPort: 8082
-  externalArtifactoryPort: 8081
-  internalArtifactoryPort: 8081
+  externalArtifactoryPort: 8082
+  internalArtifactoryPort: 8082
   uid: 1030
   gid: 1030
   terminationGracePeriodSeconds: 30
