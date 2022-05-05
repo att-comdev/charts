@@ -164,6 +164,8 @@ plugins:
 conf:
   config:
     jenkins:
+      csrf:
+        enable_proxy_compatibility: false
       email:
         enabled: false
         suffix: null
