@@ -104,7 +104,7 @@
   </disabledAgentProtocols>
   <label>{{ .Values.conf.node_labels.controller | default "controller" }}</label>
   <crumbIssuer class="hudson.security.csrf.DefaultCrumbIssuer">
-    <excludeClientIPFromCrumb>false</excludeClientIPFromCrumb>
+    <excludeClientIPFromCrumb>{{ .Values.conf.crumb_issuer.exclude_clientip_from_crumb }}</excludeClientIPFromCrumb>
   </crumbIssuer>
   <nodeProperties/>
   <globalNodeProperties>

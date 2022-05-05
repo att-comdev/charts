@@ -342,6 +342,8 @@ conf:
     # The labels for the node should be separated by space.
     # "controller" is reserved for Jenkins
     controller: "controller"
+  crumb_issuer:
+    exclude_clientip_from_crumb: false
 
 ingress:
   enabled: true
