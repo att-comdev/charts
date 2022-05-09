@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71d4acb4_340e28ef",
+        "filename": "jenkins/templates/etc/_plugins.txt.tpl",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1013696
+      },
+      "writtenOn": "2022-05-09T16:45:51Z",
+      "side": 1,
+      "message": "whats the need to update this plugin as fix is not available yet for this ?",
+      "revId": "44c5d6cd9a305078caeefdcaad565904272e06ef",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
