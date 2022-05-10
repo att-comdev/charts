@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "753d836b_e2e3b34f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019811
+      },
+      "writtenOn": "2022-05-10T18:48:05Z",
+      "side": 1,
+      "message": "please re-vote. since newer version of this (extended choice parameter) plugin isn\u0027t available and 346.vd87693c5a_86c still contains vulnerabilities, I am not updating this plugin as this time.",
+      "revId": "e4ad97c706f8d634ee63cd3d99731f3d0f2e1e0c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
