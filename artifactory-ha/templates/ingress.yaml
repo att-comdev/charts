@@ -5,9 +5,8 @@
 {{- $length := len .Values.ingress.hosts -}}
 {{- if ge ( len .Values.ingress.hosts ) 1 }}
 {{- $host := index .Values.ingress.hosts 0 -}}
-{{- $eachHost := split "." $host -}}
 {{- $ingressNameF := default ( include "artifactory-ha.fullname" . ) .Values.ingress.name -}}
-{{- $ingressName := printf "%s-%s" $ingressNameF $eachHost._0 -}}
+{{- $ingressName := printf "%s-%s" $ingressNameF $host -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -67,9 +66,8 @@ spec:
 {{- if ge ( len .Values.ingress.hosts ) 2 }}
 ---
 {{- $host := index .Values.ingress.hosts 1 -}}
-{{- $eachHost := split "." $host -}}
 {{- $ingressNameF := default ( include "artifactory-ha.fullname" . ) .Values.ingress.name -}}
-{{- $ingressName := printf "%s-%s" $ingressNameF $eachHost._0 -}}
+{{- $ingressName := printf "%s-%s" $ingressNameF $host -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -129,9 +127,8 @@ spec:
 {{- if ge ( len .Values.ingress.hosts ) 3 }}
 ---
 {{- $host := index .Values.ingress.hosts 2 -}}
-{{- $eachHost := split "." $host -}}
 {{- $ingressNameF := default ( include "artifactory-ha.fullname" . ) .Values.ingress.name -}}
-{{- $ingressName := printf "%s-%s" $ingressNameF $eachHost._0 -}}
+{{- $ingressName := printf "%s-%s" $ingressNameF $host -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -188,6 +185,24 @@ spec:
 {{ toYaml .Values.ingress.tls | indent 4 }}
   {{- end -}}
 {{- end -}}
+{{- if ge ( len .Values.ingress.hosts ) 4 }}
+---
+{{- $host := index .Values.ingress.hosts 3 -}}
+{{- $eachHost := split "." $host -}}
+{{- $ingressNameF := default ( include "artifactory-ha.fullname" . ) .Values.ingress.name -}}
+{{- $ingressName := printf "%s-%s" $ingressNameF $eachHost._0 -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $ingressName }}
+  labels:
+    app: {{ template "artifactory-ha.name" . }}
+    chart: {{ template "artifactory-ha.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+{{- if .Values.ingress.labels }}
+{{ .Values.ingress.labels | toYaml | trimSuffix "\n"| indent 4 -}}
+{{- end}}
 {{- if .Values.artifactory.replicator.enabled }}
 ---
 {{- $replicationIngressName := default ( include "artifactory-ha.replicator.fullname" . ) .Values.artifactory.replicator.ingress.name -}}
