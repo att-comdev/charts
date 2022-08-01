@@ -5,7 +5,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: dindproxy
-  namespace: jenkins-nodes
+  namespace: {{.Values.jenkinsNodes.namespace}}
   labels:
 {{ tuple $envAll "dind" "proxy" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 4 }}
 spec:
