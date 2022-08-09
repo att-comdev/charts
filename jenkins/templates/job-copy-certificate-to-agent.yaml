@@ -21,5 +21,5 @@ spec:
       - name: copy-certificate-to-agent
         image: {{ .Values.images.tags.namespace_creator }}
         imagePullPolicy: {{ .Values.images.pull_policy }}
-        command: ["/bin/sh","-c", "kubectl get secret jenkins-internal-tls -n {{ .Values.jenkinsNodes.service.namespace }} -o json | jq '{apiVersion,data,kind,metadata,type} | .metadata |= {namespace, name} | .data |= {\"ca.crt\"}' | sed 's/\"namespace\": \".*\"/\"namespace\": \"{{ .Values.jenkinsNodes.namespace }}\"/' | sed 's/\"type\": \".*\"/\"type\": \"Opaque\"/' | kubectl apply -f -"]
+        command: ["/bin/sh","-c", "kubectl get secret jenkins-internal-tls -n {{ .Values.jenkinsNodes.service.namespace }} -o json | jq '{apiVersion,data,kind,metadata,type} | .metadata |= {namespace, name} | .data |= {\"ca.crt\"}' | sed 's/\"namespace\": \".*\"/\"namespace\": \"{{ .Values.jenkinsNodes.namespace }}\"/' | sed 's/\"type\": \".*\"/\"type\": \"kubernetes.io\\/tls\"/' | kubectl apply -f -"]
 {{- end -}}
