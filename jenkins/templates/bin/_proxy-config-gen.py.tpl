@@ -3,7 +3,7 @@
 # generate a suitable proxy.xml for jenkins using environment
 # variables (which ignores these)
 
-from urlparse import urlparse
+from urllib.parse import urlparse
 import os
 import sys
 
@@ -13,13 +13,13 @@ for ev in ( "http_proxy", "https_proxy", "HTTP_PROXY", "HTTPS_PROXY" ):
         break
 
 if not proxy_url:
-    print "INFO: No proxy environment variables, proxy.xml will not be generated"
+    print("INFO: No proxy environment variables, proxy.xml will not be generated")
     sys.exit(0)
 
 o = urlparse(proxy_url)
 
 if not o.hostname:
-    print "WARNING: unable to parse proxy environment variable (%s=%s)" % (ev, proxy_url)
+    print("WARNING: unable to parse proxy environment variable (%s=%s)" % (ev, proxy_url))
     sys.exit(0)
 
 port = o.port
@@ -28,7 +28,7 @@ port = o.port
 # proxy over https ... so best effort
 if not port:
     port = 80
-    print "WARNING: port not explicitly specified, assuming %d" % port
+    print("WARNING: port not explicitly specified, assuming %d" % port)
 
 # $NO_PROXY uses commas as a separator, xml wants \n; remove spaces
 # and omit empty values
@@ -56,6 +56,6 @@ if not cfg_filename:
 try:
     open(cfg_filename, "w").write(proxy_config)
     msg = "configuration file\n\n" + proxy_config + "\nwritten to %s" % cfg_filename
-    print "\n".join([ "INFO: %s" %s  for s in msg.split("\n") ])
+    print("\n".join([ "INFO: %s" %s  for s in msg.split("\n") ]))
 except:
-    print "WARNING: unable to create %s" % cfg_filename
+    print("WARNING: unable to create %s" % cfg_filename)

@@ -50,7 +50,7 @@ touch /var/jenkins_home/plugins_downloaded
 
 # proxy.xml configuration from environment variables
 rm -fv /var/jenkins_home/proxy.xml
-python proxy-config-gen.py
+python3 proxy-config-gen.py
 
 # generate ssh key if we don't have one already
 KFILE=~/.ssh/id_ed25519
@@ -58,4 +58,4 @@ if [ ! -e "${KFILE}" ] ; then
     ssh-keygen -q -t ed25519 -f ${KFILE} -N ""
 fi
 
-exec /sbin/tini -- /usr/local/bin/jenkins.sh
+exec /usr/sbin/tini -- /usr/local/bin/jenkins.sh
