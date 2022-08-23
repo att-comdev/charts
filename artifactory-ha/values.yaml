@@ -287,7 +287,7 @@ ingress:
   defaultBackend:
     enabled: true
   # Used to create an Ingress record.
-  hosts: 
+  hosts:
     - localhost
   routerPath: /
   artifactoryPath: /artifactory/
@@ -657,6 +657,10 @@ artifactory:
     ## The dataKey should be the name of the secret data key created.
     dataKey:
 
+  ## Embedded Mission Control service config.
+  missionControl:
+    enabled: false
+
   ## Create configMap with artifactory.config.import.xml and security.import.xml and pass name of configMap in following parameter
   configMapName:
 
@@ -798,6 +802,10 @@ artifactory:
     replicator:
       enabled: true
     {{- end }}
+    {{- if .Values.artifactory.missionControl.enabled }}
+    mc:
+      enabled: true
+    {{- end }}
 
   ## IMPORTANT: If overriding artifactory.internalPort:
   ## DO NOT use port lower than 1024 as Artifactory runs as non-root and cannot bind to ports lower than 1024!
@@ -817,7 +825,7 @@ artifactory:
     path: /router/api/v1/system/health
     initialDelaySeconds: 180
     failureThreshold: 10
-    timeoutSeconds: 5 
+    timeoutSeconds: 5
     periodSeconds: 10
     successThreshold: 1
 
@@ -1452,7 +1460,7 @@ artifactory:
     minAvailable: 1
     ## Resources for the member nodes
     #resources:
-     
+
     # requests:
     #   memory: "2Gi"
     #   cpu: "1"
