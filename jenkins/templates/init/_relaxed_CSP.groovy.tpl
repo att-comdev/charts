@@ -1,4 +1,4 @@
-System.setProperty("hudson.model.DirectoryBrowserSupport.CSP","sandbox allow-scripts allow-popups; " +
+System.setProperty("hudson.model.DirectoryBrowserSupport.CSP","sandbox allow-same-origin allow-scripts allow-popups; " +
                     "script-src 'unsafe-inline' 'unsafe-eval' 'self' " +
                     "https://code.jquery.com " +
                     "https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js " +
