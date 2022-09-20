@@ -1,4 +1,4 @@
-ace-editor:1.1
+ace-editor:1.10
 active-directory:2.25.1
 ansicolor:1.0.1
 ant:1.13
