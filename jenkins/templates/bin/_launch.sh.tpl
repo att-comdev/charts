@@ -58,4 +58,5 @@ if [ ! -e "${KFILE}" ] ; then
     ssh-keygen -q -t ed25519 -f ${KFILE} -N ""
 fi
 
-exec /usr/sbin/tini -- /usr/local/bin/jenkins.sh
+which tini
+exec /usr/bin/tini -- /usr/local/bin/jenkins.sh
