@@ -344,6 +344,9 @@ conf:
     # The labels for the node should be separated by space.
     # "controller" is reserved for Jenkins
     controller: "controller"
+  git_host_key_verification:
+    override: null
+    enable: false
 
 ingress:
   enabled: true
