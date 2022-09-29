@@ -111,19 +111,27 @@ data:
 {{- else -}}
 {{ tuple "etc/_hudson.tasks.Mailer.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
 {{- end }}
-{{ if .Values.conf.location_config.enable }}
+{{- if .Values.conf.location_config.enable }}
   jenkins.model.JenkinsLocationConfiguration.xml: |
 {{ if .Values.conf.location_config.override -}}
 {{ .Values.conf.location_config.override | indent 4 }}
 {{- else -}}
 {{ tuple "etc/_jenkins.model.JenkinsLocationConfiguration.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
 {{- end }}
-{{- end }}
-{{ if .Values.conf.gerrit_trigger.enable }}
+{{- end -}}
+{{- if .Values.conf.gerrit_trigger.enable }}
   gerrit-trigger.xml: |
 {{ if .Values.conf.gerrit_trigger.override -}}
 {{ .Values.conf.gerrit_trigger.override | indent 4 }}
 {{- else -}}
 {{ tuple "etc/_gerrit-trigger.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
 {{- end }}
+{{- end -}}
+{{- if .Values.conf.git_client_config.enable }}
+  org.jenkinsci.plugins.gitclient.GitHostKeyVerificationConfiguration.xml: |
+{{ if .Values.conf.git_client_config.override -}}
+{{ .Values.conf.git_client_config.override | indent 4 }}
+{{- else -}}
+{{ tuple "etc/_org.jenkinsci.plugins.gitclient.GitHostKeyVerificationConfiguration.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
 {{- end }}
+{{- end -}}
