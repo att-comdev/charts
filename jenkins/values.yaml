@@ -344,6 +344,17 @@ conf:
     # The labels for the node should be separated by space.
     # "controller" is reserved for Jenkins
     controller: "controller"
+  git_client_config:
+    override: null
+    enable: false
+    # Strategy options are AcceptFirstConnectionStrategy, KnownHostsFileVerificationStrategy,
+    # NoHostKeyVerificationStrategy, and ManuallyProvidedKeyVerificationStrategy.
+    # In the last case, approvedHostKeys must be provided (each key on the new line)
+    # or manualKeysFromKnownHostsSystemParam should be enabled to automatically populate
+    # the keys' list from .Values.conf.config.jenkins.global_env_vars.known_hosts.
+    strategy: KnownHostsFileVerificationStrategy
+    approvedHostKeys: null
+    manualKeysFromKnownHostsSystemParam: false
 
 ingress:
   enabled: true
