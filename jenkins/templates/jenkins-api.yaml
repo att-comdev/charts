@@ -131,6 +131,11 @@ spec:
             - name: jenkins-init
               mountPath: /tmp/artifactory-css.groovy
               subPath: artifactory-css.groovy
+            {{- if .Values.conf.git_client_config.enable }}
+            - name: jenkins-etc
+              mountPath: /seed/org.jenkinsci.plugins.gitclient.GitHostKeyVerificationConfiguration.xml
+              subPath: org.jenkinsci.plugins.gitclient.GitHostKeyVerificationConfiguration.xml
+            {{- end }}
         {{- if .Values.manifests.certificates }}
         - name: cert-add
           image: {{ .Values.images.tags.jenkins }}
@@ -248,4 +253,3 @@ spec:
         requests:
           storage: {{ .Values.volume.size }}
       storageClassName: {{ .Values.volume.class_name }}
-
