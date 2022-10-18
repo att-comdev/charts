@@ -81,6 +81,9 @@ data:
 
     management.load_definitions = /etc/definitions/definitions.json
 
+    ## Logging to console is disabled by default in 3.9
+    log.console = true
+
     ## Memory-based Flow Control threshold
     vm_memory_high_watermark.{{ .Values.rabbitmqMemoryHighWatermarkType }} = {{ .Values.rabbitmqMemoryHighWatermark }}
 
