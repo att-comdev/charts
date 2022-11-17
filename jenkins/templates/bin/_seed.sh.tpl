@@ -25,6 +25,10 @@ cp -nrv /seed/* /var/jenkins_home/
 {{- if .Values.conf.gerrit_trigger.enable }}
 # Add ssh keys for gerrit trigger.
 mkdir -p /var/jenkins_home/.ssh
+# known_hosts file doesnt exists or if it exists and the size is 0 create one
+{{- if .Values.conf.known_hosts.keysFromKnownHostsSystemParam }}
+! [ -s /var/jenkins_home/.ssh/known_hosts ] && echo -e {{ .Values.conf.config.jenkins.global_env_vars.known_hosts | quote }} > /var/jenkins_home/.ssh/known_hosts
+{{- end }}
 {{- range .Values.conf.gerrit_trigger.servers }}
 {{- if .gerrit_authkey_path }}
 cp -nvpL /keys/id_rsa_{{ .name }} /var/jenkins_home/.ssh/{{ .gerrit_authkey_path }}

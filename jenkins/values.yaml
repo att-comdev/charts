@@ -355,6 +355,10 @@ conf:
     strategy: KnownHostsFileVerificationStrategy
     approvedHostKeys: null
     manualKeysFromKnownHostsSystemParam: false
+  # if keysFromKnownHostsSystemParam is true known_hosts will be taken from global_env_var
+  # known_hosts parameter
+  known_hosts:
+    keysFromKnownHostsSystemParam: false
 
 ingress:
   enabled: true
