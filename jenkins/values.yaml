@@ -355,6 +355,8 @@ conf:
     strategy: KnownHostsFileVerificationStrategy
     approvedHostKeys: null
     manualKeysFromKnownHostsSystemParam: false
+  known_hosts:
+    keysFromKnownHostsSystemParam: false
 
 ingress:
   enabled: true
