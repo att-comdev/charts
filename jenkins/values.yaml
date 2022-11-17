@@ -355,6 +355,18 @@ conf:
     strategy: KnownHostsFileVerificationStrategy
     approvedHostKeys: null
     manualKeysFromKnownHostsSystemParam: false
+  # If the file is already on the file system and override is false, then known_hosts will
+  # be untouched. However if the known_hosts file is empty then it will be created
+  # from global_env_vars.known_hosts
+  # If override is true, then the file will be populated according to keysFromKnownHostsSystemParam
+  # If keysFromKnownHostsSystemParam is set to true the known_hosts will be populated
+  # from global_env_vars.known_hosts
+  # If keysFromKnownHostsSystemParam is set to false then known_hosts will be
+  # populated from content specified
+  known_hosts:
+    override: false
+    keysFromKnownHostsSystemParam: false
+    content: null
 
 ingress:
   enabled: true
