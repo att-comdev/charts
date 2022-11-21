@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a5c0bd2_c65bc597",
+        "filename": "jenkins/templates/bin/_seed.sh.tpl",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1016322
+      },
+      "writtenOn": "2022-11-21T16:56:19Z",
+      "side": 1,
+      "message": "Please ensure that the file is not there first. I have doubt that we\u0027d like to override existing file.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 114
+      },
+      "revId": "e39698d3581cc9f269a6ccec0d5626fd579b4581",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
