@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f51502f5_4a2bf1ee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019811
+      },
+      "writtenOn": "2022-11-21T18:22:38Z",
+      "side": 1,
+      "message": "creating the known_hosts file only if the file doesnt exists or the size is 0",
+      "revId": "9a114da811921e4ea82ff6e3bf21ef73bc37c095",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
