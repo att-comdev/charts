@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ef559e5_74fb8686",
+        "filename": "jenkins/templates/bin/_seed.sh.tpl",
+        "patchSetId": 12
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1020059
+      },
+      "writtenOn": "2022-11-23T23:48:43Z",
+      "side": 1,
+      "message": "Please, add create known_hosts from content here too.",
+      "revId": "9a03b0bb329de3983f50f83c43d65f6841d5d1e5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "acbcbb62_795d68d0",
+        "filename": "jenkins/values.yaml",
+        "patchSetId": 12
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1020059
+      },
+      "writtenOn": "2022-11-23T23:48:43Z",
+      "side": 1,
+      "message": "The default value should be an empty string, I think.",
+      "revId": "9a03b0bb329de3983f50f83c43d65f6841d5d1e5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
