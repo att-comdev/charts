@@ -90,6 +90,7 @@ rbac:
       - delete
       - update
 
+
 pod:
   mandatory_access_control:
     type: apparmor
@@ -101,6 +102,19 @@ pod:
       namespace-creator: runtime/default
     dindproxy:
       dindproxy: runtime/default
+    check-plugins:
+      check-plugins: runtime/default
+    delete-plugins:
+      delete-plugins: runtime/default
+    copy-certificate-to-agent:
+      copy-certificate-to-agent: runtime/default
+    config-change-while-upgrade:
+      config-change-while-upgrade: runtime/default
+    jenkins-ssh-key:
+      jenkins-ssh-key: runtime/default
+    create-image-pull-secret:
+      create-image-pull-secret: runtime/default
+
   security_context:
     jenkins:
       pod:
@@ -450,7 +464,6 @@ endpoints:
       api:
         default: 80
         internal: 5000
-  cluster_domain_suffix: cluster.local
   jenkins:
     host_fqdn_override:
       default:
