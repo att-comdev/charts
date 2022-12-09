@@ -13,6 +13,9 @@ metadata:
     "helm.sh/hook-delete-policy": "before-hook-creation"
 spec:
   template:
+    metadata:
+      annotations:
+{{ dict "envAll" $envAll "podName" "check-plugins" "containerNames" (list "check-plugins") | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
     spec:
       restartPolicy: Never
       serviceAccount: {{ $serviceAccountName }}
