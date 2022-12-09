@@ -2,18 +2,20 @@
 {{- $envAll := . }}
 
 {{- $serviceAccountName := printf "create-namespace-%s" .Release.Name }}
-{{- $configChange := printf "config-change-while-upgrade-%s" .Release.Name }}
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ $configChange }}
+  name: config-change-while-upgrade-{{ .Release.Name }}
   namespace: {{ .Values.jenkinsNodes.service.namespace }}
   annotations:
     "helm.sh/hook": "pre-upgrade"
     "helm.sh/hook-delete-policy": "before-hook-creation"
 spec:
   template:
+    metadata:
+      annotations:
+{{ dict "envAll" $envAll "podName" "config-change-while-upgrade" "containerNames" (list "config-change-while-upgrade") | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
     spec:
       restartPolicy: Never
       serviceAccount: {{ $serviceAccountName }}
