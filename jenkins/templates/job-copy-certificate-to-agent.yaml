@@ -2,18 +2,20 @@
 {{- $envAll := . }}
 
 {{- $serviceAccountName := printf "create-namespace-%s" .Release.Name }}
-{{- $CopyCertificate := printf "copy-certificate-to-agent-%s" .Release.Name }}
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ $CopyCertificate }}
+  name: copy-certificate-to-agent-{{ .Release.Name }}
   namespace: {{ .Values.jenkinsNodes.service.namespace }}
   annotations:
     "helm.sh/hook": "post-install,post-upgrade"
     "helm.sh/hook-delete-policy": "before-hook-creation"
 spec:
   template:
+    metadata:
+      annotations:
+{{ dict "envAll" $envAll "podName" "copy-certificate-to-agent" "containerNames" (list "copy-certificate-to-agent") | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
     spec:
       restartPolicy: Never
       serviceAccount: {{ $serviceAccountName }}
