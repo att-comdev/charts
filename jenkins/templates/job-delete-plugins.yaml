@@ -1,18 +1,20 @@
 {{- $envAll := . }}
 
 {{- $serviceAccountName := printf "create-namespace-%s" .Release.Name }}
-{{- $DeletePlugins := printf "delete-plugins-%s" .Release.Name }}
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ $DeletePlugins }}
+  name: delete-plugins
   namespace: {{ .Values.jenkinsNodes.service.namespace }}
   annotations:
     "helm.sh/hook": "pre-upgrade"
     "helm.sh/hook-delete-policy": "before-hook-creation"
 spec:
   template:
+    metadata:
+      annotations:
+{{ dict "envAll" $envAll "podName" "delete-plugins" "containerNames" (list "delete-plugins") | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
     spec:
       restartPolicy: Never
       serviceAccount: {{ $serviceAccountName }}

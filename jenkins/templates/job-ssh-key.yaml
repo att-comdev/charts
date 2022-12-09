@@ -58,6 +58,8 @@ metadata:
 spec:
   template:
     metadata:
+      annotations:
+{{ dict "envAll" $envAll "podName" "jenkins-ssh-key" "containerNames" (list "prepare-keys" ) | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
       labels:
 {{ tuple $envAll "jenkins" $jobName | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 8 }}
     spec:

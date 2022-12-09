@@ -54,7 +54,7 @@ subjects:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: create-namespaces-{{ .Release.Name }}
+  name: create-namespaces
   labels:
 {{ tuple $envAll "rbac-manager" "create-namespaces" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 4 }}
   annotations:
