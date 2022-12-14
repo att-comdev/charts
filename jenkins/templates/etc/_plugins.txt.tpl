@@ -63,7 +63,7 @@ docker-plugin:1.2.10
 docker-slaves:1.0.7
 docker-traceability:1.2
 docker-workflow:521.v1a_a_dd2073b_2e
-dockerhub-notification:2.6.2
+dockerhub-notification:2.6.2.1
 durable-task:500.v8927d9fd99d8
 echarts-api:5.3.3-1
 email-ext:2.91
@@ -112,7 +112,7 @@ jquery:1.12.4-1
 jquery-detached:1.2.1
 jquery3-api:3.6.1-1
 jsch:0.1.55.61.va_e9ee26616e7
-junit:1143.v8d9a_e3355270
+junit:1166.va_436e268e972
 kubernetes:3706.vdfb_d599579f3
 kubernetes-client-api:5.12.2-193.v26a_6078f65a_9
 kubernetes-credentials:0.9.0
@@ -126,7 +126,7 @@ mask-passwords:3.3
 matrix-auth:3.1.5
 matrix-project:785.v06b_7f47b_c631
 maven-plugin:3.19
-mercurial:1251.va_b_121f184902
+mercurial:1260.vdfb_723cdcc81
 metrics:4.2.10-389.v93143621b_050
 mina-sshd-api-common:2.9.1-44.v476733c11f82
 mina-sshd-api-core:2.9.1-44.v476733c11f82
@@ -147,11 +147,11 @@ pipeline-milestone-step:101.vd572fef9d926
 pipeline-model-api:2.2114.v2654ca_721309
 pipeline-model-definition:2.2114.v2654ca_721309
 pipeline-model-extensions:2.2114.v2654ca_721309
-pipeline-rest-api:2.24
+pipeline-rest-api:2.28
 pipeline-stage-step:296.v5f6908f017a_5
 pipeline-stage-tags-metadata:2.2114.v2654ca_721309
-pipeline-stage-view:2.24
-pipeline-utility-steps:2.11.0
+pipeline-stage-view:2.28
+pipeline-utility-steps:2.14.0
 plain-credentials:139.ved2b_9cf7587b
 plugin-util-api:2.17.0
 pollscm:1.3.1
@@ -170,7 +170,7 @@ role-strategy:562.v44e9a_e828d0e
 run-condition:1.5
 saferestart:0.3
 scm-api:621.vda_a_b_055e58f7
-script-security:1183.v774b_0b_0a_a_451
+script-security:1228.vd93135a_2fb_25
 snakeyaml-api:1.29.1
 sse-gateway:1.26
 sshd:3.249.v2dc2ea_416e33
@@ -191,12 +191,12 @@ windows-slaves:1.8.1
 workflow-aggregator:590.v6a_d052e5a_a_b_5
 workflow-api:1192.v2d0deb_19d212
 workflow-basic-steps:994.vd57e3ca_46d24
-workflow-cps:2802.v5ea_628154b_c2
+workflow-cps:3565.v4b_d9b_8c29a_b_3
 workflow-cps-global-lib:588.v576c103a_ff86
 workflow-durable-task-step:1199.v02b_9244f8064
 workflow-job:1239.v71b_b_a_124a_725
 workflow-multibranch:716.vc692a_e52371b_
 workflow-scm-step:400.v6b_89a_1317c9a_
 workflow-step-api:639.v6eca_cd8c04a_a_
-workflow-support:838.va_3a_087b_4055b
+workflow-support:839.v35e2736cfd5c
 ws-cleanup:0.43
