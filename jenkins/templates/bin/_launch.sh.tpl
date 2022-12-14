@@ -41,7 +41,7 @@ if [ -e /plugins.txt ] ; then
     # put a dummy-lock file in place so that if install-plugins.sh finds
     # at least something to cleanup and doesn't error out
     mkdir -p /usr/share/jenkins/ref/plugins/ && touch /usr/share/jenkins/ref/plugins/zzz-dummy.lock
-    /usr/local/bin/install-plugins.sh $(cat /plugins.txt)
+    /usr/local/bin/install-plugin-cli.sh $(cat /plugins.txt)
 fi
 {{- end }}
 
