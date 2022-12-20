@@ -92,7 +92,7 @@ handy-uri-templates-2-api:2.1.8-22.v77d5b_75e6953
 htmlpublisher:1.31
 http_request:1.16
 instance-identity:116.vf8f487400980
-ionicons-api:28.va_f3a_84439e5f
+ionicons-api:31.v4757b_6987003
 ivy:2.2
 jackson2-api:2.13.3-285.vc03c0256d517
 jakarta-activation-api:2.0.1-1
@@ -170,7 +170,7 @@ role-strategy:562.v44e9a_e828d0e
 run-condition:1.5
 saferestart:0.3
 scm-api:621.vda_a_b_055e58f7
-script-security:1183.v774b_0b_0a_a_451
+script-security:1189.vb_a_b_7c8fd5fde
 snakeyaml-api:1.29.1
 sse-gateway:1.26
 sshd:3.249.v2dc2ea_416e33
@@ -189,14 +189,14 @@ uno-choice:2.6.4
 variant:59.vf075fe829ccb
 windows-slaves:1.8.1
 workflow-aggregator:590.v6a_d052e5a_a_b_5
-workflow-api:1192.v2d0deb_19d212
+workflow-api:1200.v8005c684b_a_c6
 workflow-basic-steps:994.vd57e3ca_46d24
-workflow-cps:2802.v5ea_628154b_c2
+workflow-cps:3520.va_8fc49e2f96f
 workflow-cps-global-lib:588.v576c103a_ff86
 workflow-durable-task-step:1199.v02b_9244f8064
 workflow-job:1239.v71b_b_a_124a_725
 workflow-multibranch:716.vc692a_e52371b_
 workflow-scm-step:400.v6b_89a_1317c9a_
 workflow-step-api:639.v6eca_cd8c04a_a_
-workflow-support:838.va_3a_087b_4055b
+workflow-support:839.v35e2736cfd5c
 ws-cleanup:0.43
