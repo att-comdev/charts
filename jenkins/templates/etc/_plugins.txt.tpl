@@ -41,7 +41,7 @@ build-timestamp:1.0.3
 build-user-vars-plugin:1.9
 buildresult-trigger:0.17
 caffeine-api:2.9.3-65.v6a_47d0f4d1fe
-checks-api:1.7.5
+checks-api:1.8.0
 cloud-stats:0.27
 cloudbees-bitbucket-branch-source:791.vb_eea_a_476405b
 cloudbees-folder:6.758.vfd75d09eea_a_1
@@ -63,9 +63,9 @@ docker-plugin:1.2.10
 docker-slaves:1.0.7
 docker-traceability:1.2
 docker-workflow:521.v1a_a_dd2073b_2e
-dockerhub-notification:2.6.2
+dockerhub-notification:2.6.2.1
 durable-task:500.v8927d9fd99d8
-echarts-api:5.3.3-1
+echarts-api:5.4.0-1
 email-ext:2.91
 envfile:1.2
 envinject:2.881.v37c62073ff97
@@ -92,9 +92,9 @@ handy-uri-templates-2-api:2.1.8-22.v77d5b_75e6953
 htmlpublisher:1.31
 http_request:1.16
 instance-identity:116.vf8f487400980
-ionicons-api:28.va_f3a_84439e5f
+ionicons-api:31.v4757b_6987003
 ivy:2.2
-jackson2-api:2.13.3-285.vc03c0256d517
+jackson2-api:2.13.4.20221013-295.v8e29ea_354141
 jakarta-activation-api:2.0.1-1
 jakarta-mail-api:2.0.1-1
 javadoc:226.v71211feb_e7e9
@@ -112,7 +112,7 @@ jquery:1.12.4-1
 jquery-detached:1.2.1
 jquery3-api:3.6.1-1
 jsch:0.1.55.61.va_e9ee26616e7
-junit:1143.v8d9a_e3355270
+junit:1166.va_436e268e972
 kubernetes:3706.vdfb_d599579f3
 kubernetes-client-api:5.12.2-193.v26a_6078f65a_9
 kubernetes-credentials:0.9.0
@@ -126,7 +126,7 @@ mask-passwords:3.3
 matrix-auth:3.1.5
 matrix-project:785.v06b_7f47b_c631
 maven-plugin:3.19
-mercurial:1251.va_b_121f184902
+mercurial:1260.vdfb_723cdcc81
 metrics:4.2.10-389.v93143621b_050
 mina-sshd-api-common:2.9.1-44.v476733c11f82
 mina-sshd-api-core:2.9.1-44.v476733c11f82
@@ -170,7 +170,7 @@ role-strategy:562.v44e9a_e828d0e
 run-condition:1.5
 saferestart:0.3
 scm-api:621.vda_a_b_055e58f7
-script-security:1183.v774b_0b_0a_a_451
+script-security:1228.vd93135a_2fb_25
 snakeyaml-api:1.29.1
 sse-gateway:1.26
 sshd:3.249.v2dc2ea_416e33
@@ -189,7 +189,7 @@ uno-choice:2.6.4
 variant:59.vf075fe829ccb
 windows-slaves:1.8.1
 workflow-aggregator:590.v6a_d052e5a_a_b_5
-workflow-api:1192.v2d0deb_19d212
+workflow-api:1200.v8005c684b_a_c6
 workflow-basic-steps:994.vd57e3ca_46d24
 workflow-cps:2802.v5ea_628154b_c2
 workflow-cps-global-lib:588.v576c103a_ff86
@@ -198,5 +198,5 @@ workflow-job:1239.v71b_b_a_124a_725
 workflow-multibranch:716.vc692a_e52371b_
 workflow-scm-step:400.v6b_89a_1317c9a_
 workflow-step-api:639.v6eca_cd8c04a_a_
-workflow-support:838.va_3a_087b_4055b
+workflow-support:839.v35e2736cfd5c
 ws-cleanup:0.43
