@@ -2,6 +2,19 @@
 
 {{- $serviceAccountName := printf "create-namespace-%s" .Release.Name }}
 {{- $DeletePlugins := printf "check-plugins-%s" .Release.Name }}
+{{- $podmac := dict "check-plugins" "runtime/default" -}}
+{{- if hasKey $envAll.Values.pod "mandatory_access_control" -}}
+{{- if hasKey $envAll.Values.pod.mandatory_access_control "type" -}}
+{{- $macType := $envAll.Values.pod.mandatory_access_control.type -}}
+{{- if $macType -}}
+{{- if eq $macType "apparmor" -}}
+{{- if not (hasKey $envAll.Values.pod.mandatory_access_control $DeletePlugins) -}}
+{{- $envAll.Values.pod.mandatory_access_control.$DeletePlugins := $podmac -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
 ---
 apiVersion: batch/v1
 kind: Job
@@ -15,7 +28,7 @@ spec:
   template:
     metadata:
       annotations:
-{{ dict "envAll" $envAll "containerNames" (list "check-plugins" ) | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
+{{ dict "envAll" $envAll "podName" $DeletePlugins "containerNames" (list "check-plugins" ) | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
     spec:
       restartPolicy: Never
       serviceAccount: {{ $serviceAccountName }}
