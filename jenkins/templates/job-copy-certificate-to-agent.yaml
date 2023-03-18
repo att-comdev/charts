@@ -3,6 +3,7 @@
 
 {{- $serviceAccountName := printf "create-namespace-%s" .Release.Name }}
 {{- $CopyCertificate := printf "copy-certificate-to-agent-%s" .Release.Name }}
+{{- $CronCopyCertificate := printf "copy-certificate-to-agent-%s-template" .Release.Name }}
 ---
 apiVersion: batch/v1
 kind: Job
@@ -22,4 +23,27 @@ spec:
         image: {{ .Values.images.tags.namespace_creator }}
         imagePullPolicy: {{ .Values.images.pull_policy }}
         command: ["/bin/sh","-c", "kubectl get secret jenkins-internal-tls -n {{ .Values.jenkinsNodes.service.namespace }} -o json | jq '{apiVersion,data,kind,metadata,type} | .metadata |= {namespace, name} | .data |= {\"ca.crt\"}' | sed 's/\"namespace\": \".*\"/\"namespace\": \"{{ .Values.jenkinsNodes.namespace }}\"/' | sed 's/\"type\": \".*\"/\"type\": \"Opaque\"/' | kubectl apply -f -"]
+...
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ $CronCopyCertificate }}
+  namespace: {{ .Values.jenkinsNodes.service.namespace }}
+  annotations:
+    "helm.sh/hook": "post-install,post-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+spec:
+  schedule: "* * 31 2 *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          serviceAccount: {{ $serviceAccountName }}
+          containers:
+          - name: copy-certificate-to-agent
+            image: {{ .Values.images.tags.namespace_creator }}
+            imagePullPolicy: {{ .Values.images.pull_policy }}
+            command: ["/bin/sh","-c", "kubectl get secret jenkins-internal-tls -n {{ .Values.jenkinsNodes.service.namespace }} -o json | jq '{apiVersion,data,kind,metadata,type} | .metadata |= {namespace, name} | .data |= {\"ca.crt\"}' | sed 's/\"namespace\": \".*\"/\"namespace\": \"{{ .Values.jenkinsNodes.namespace }}\"/' | sed 's/\"type\": \".*\"/\"type\": \"Opaque\"/' | kubectl apply -f -"]
 {{- end -}}
