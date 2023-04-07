@@ -164,6 +164,20 @@ spec:
               subPath: ca.crt
         {{- end }}
       containers:
+        - name: jenkins-jobs
+          image: {{ .Values.images.tags.jenkins }}
+          imagePullPolicy: {{ .Values.images.pull_policy }}
+{{ tuple $envAll $envAll.Values.pod.resources.api | include "helm-toolkit.snippets.kubernetes_resources" | indent 10 }}
+{{ dict "envAll" $envAll "application" "jenkins" "container" "jenkins" | include "helm-toolkit.snippets.kubernetes_container_security_context" | indent 10 }}
+          command:
+            #- /tmp/jenkins-jobs.sh
+            - cat
+          volumeMounts:
+            - name: pod-tmp
+              mountPath: /tmp
+            - name: jenkins-bin
+              mountPath: /tmp/jenkins-jobs.sh
+              subPath: jenkins-jobs.sh
         - name: jenkins
           image: {{ .Values.images.tags.jenkins }}
           imagePullPolicy: {{ .Values.images.pull_policy }}
