@@ -29,6 +29,8 @@ data:
 {{ tuple "bin/_seed.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
   launch.sh: |
 {{ tuple "bin/_launch.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+  jenkins-jobs.sh: |
+{{ tuple "bin/_jenkins-jobs.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
   proxy-config-gen.py: |
 {{ tuple "bin/_proxy-config-gen.py.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
   add_ssh_keys.sh: |

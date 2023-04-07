@@ -1,0 +1,2 @@
+set -x
+set -e
