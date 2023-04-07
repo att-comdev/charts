@@ -78,9 +78,6 @@ spec:
               mountPath: /seed/jobs/CICD/config.xml
               subPath: cicdfolderconfig.xml
             - name: jenkins-etc
-              mountPath: /seed/jobs/CICD/jobs/SuperSeed/config.xml
-              subPath: superseedconfig.xml
-            - name: jenkins-etc
               mountPath: /seed/jenkins.security.UpdateSiteWarningsConfiguration.xml
               subPath: jenkins.security.UpdateSiteWarningsConfiguration.xml
             - name: jenkins-etc
@@ -131,6 +128,9 @@ spec:
             - name: jenkins-init
               mountPath: /tmp/artifactory-css.groovy
               subPath: artifactory-css.groovy
+            - name: jenkins-init
+              mountPath: /tmp/preseed.groovy
+              subPath: preseed.groovy
         {{- if .Values.manifests.certificates }}
         - name: cert-add
           image: {{ .Values.images.tags.jenkins }}
