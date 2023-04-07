@@ -33,18 +33,6 @@ data:
 {{- else -}}
 {{ tuple "etc/_config.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
 {{- end }}
-  cicdfolderconfig.xml: |
-{{ if .Values.conf.config.override -}}
-{{ .Values.conf.config.override | indent 4 }}
-{{- else -}}
-{{ tuple "etc/_cicdfolderconfig.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
-{{- end }}
-  superseedconfig.xml: |
-{{ if .Values.conf.config.override -}}
-{{ .Values.conf.config.override | indent 4 }}
-{{- else -}}
-{{ tuple "etc/_superseedconfig.xml.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
-{{- end }}
   plugins.txt: |
 {{ if .Values.conf.plugins.override -}}
 {{ .Values.conf.plugins.override | indent 4 }}
