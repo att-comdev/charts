@@ -57,6 +57,9 @@ cp -fv /tmp/relaxed-CSP.groovy /var/jenkins_home/init.groovy.d/relaxed-CSP.groov
 # copy artifactory css issue fix solution
 cp -fv /tmp/artifactory-css.groovy /var/jenkins_home/init.groovy.d/artifactory-css.groovy
 
+# copy artifactory css issue fix solution
+cp -fv /tmp/pipeline-utility-steps.groovy /var/jenkins_home/init.groovy.d/pipeline-utility-steps.groovy
+
 # the seed runs as root; everything else runs as jenkins so we have to
 # make sure the permissions are as expected
 find /var/jenkins_home/ -not -user jenkins -print0 | xargs -r0 chown -v jenkins:jenkins
