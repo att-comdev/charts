@@ -25,3 +25,5 @@ data:
 {{ tuple "init/_relaxed_CSP.groovy.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
   artifactory-css.groovy: |
 {{ tuple "init/_artifactory_css.groovy.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+  pipeline-utility-steps.groovy: |
+{{ tuple "init/_pipeline_utility_steps.groovy.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
