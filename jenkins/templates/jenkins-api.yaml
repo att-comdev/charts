@@ -131,6 +131,9 @@ spec:
             - name: jenkins-init
               mountPath: /tmp/artifactory-css.groovy
               subPath: artifactory-css.groovy
+            - name: jenkins-init
+              mountPath: /tmp/pipeline-utility-steps.groovy
+              subPath: pipeline-utility-steps.groovy
             {{- if .Values.conf.git_client_config.enable }}
             - name: jenkins-etc
               mountPath: /seed/org.jenkinsci.plugins.gitclient.GitHostKeyVerificationConfiguration.xml
