@@ -59,4 +59,14 @@ cp -fv /tmp/artifactory-css.groovy /var/jenkins_home/init.groovy.d/artifactory-c
 
 # the seed runs as root; everything else runs as jenkins so we have to
 # make sure the permissions are as expected
+# by default, exclude 'jobs' and 'workspace' folders because seed doesn't touch them and they may contain millions of files
+# but there is an option to not to exclude them and assign owner to all files in the home folder (old way)
+# it can be used in case of problems with permissions.
+{{- if .Values.conf.change_owner_for_all_files }}
 find /var/jenkins_home/ -not -user jenkins -print0 | xargs -r0 chown -v jenkins:jenkins
+{{ else }}
+# 'find' enumerates over all directories (and takes a lot of time) even if some path is excluded
+# so it's better to start with the list of paths that doesn't contain excluded folders
+find /var/jenkins_home/ -maxdepth 1 -mindepth 1 -not -ipath '/var/jenkins_home/jobs' -not -ipath '/var/jenkins_home/workspace' -print0 | \
+xargs -r0 -I {term} find {term} -not -user jenkins -print0 | xargs -r0 chown -v jenkins:jenkins
+{{- end }}
