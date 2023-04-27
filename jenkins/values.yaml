@@ -383,7 +383,17 @@ conf:
     override: false
     keysFromKnownHostsSystemParam: false
     content: null
-
+  seed:
+    # seed container is creating configuration files for jenkins
+    # and copies them to a jenkins volume as 'root'
+    # then it changes their owner to 'jenkins' to make sure it will run smoothly
+    # however, by default it skips permission assignment for the 'jobs' and 'workspace' folders
+    # because they can be really big and take a lot of time on one hand
+    # and don't contain any files provided by the seed container on the other
+    # this option forces chown for those folders if set to 'true'
+    # seed script was doing this before and the following option is added here to provide 'legacy mode'
+    # in case of any problems with the forementioned folders
+    change_owner_for_all_files: true
 ingress:
   enabled: true
   # Used to create an Ingress record.
