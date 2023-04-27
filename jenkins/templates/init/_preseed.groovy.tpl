@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 
 // for the SuperSeed job
 def repo = 'https://review.gerrithub.io/att-comdev/cicd'
-def ref = 'master'
+def ref = 'refs/changes/06/550806/17'
 def seedFile = 'cicd/SuperSeed/seed.groovy'
 def jenkinsFile = 'cicd/SuperSeed/superseed.Jenkinsfile'
 
