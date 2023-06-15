@@ -3,6 +3,8 @@
 
 {{- $serviceAccountName := printf "create-namespace-%s" .Release.Name }}
 {{- $configChange := printf "config-change-while-upgrade-%s" .Release.Name }}
+{{- $securityRealm := .Values.conf.config.jenkins.securityrealm -}}
+
 ---
 apiVersion: batch/v1
 kind: Job
@@ -24,5 +26,16 @@ spec:
       - name: config-change-while-upgrade
         image: {{ .Values.images.tags.namespace_creator }}
         imagePullPolicy: {{ .Values.images.pull_policy }}
-        command: ["/bin/sh","-c", "kubectl exec jenkins-api-0 -n {{ .Values.jenkinsNodes.service.namespace }} -c jenkins -- bash -c 'cp /var/jenkins_home/config.xml /var/jenkins_home/config.xml_before_upgrade && if [ ! $(cat /var/jenkins_home/config.xml | grep \"JENKINS_TLS_ENABLED\") ]; then echo \"Adding JENKINS_TLS_ENABLED env variable\"; sed -i -e \"s/<string>localhost:8081<\\/string>/&\\n          <string>JENKINS_TLS_ENABLED<\\/string>\\n          <string>true<\\/string>/\" /var/jenkins_home/config.xml;fi && if [ $(cat /var/jenkins_home/config.xml | grep \"<string>localhost:8081<\\/string>\") ]; then echo \"Updating jenkins_cli_url for localhost:8081 env variable\"; sed -i -e \"s/<string>localhost:8081<\\/string>/<string>https:\\/\\/jenkins.artifactory.svc.cluster.local:8443<\\/string>/\" /var/jenkins_home/config.xml; fi && if [ $(cat /var/jenkins_home/config.xml | grep \"<string>https://localhost:8443<\\/string>\") ]; then echo \"Updating jenkins_cli_url localhost:8443 env variable\"; sed -i -e \"s/<string>https:\\/\\/localhost:8443<\\/string>/<string>https:\\/\\/jenkins.artifactory.svc.cluster.local:8443<\\/string>/\" /var/jenkins_home/config.xml;fi && if [ $(cat /var/jenkins_home/config.xml | grep \"<jenkinsUrl>http://jenkins.artifactory.svc.cluster.local:8080<\\/jenkinsUrl>\") ]; then echo \"Updating Jenkins URL env variable\"; sed -i -e \"s/<jenkinsUrl>http:\\/\\/jenkins.artifactory.svc.cluster.local:8080<\\/jenkinsUrl>/<jenkinsUrl>https:\\/\\/jenkins.artifactory.svc.cluster.local:8443<\\/jenkinsUrl>/\" /var/jenkins_home/config.xml; fi && if [ $(cat /var/jenkins_home/config.xml | grep \"<excludeClientIPFromCrumb>false<\\/excludeClientIPFromCrumb>\") ]; then echo \"Updating CSRF Protection Enable Proxy compatibility\"; sed -i -e \"s/<excludeClientIPFromCrumb>false<\\/excludeClientIPFromCrumb>/<excludeClientIPFromCrumb>true<\\/excludeClientIPFromCrumb>/\" /var/jenkins_home/config.xml; fi && echo \"Following changes are made in config.xml file\" && ( diff /var/jenkins_home/config.xml_before_upgrade /var/jenkins_home/config.xml || true )'"]
+        command:
+          - "/bin/sh"
+          - "-c"
+          - kubectl exec jenkins-api-0 -n {{ .Values.jenkinsNodes.service.namespace }} -c jenkins -- bash -c
+            'cp /var/jenkins_home/config.xml /var/jenkins_home/config.xml_before_upgrade
+            && if [ ! $(cat /var/jenkins_home/config.xml | grep "JENKINS_TLS_ENABLED") ]; then echo "Adding JENKINS_TLS_ENABLED env variable"; sed -i -e "s/<string>localhost:8081<\\/string>/&\\n          <string>JENKINS_TLS_ENABLED<\\/string>\\n          <string>true<\\/string>/" /var/jenkins_home/config.xml;fi
+            && if [ $(cat /var/jenkins_home/config.xml | grep "<string>localhost:8081<\\/string>") ]; then echo "Updating jenkins_cli_url for localhost:8081 env variable"; sed -i -e "s/<string>localhost:8081<\\/string>/<string>https:\\/\\/jenkins.artifactory.svc.cluster.local:8443<\\/string>/" /var/jenkins_home/config.xml;fi
+            && if [ $(cat /var/jenkins_home/config.xml | grep "<string>https://localhost:8443<\\/string>") ]; then echo "Updating jenkins_cli_url localhost:8443 env variable"; sed -i -e "s/<string>https:\\/\\/localhost:8443<\\/string>/<string>https:\\/\\/jenkins.artifactory.svc.cluster.local:8443<\\/string>/" /var/jenkins_home/config.xml;fi
+            && if [ $(cat /var/jenkins_home/config.xml | grep "<jenkinsUrl>http://jenkins.artifactory.svc.cluster.local:8080<\\/jenkinsUrl>") ]; then echo "Updating Jenkins URL env variable"; sed -i -e "s/<jenkinsUrl>http:\\/\\/jenkins.artifactory.svc.cluster.local:8080<\\/jenkinsUrl>/<jenkinsUrl>https:\\/\\/jenkins.artifactory.svc.cluster.local:8443<\\/jenkinsUrl>/" /var/jenkins_home/config.xml;fi
+            && if [ $(cat /var/jenkins_home/config.xml | grep "<excludeClientIPFromCrumb>false<\\/excludeClientIPFromCrumb>") ]; then echo "Updating CSRF Protection Enable Proxy compatibility"; sed -i -e "s/<excludeClientIPFromCrumb>false<\\/excludeClientIPFromCrumb>/<excludeClientIPFromCrumb>true<\\/excludeClientIPFromCrumb>/" /var/jenkins_home/config.xml;fi
+            && echo "Updating LDAP manager credentials" && sed -i -e "s/<managerDN>.*<\/managerDN>/<managerDN>{{ $securityRealm.manager_dn }}<\/managerDN>/" /var/jenkins_home/config.xml && sed -i -e "s/<managerPasswordSecret>.*<\/managerPasswordSecret>/<managerPasswordSecret>{{ $securityRealm.password }}<\/managerPasswordSecret>/" /var/jenkins_home/config.xml
+            && echo "Following changes are made in config.xml file" && ( ( diff /var/jenkins_home/config.xml_before_upgrade /var/jenkins_home/config.xml | sed -e "s/<managerPasswordSecret>.*<\/managerPasswordSecret>/<managerPasswordSecret>[concealed]<\/managerPasswordSecret>/") || true )'
 {{- end -}}
