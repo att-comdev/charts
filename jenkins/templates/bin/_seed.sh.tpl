@@ -18,6 +18,9 @@ limitations under the License.
 
 set -ex
 
+echo "hello from seed"
+date
+
 # seed the (jenkins home) PVC with files *iff* they do not exist (-n
 # avoids replacing files)
 cp -nrv /seed/* /var/jenkins_home/
