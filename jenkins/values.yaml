@@ -110,6 +110,8 @@ pod:
       copy-certificate-to-agent: runtime/default
     config-change-while-upgrade:
       config-change-while-upgrade: runtime/default
+    update-ldap-credentials:
+      update-ldap-credentials: runtime/default
     jenkins-ssh-key:
       init: runtime/default
       jenkins-ssh-key: runtime/default
