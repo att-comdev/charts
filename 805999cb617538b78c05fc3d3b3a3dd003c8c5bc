@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "995856aa_a2b734cb",
+        "filename": "jenkins/templates/job-config-change-while-upgrade.yaml",
+        "patchSetId": 11
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1020845
+      },
+      "writtenOn": "2023-06-27T02:35:33Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "d86ec7ca_674c5212",
+      "revId": "805999cb617538b78c05fc3d3b3a3dd003c8c5bc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ba3824f1_bc024d0c",
         "filename": "jenkins/templates/job-config-change-while-upgrade.yaml",
         "patchSetId": 11
@@ -43,6 +61,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5f41c117_ecb93adf",
+        "filename": "jenkins/templates/job-config-change-while-upgrade.yaml",
+        "patchSetId": 11
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1020845
+      },
+      "writtenOn": "2023-06-27T02:35:33Z",
+      "side": 1,
+      "message": "I don\u0027t think this command is removing the string. Substitution value starts with \"\u0026\" which should include search result in the output. Looks like it\u0027s just adding a new line after this string with \"\u003cstring\u003eJENKINS_TLS_ENABLED\u003c/string\u003e\"",
+      "parentUuid": "ba3824f1_bc024d0c",
+      "range": {
+        "startLine": 34,
+        "startChar": 156,
+        "endLine": 34,
+        "endChar": 189
+      },
+      "revId": "805999cb617538b78c05fc3d3b3a3dd003c8c5bc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4f89a0dd_03b87357",
         "filename": "jenkins/templates/job-config-change-while-upgrade.yaml",
         "patchSetId": 11
@@ -54,6 +96,24 @@
       "writtenOn": "2023-06-26T22:05:58Z",
       "side": 1,
       "message": "The previous sed commands use double backslash \\\\ for escaping. Which way is wrong?",
+      "revId": "805999cb617538b78c05fc3d3b3a3dd003c8c5bc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27a8cc9c_a18c8d6c",
+        "filename": "jenkins/templates/job-config-change-while-upgrade.yaml",
+        "patchSetId": 11
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1020845
+      },
+      "writtenOn": "2023-06-27T02:35:33Z",
+      "side": 1,
+      "message": "previously this bunch of commands was defined as a single string. In that case we have to escape the escape symbol itself if we want it to get into the final code. So double back slash (\\\\\\\\) was translated into single back slash (\\\\) in the final shell command.\n\nI changed formatting, so now it\u0027s defined as a plain multiline string (more info: https://yaml-multiline.info/). In that mode no extra escaping is needed for the yaml file itself, so it passes through single back slash into the shell script as-is effectively yielding the same result.\n\nOther \u0027sed\u0027 and \u0027grep\u0027 commands started using double back slashes after my change. This is actually not correct but they were working fine. Anyways, I updated them so now they use single back slashes as well.",
+      "parentUuid": "4f89a0dd_03b87357",
       "revId": "805999cb617538b78c05fc3d3b3a3dd003c8c5bc",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
