@@ -168,12 +168,12 @@ rbac:
 
 ingress:
   enabled: false
+  class: nginx
   defaultBackend:
     enabled: true
   # Used to create an Ingress record.
   hosts: []
   annotations:
-  # kubernetes.io/ingress.class: nginx
   # kubernetes.io/tls-acme: "true"
   tls:
   # Secrets must be manually created in the namespace.
