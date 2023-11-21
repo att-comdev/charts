@@ -20,6 +20,7 @@ metadata:
       {{ $key }}: {{ $value | quote }}
     {{- end }}
 spec:
+  ingressClassName: {{ .Values.ingress.class }}
   backend:
     serviceName: {{ $serviceName }}
     servicePort: {{ $servicePort }}
