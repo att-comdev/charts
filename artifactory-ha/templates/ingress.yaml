@@ -24,6 +24,7 @@ metadata:
 {{ .Values.ingress.annotations.annotations1 | toYaml | trimSuffix "\n" | indent 4 -}}
 {{- end }}
 spec:
+  ingressClassName: {{ .Values.ingress.class }}
   {{- if .Values.ingress.defaultBackend.enabled }}
   backend:
     serviceName: {{ $serviceName }}
@@ -85,6 +86,7 @@ metadata:
 {{ .Values.ingress.annotations.annotations2 | toYaml | trimSuffix "\n" | indent 4 -}}
 {{- end }}
 spec:
+  ingressClassName: {{ .Values.ingress.class }}
   {{- if .Values.ingress.defaultBackend.enabled }}
   backend:
     serviceName: {{ $serviceName }}
@@ -146,6 +148,7 @@ metadata:
 {{ .Values.ingress.annotations.annotations3 | toYaml | trimSuffix "\n" | indent 4 -}}
 {{- end }}
 spec:
+  ingressClassName: {{ .Values.ingress.class }}
   {{- if .Values.ingress.defaultBackend.enabled }}
   backend:
     serviceName: {{ $serviceName }}
@@ -207,6 +210,7 @@ metadata:
 {{ .Values.ingress.annotations.annotations4 | toYaml | trimSuffix "\n" | indent 4 -}}
 {{- end }}
 spec:
+  ingressClassName: {{ .Values.ingress.class }}
   {{- if .Values.ingress.defaultBackend.enabled }}
   backend:
     serviceName: {{ $serviceName }}
@@ -268,6 +272,7 @@ metadata:
 {{ .Values.ingress.annotations.annotations5 | toYaml | trimSuffix "\n" | indent 4 -}}
 {{- end }}
 spec:
+  ingressClassName: {{ .Values.ingress.class }}
   {{- if .Values.ingress.defaultBackend.enabled }}
   backend:
     serviceName: {{ $serviceName }}
@@ -329,6 +334,7 @@ metadata:
 {{ .Values.ingress.annotations.annotations6 | toYaml | trimSuffix "\n" | indent 4 -}}
 {{- end }}
 spec:
+  ingressClassName: {{ .Values.ingress.class }}
   {{- if .Values.ingress.defaultBackend.enabled }}
   backend:
     serviceName: {{ $serviceName }}
@@ -385,6 +391,7 @@ metadata:
 {{ .Values.artifactory.replicator.ingress.annotations | toYaml | trimSuffix "\n" | indent 4 -}}
   {{- end }}
 spec:
+  ingressClassName: {{ .Values.ingress.class }}
   {{- if .Values.ingress.defaultBackend.enabled }}
   backend:
     serviceName: {{ $serviceName }}
@@ -442,6 +449,7 @@ metadata:
 {{ .Values.artifactory.replicator.trackerIngress.annotations | toYaml | trimSuffix "\n" | indent 4 -}}
   {{- end }}
 spec:
+  ingressClassName: {{ .Values.ingress.class }}
   {{- if .Values.ingress.defaultBackend.enabled }}
   backend:
     serviceName: {{ $serviceName }}

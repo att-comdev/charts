@@ -17,4 +17,4 @@ name: rabbitmq-ha
 sources:
 - https://github.com/rabbitmq/rabbitmq
 - https://github.com/docker-library/rabbitmq
-version: 1.46.5
+version: 1.46.6
