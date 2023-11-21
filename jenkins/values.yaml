@@ -396,6 +396,7 @@ conf:
     change_owner_for_all_files: false
 ingress:
   enabled: true
+  class: nginx
   # Used to create an Ingress record.
   hosts:
   #  - jenkins.domain.example
