@@ -19,6 +19,7 @@ metadata:
 {{ toYaml . | indent 4 }}
 {{- end }}
 spec:
+  ingressClassName: {{ .Values.ingress.class }}
 {{- if .Values.ingress.defaultBackend.enabled }}
   backend:
     serviceName: {{ $serviceName }}
@@ -49,4 +50,3 @@ spec:
 {{ toYaml .Values.ingress.tls | indent 4 }}
   {{- end -}}
 {{- end -}}
-

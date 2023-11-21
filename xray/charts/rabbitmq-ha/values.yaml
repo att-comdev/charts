@@ -483,6 +483,7 @@ ingress:
   ## Set to true to enable ingress record generation
   enabled: false
 
+  class: nginx
   path: /
 
   ## The list of hostnames to be covered with this ingress record.
@@ -497,7 +498,6 @@ ingress:
 
   ## Ingress annotations done as key:value pairs
   annotations: {}
-  #  kubernetes.io/ingress.class: nginx
 
 livenessProbe:
   initialDelaySeconds: 120
