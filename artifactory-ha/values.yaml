@@ -284,6 +284,7 @@ serviceAccount:
 
 ingress:
   enabled: false
+  class: nginx
   defaultBackend:
     enabled: true
   # Used to create an Ingress record.
@@ -291,7 +292,6 @@ ingress:
     - localhost
   routerPath: /
   artifactoryPath: /artifactory/
-  # kubernetes.io/ingress.class: nginx
   # kubernetes.io/tls-acme: "true"
   # nginx.ingress.kubernetes.io/proxy-body-size: "0"
   labels: {}
@@ -1354,9 +1354,9 @@ artifactory:
     enabled: false
     ingress:
       name:
+      class:
       hosts: []
       annotations: {}
-        # kubernetes.io/ingress.class: nginx
         # nginx.ingress.kubernetes.io/proxy-buffering: "off"
         # nginx.ingress.kubernetes.io/configuration-snippet: |
         #   chunked_transfer_encoding on;
@@ -1370,9 +1370,9 @@ artifactory:
     trackerIngress:
       enabled: false
       name:
+      class:
       hosts: []
       annotations: {}
-       # kubernetes.io/ingress.class: nginx
        # nginx.ingress.kubernetes.io/proxy-buffering: "off"
        # nginx.ingress.kubernetes.io/configuration-snippet: |
        #   chunked_transfer_encoding on;

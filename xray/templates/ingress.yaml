@@ -22,6 +22,7 @@ metadata:
       {{ $key }}: {{ tpl $value $ | quote }}
     {{- end }}
 spec:
+  ingressClassName: {{ .Values.ingress.class }}
   {{- if .Values.ingress.defaultBackend.enabled }}
   backend:
     serviceName: {{ $serviceName }}
