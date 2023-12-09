@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a33233fe_4c91e997",
+        "filename": "artifactory-ha/values.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 1357,
+      "author": {
+        "id": 1020059
+      },
+      "writtenOn": "2023-12-09T00:29:01Z",
+      "side": 1,
+      "message": "Shouldn\u0027t we use \"nginx\" class here too? For consistency.",
+      "revId": "29110e3d81f95f0d7189c7a14c64bae593fcac5d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b33e2f9_8456c34f",
+        "filename": "artifactory-ha/values.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 1373,
+      "author": {
+        "id": 1020059
+      },
+      "writtenOn": "2023-12-09T00:29:01Z",
+      "side": 1,
+      "message": "Same as above.",
+      "revId": "29110e3d81f95f0d7189c7a14c64bae593fcac5d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
