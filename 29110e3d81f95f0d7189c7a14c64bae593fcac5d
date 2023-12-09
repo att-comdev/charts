@@ -18,6 +18,24 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "549f76ad_e1d45581",
+        "filename": "artifactory-ha/values.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 1357,
+      "author": {
+        "id": 1020113
+      },
+      "writtenOn": "2023-12-09T02:49:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a33233fe_4c91e997",
+      "revId": "29110e3d81f95f0d7189c7a14c64bae593fcac5d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5b33e2f9_8456c34f",
@@ -31,6 +49,24 @@
       "writtenOn": "2023-12-09T00:29:01Z",
       "side": 1,
       "message": "Same as above.",
+      "revId": "29110e3d81f95f0d7189c7a14c64bae593fcac5d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "65f4a398_980be806",
+        "filename": "artifactory-ha/values.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 1373,
+      "author": {
+        "id": 1020113
+      },
+      "writtenOn": "2023-12-09T02:49:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b33e2f9_8456c34f",
       "revId": "29110e3d81f95f0d7189c7a14c64bae593fcac5d",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
