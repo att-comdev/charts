@@ -24,5 +24,5 @@ spec:
       - name: copy-certificate-to-agent
         image: {{ .Values.images.tags.namespace_creator }}
         imagePullPolicy: {{ .Values.images.pull_policy }}
-        command: ["/bin/sh","-c", "kubectl get secret jenkins-internal-tls -n {{ .Values.jenkinsNodes.service.namespace }} -o json | jq '{apiVersion,data,kind,metadata,type} | .metadata |= {namespace, name} | .data |= {\"ca.crt\"}' | sed 's/\"namespace\": \".*\"/\"namespace\": \"{{ .Values.jenkinsNodes.namespace }}\"/' | sed 's/\"type\": \".*\"/\"type\": \"Opaque\"/' | kubectl apply -f -"]
+        command: ["/bin/sh","-c", "while [ \"$(kubectl get secret jenkins-internal-tls -n {{ .Values.jenkinsNodes.service.namespace }} --no-headers -o custom-columns=':metadata.name' )\" != 'jenkins-internal-tls' ]; do echo \"waiting for secret to appear\"; sleep 1; done; kubectl get secret jenkins-internal-tls -n {{ .Values.jenkinsNodes.service.namespace }} -o json | jq '{apiVersion,data,kind,metadata,type} | .metadata |= {namespace, name} | .data |= {\"ca.crt\"}' | sed 's/\"namespace\": \".*\"/\"namespace\": \"{{ .Values.jenkinsNodes.namespace }}\"/' | sed 's/\"type\": \".*\"/\"type\": \"Opaque\"/' | kubectl apply -f -"]
 {{- end -}}
