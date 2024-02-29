@@ -35,7 +35,7 @@ spec:
     http:
       paths:
         - path: {{ $.Values.ingress.routerPath }}
-          pathType: ImplementationSpecific
+          pathType: Prefix
           backend:
             service:
               name: {{ $serviceName }}
@@ -46,7 +46,7 @@ spec:
                 name: {{ $servicePort | quote }}
                 {{- end }}
         - path: {{ $.Values.ingress.artifactoryPath }}
-          pathType: ImplementationSpecific
+          pathType: Prefix
           backend:
             service:
               name: {{ $serviceName }}
@@ -97,7 +97,7 @@ spec:
     http:
       paths:
         - path: {{ $.Values.ingress.routerPath }}
-          pathType: ImplementationSpecific
+          pathType: Prefix
           backend:
             service:
               name: {{ $serviceName }}
@@ -108,7 +108,7 @@ spec:
                 name: {{ $servicePort | quote }}
                 {{- end }}
         - path: {{ $.Values.ingress.artifactoryPath }}
-          pathType: ImplementationSpecific
+          pathType: Prefix
           backend:
             service:
               name: {{ $serviceName }}
@@ -159,7 +159,7 @@ spec:
     http:
       paths:
         - path: {{ $.Values.ingress.routerPath }}
-          pathType: ImplementationSpecific
+          pathType: Prefix
           backend:
             service:
               name: {{ $serviceName }}
@@ -170,7 +170,7 @@ spec:
                 name: {{ $servicePort | quote }}
                 {{- end }}
         - path: {{ $.Values.ingress.artifactoryPath }}
-          pathType: ImplementationSpecific
+          pathType: Prefix
           backend:
             service:
               name: {{ $serviceName }}
@@ -221,7 +221,7 @@ spec:
     http:
       paths:
         - path: {{ $.Values.ingress.routerPath }}
-          pathType: ImplementationSpecific
+          pathType: Prefix
           backend:
             service:
               name: {{ $serviceName }}
@@ -232,7 +232,7 @@ spec:
                 name: {{ $servicePort | quote }}
                 {{- end }}
         - path: {{ $.Values.ingress.artifactoryPath }}
-          pathType: ImplementationSpecific
+          pathType: Prefix
           backend:
             service:
               name: {{ $serviceName }}
@@ -283,7 +283,7 @@ spec:
     http:
       paths:
         - path: {{ $.Values.ingress.routerPath }}
-          pathType: ImplementationSpecific
+          pathType: Prefix
           backend:
             service:
               name: {{ $serviceName }}
@@ -294,7 +294,7 @@ spec:
                 name: {{ $servicePort | quote }}
                 {{- end }}
         - path: {{ $.Values.ingress.artifactoryPath }}
-          pathType: ImplementationSpecific
+          pathType: Prefix
           backend:
             service:
               name: {{ $serviceName }}
@@ -345,7 +345,7 @@ spec:
     http:
       paths:
         - path: {{ $.Values.ingress.routerPath }}
-          pathType: ImplementationSpecific
+          pathType: Prefix
           backend:
             service:
               name: {{ $serviceName }}
@@ -356,7 +356,7 @@ spec:
                 name: {{ $servicePort | quote }}
                 {{- end }}
         - path: {{ $.Values.ingress.artifactoryPath }}
-          pathType: ImplementationSpecific
+          pathType: Prefix
           backend:
             service:
               name: {{ $serviceName }}
@@ -404,7 +404,7 @@ spec:
     http:
       paths:
         - path: /replicator/
-          pathType: ImplementationSpecific
+          pathType: Prefix
           backend:
             service:
               name: {{ $serviceName }}
@@ -415,7 +415,7 @@ spec:
                 name: {{ $servicePort | quote }}
                 {{- end }}
         - path: /artifactory/api/replication/replicate/file/streaming
-          pathType: ImplementationSpecific
+          pathType: Prefix
           backend:
             service:
               name: {{ $serviceName }}
@@ -462,7 +462,7 @@ spec:
     http:
       paths:
         - path: /
-          pathType: ImplementationSpecific
+          pathType: Prefix
           backend:
             service:
               name: {{ $serviceName }}

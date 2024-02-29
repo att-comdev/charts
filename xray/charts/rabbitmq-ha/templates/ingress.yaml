@@ -28,7 +28,7 @@ spec:
     {{- end }}
         paths:
           - path: {{ .Values.ingress.path }}
-            pathType: ImplementationSpecific
+            pathType: Prefix
             backend:
               service:
                 name: {{ template "rabbitmq-ha.fullname" . }}
