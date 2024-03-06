@@ -132,7 +132,6 @@ mina-sshd-api-common:2.10.0-69.v28e3e36d18eb_
 mina-sshd-api-core:2.10.0-69.v28e3e36d18eb_
 next-build-number:1.8
 nexus-artifact-uploader:2.14
-nexus-jenkins-plugin:3.16.503.vb_a_7b_10f1c4cf
 oauth-credentials:0.646.v02b_66dc03d2e
 okhttp-api:4.11.0-157.v6852a_a_fa_ec11
 openstack-cloud:2.64
