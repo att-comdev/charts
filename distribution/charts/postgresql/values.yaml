@@ -13,9 +13,6 @@ global:
 ## ref: https://hub.docker.com/r/bitnami/postgresql/tags/
 ##
 image:
-  postgresql: releases-docker.jfrog.io/bitnami/postgresql:13.2.0-debian-10-r55
-  volumePermissions: docker.io/bitnami/bitnami-shell:10
-  metrics: docker.io/bitnami/postgres-exporter:0.9.0-debian-10-r43
   registry: docker.io
   repository: bitnami/postgresql
   tag: 11.11.0-debian-10-r71
