@@ -7,12 +7,15 @@ Return the proper image name
 {{- $registryName := .imageRoot.registry -}}
 {{- $repositoryName := .imageRoot.repository -}}
 {{- $tag := .imageRoot.tag | toString -}}
+{{- $fullName := .imageRoot.fullName -}}
 {{- if .global }}
     {{- if .global.imageRegistry }}
      {{- $registryName = .global.imageRegistry -}}
     {{- end -}}
 {{- end -}}
-{{- if $registryName }}
+{{- if $fullName -}}
+{{- printf "%s" $fullName -}}
+{{- else if $registryName }}
 {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
 {{- else -}}
 {{- printf "%s:%s" $repositoryName $tag -}}
