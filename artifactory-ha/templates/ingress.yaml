@@ -1,36 +1,53 @@
 {{- if .Values.ingress.enabled -}}
 {{- $serviceName := include "artifactory-ha.fullname" . -}}
-{{- $servicePort := printf "%1.f" .Values.artifactory.externalPort -}}
-{{- $artifactoryServicePort := printf "%1.f" .Values.artifactory.externalArtifactoryPort -}}
-{{- $length := len .Values.ingress.hosts -}}
-{{- if ge ( len .Values.ingress.hosts ) 1 }}
-{{- $host := index .Values.ingress.hosts 0 -}}
-{{- $ingressNameF := default ( include "artifactory-ha.fullname" . ) .Values.ingress.name -}}
-{{- $ingressName := printf "%s-%s" $ingressNameF $host -}}
+{{- $servicePort := .Values.artifactory.externalPort -}}
+{{- $artifactoryServicePort := .Values.artifactory.externalArtifactoryPort -}}
+{{- $ingressNameArtifactory := default ( include "artifactory-ha.fullname" . ) .Values.ingress.name -}}
+{{- if .Values.ingress.hosts }}
+  {{- range $index, $host := .Values.ingress.hosts }}
+    {{- $ingressName := printf "%s-%s" $ingressNameArtifactory $host -}}
+    {{- $annotationName := printf "annotations%d" ( add1 $index ) -}}
+    {{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
 apiVersion: networking.k8s.io/v1
+    {{- else if $.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
+apiVersion: networking.k8s.io/v1beta1
+    {{- else }}
+apiVersion: extensions/v1beta1
+    {{- end }}
 kind: Ingress
 metadata:
   name: {{ $ingressName }}
   labels:
-    app: {{ template "artifactory-ha.name" . }}
-    chart: {{ template "artifactory-ha.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-{{- if .Values.ingress.labels }}
-{{ .Values.ingress.labels | toYaml | trimSuffix "\n"| indent 4 -}}
-{{- end}}
-{{- if .Values.ingress.annotations.annotations1}}
+    app: {{ template "artifactory-ha.name" $ }}
+    chart: {{ template "artifactory-ha.chart" $ }}
+    release: {{ $.Release.Name }}
+    heritage: {{ $.Release.Service }}
+    {{- if $.Values.ingress.labels }}
+{{ $.Values.ingress.labels | toYaml | trimSuffix "\n"| indent 4 -}}
+    {{- end}}
+    {{- if hasKey $.Values.ingress.annotations $annotationName }}
   annotations:
-{{ .Values.ingress.annotations.annotations1 | toYaml | trimSuffix "\n" | indent 4 -}}
-{{- end }}
+{{ index $.Values.ingress "annotations" $annotationName | toYaml | trimSuffix "\n" | indent 4 -}}
+    {{- end }}
 spec:
-  ingressClassName: {{ .Values.ingress.class }}
-  {{- if .Values.ingress.defaultBackend.enabled }}
+    {{- if and $.Values.ingress.className (semverCompare ">=1.18.0-0" $.Capabilities.KubeVersion.GitVersion) }}
+  ingressClassName: {{ $.Values.ingress.className }}
+    {{- end }}
+    {{- if $.Values.ingress.defaultBackend.enabled }}
+      {{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
+  defaultBackend:
+    service:
+      name: {{ $serviceName }}
+      port:
+        number: {{ $servicePort }}
+      {{- else }}
   backend:
     serviceName: {{ $serviceName }}
     servicePort: {{ $servicePort }}
-  {{- end }}
+      {{- end }}
+    {{- end }}
   rules:
+    {{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
   - host: {{ $host | quote }}
     http:
       paths:
@@ -40,344 +57,56 @@ spec:
             service:
               name: {{ $serviceName }}
               port:
-                {{- if or (kindIs "int" $servicePort) (regexMatch "^[0-9]{1,5}$" $servicePort) }}
-                number: {{ $servicePort | int }}
-                {{- else }}
-                name: {{ $servicePort | quote }}
-                {{- end }}
+                number: {{ $servicePort }}
         - path: {{ $.Values.ingress.artifactoryPath }}
           pathType: Prefix
           backend:
             service:
               name: {{ $serviceName }}
               port:
-                {{- if or (kindIs "int" $artifactoryServicePort) (regexMatch "^[0-9]{1,5}$" $artifactoryServicePort) }}
-                number: {{ $artifactoryServicePort | int }}
-                {{- else }}
-                name: {{ $artifactoryServicePort | quote }}
-                {{- end }}
-  {{- with .Values.ingress.additionalRules }}
-{{ tpl . $ | indent 2 }}
-  {{- end }}
-  {{- if .Values.ingress.tls }}
-  tls:
-{{ toYaml .Values.ingress.tls | indent 4 }}
-  {{- end -}}
-{{- end -}}
-{{- if ge ( len .Values.ingress.hosts ) 2 }}
----
-{{- $host := index .Values.ingress.hosts 1 -}}
-{{- $ingressNameF := default ( include "artifactory-ha.fullname" . ) .Values.ingress.name -}}
-{{- $ingressName := printf "%s-%s" $ingressNameF $host -}}
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: {{ $ingressName }}
-  labels:
-    app: {{ template "artifactory-ha.name" . }}
-    chart: {{ template "artifactory-ha.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-{{- if .Values.ingress.labels }}
-{{ .Values.ingress.labels | toYaml | trimSuffix "\n"| indent 4 -}}
-{{- end}}
-{{- if .Values.ingress.annotations.annotations2 }}
-  annotations:
-{{ .Values.ingress.annotations.annotations2 | toYaml | trimSuffix "\n" | indent 4 -}}
-{{- end }}
-spec:
-  ingressClassName: {{ .Values.ingress.class }}
-  {{- if .Values.ingress.defaultBackend.enabled }}
-  backend:
-    serviceName: {{ $serviceName }}
-    servicePort: {{ $servicePort }}
-  {{- end }}
-  rules:
+                number: {{ $artifactoryServicePort }}
+        {{- if and $.Values.federation.enabled (not (regexMatch "^.*(oss|cpp-ce|jcr).*$" $.Values.artifactory.image.repository)) }}
+        - path: {{ $.Values.ingress.rtfsPath }}
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ $serviceName }}
+              port:
+                number: {{ $.Values.federation.internalPort }}
+        {{- end }}
+    {{- else }}
   - host: {{ $host | quote }}
     http:
       paths:
         - path: {{ $.Values.ingress.routerPath }}
-          pathType: Prefix
           backend:
-            service:
-              name: {{ $serviceName }}
-              port:
-                {{- if or (kindIs "int" $servicePort) (regexMatch "^[0-9]{1,5}$" $servicePort) }}
-                number: {{ $servicePort | int }}
-                {{- else }}
-                name: {{ $servicePort | quote }}
-                {{- end }}
+            serviceName: {{ $serviceName }}
+            servicePort: {{ $servicePort }}
         - path: {{ $.Values.ingress.artifactoryPath }}
-          pathType: Prefix
           backend:
-            service:
-              name: {{ $serviceName }}
-              port:
-                {{- if or (kindIs "int" $artifactoryServicePort) (regexMatch "^[0-9]{1,5}$" $artifactoryServicePort) }}
-                number: {{ $artifactoryServicePort | int }}
-                {{- else }}
-                name: {{ $artifactoryServicePort | quote }}
-                {{- end }}
-  {{- with .Values.ingress.additionalRules }}
+            serviceName: {{ $serviceName }}
+            servicePort: {{ $artifactoryServicePort }}
+    {{- end -}}
+    {{- with $.Values.ingress.additionalRules }}
 {{ tpl . $ | indent 2 }}
-  {{- end }}
-  {{- if .Values.ingress.tls }}
+    {{- end }}
+    {{- if $.Values.ingress.tls }}
   tls:
-{{ toYaml .Values.ingress.tls | indent 4 }}
-  {{- end -}}
-{{- end -}}
-{{- if ge ( len .Values.ingress.hosts ) 3 }}
+{{ toYaml $.Values.ingress.tls | indent 4 }}
+    {{- end }}
 ---
-{{- $host := index .Values.ingress.hosts 2 -}}
-{{- $ingressNameF := default ( include "artifactory-ha.fullname" . ) .Values.ingress.name -}}
-{{- $ingressName := printf "%s-%s" $ingressNameF $host -}}
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: {{ $ingressName }}
-  labels:
-    app: {{ template "artifactory-ha.name" . }}
-    chart: {{ template "artifactory-ha.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-{{- if .Values.ingress.labels }}
-{{ .Values.ingress.labels | toYaml | trimSuffix "\n"| indent 4 -}}
-{{- end}}
-{{- if .Values.ingress.annotations.annotations3 }}
-  annotations:
-{{ .Values.ingress.annotations.annotations3 | toYaml | trimSuffix "\n" | indent 4 -}}
+  {{- end }}
 {{- end }}
-spec:
-  ingressClassName: {{ .Values.ingress.class }}
-  {{- if .Values.ingress.defaultBackend.enabled }}
-  backend:
-    serviceName: {{ $serviceName }}
-    servicePort: {{ $servicePort }}
-  {{- end }}
-  rules:
-  - host: {{ $host | quote }}
-    http:
-      paths:
-        - path: {{ $.Values.ingress.routerPath }}
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ $serviceName }}
-              port:
-                {{- if or (kindIs "int" $servicePort) (regexMatch "^[0-9]{1,5}$" $servicePort) }}
-                number: {{ $servicePort | int }}
-                {{- else }}
-                name: {{ $servicePort | quote }}
-                {{- end }}
-        - path: {{ $.Values.ingress.artifactoryPath }}
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ $serviceName }}
-              port:
-                {{- if or (kindIs "int" $artifactoryServicePort) (regexMatch "^[0-9]{1,5}$" $artifactoryServicePort) }}
-                number: {{ $artifactoryServicePort | int }}
-                {{- else }}
-                name: {{ $artifactoryServicePort | quote }}
-                {{- end }}
-  {{- with .Values.ingress.additionalRules }}
-{{ tpl . $ | indent 2 }}
-  {{- end }}
-  {{- if .Values.ingress.tls }}
-  tls:
-{{ toYaml .Values.ingress.tls | indent 4 }}
-  {{- end -}}
-{{- end -}}
-{{- if ge ( len .Values.ingress.hosts ) 4 }}
----
-{{- $host := index .Values.ingress.hosts 3 -}}
-{{- $ingressNameF := default ( include "artifactory-ha.fullname" . ) .Values.ingress.name -}}
-{{- $ingressName := printf "%s-%s" $ingressNameF $host -}}
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: {{ $ingressName }}
-  labels:
-    app: {{ template "artifactory-ha.name" . }}
-    chart: {{ template "artifactory-ha.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-{{- if .Values.ingress.labels }}
-{{ .Values.ingress.labels | toYaml | trimSuffix "\n"| indent 4 -}}
-{{- end}}
-{{- if .Values.ingress.annotations.annotations4 }}
-  annotations:
-{{ .Values.ingress.annotations.annotations4 | toYaml | trimSuffix "\n" | indent 4 -}}
-{{- end }}
-spec:
-  ingressClassName: {{ .Values.ingress.class }}
-  {{- if .Values.ingress.defaultBackend.enabled }}
-  backend:
-    serviceName: {{ $serviceName }}
-    servicePort: {{ $servicePort }}
-  {{- end }}
-  rules:
-  - host: {{ $host | quote }}
-    http:
-      paths:
-        - path: {{ $.Values.ingress.routerPath }}
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ $serviceName }}
-              port:
-                {{- if or (kindIs "int" $servicePort) (regexMatch "^[0-9]{1,5}$" $servicePort) }}
-                number: {{ $servicePort | int }}
-                {{- else }}
-                name: {{ $servicePort | quote }}
-                {{- end }}
-        - path: {{ $.Values.ingress.artifactoryPath }}
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ $serviceName }}
-              port:
-                {{- if or (kindIs "int" $artifactoryServicePort) (regexMatch "^[0-9]{1,5}$" $artifactoryServicePort) }}
-                number: {{ $artifactoryServicePort | int }}
-                {{- else }}
-                name: {{ $artifactoryServicePort | quote }}
-                {{- end }}
-  {{- with .Values.ingress.additionalRules }}
-{{ tpl . $ | indent 2 }}
-  {{- end }}
-  {{- if .Values.ingress.tls }}
-  tls:
-{{ toYaml .Values.ingress.tls | indent 4 }}
-  {{- end -}}
-{{- end -}}
-{{- if ge ( len .Values.ingress.hosts ) 5 }}
----
-{{- $host := index .Values.ingress.hosts 4 -}}
-{{- $ingressNameF := default ( include "artifactory-ha.fullname" . ) .Values.ingress.name -}}
-{{- $ingressName := printf "%s-%s" $ingressNameF $host -}}
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: {{ $ingressName }}
-  labels:
-    app: {{ template "artifactory-ha.name" . }}
-    chart: {{ template "artifactory-ha.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-{{- if .Values.ingress.labels }}
-{{ .Values.ingress.labels | toYaml | trimSuffix "\n"| indent 4 -}}
-{{- end}}
-{{- if .Values.ingress.annotations.annotations5 }}
-  annotations:
-{{ .Values.ingress.annotations.annotations5 | toYaml | trimSuffix "\n" | indent 4 -}}
-{{- end }}
-spec:
-  ingressClassName: {{ .Values.ingress.class }}
-  {{- if .Values.ingress.defaultBackend.enabled }}
-  backend:
-    serviceName: {{ $serviceName }}
-    servicePort: {{ $servicePort }}
-  {{- end }}
-  rules:
-  - host: {{ $host | quote }}
-    http:
-      paths:
-        - path: {{ $.Values.ingress.routerPath }}
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ $serviceName }}
-              port:
-                {{- if or (kindIs "int" $servicePort) (regexMatch "^[0-9]{1,5}$" $servicePort) }}
-                number: {{ $servicePort | int }}
-                {{- else }}
-                name: {{ $servicePort | quote }}
-                {{- end }}
-        - path: {{ $.Values.ingress.artifactoryPath }}
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ $serviceName }}
-              port:
-                {{- if or (kindIs "int" $artifactoryServicePort) (regexMatch "^[0-9]{1,5}$" $artifactoryServicePort) }}
-                number: {{ $artifactoryServicePort | int }}
-                {{- else }}
-                name: {{ $artifactoryServicePort | quote }}
-                {{- end }}
-  {{- with .Values.ingress.additionalRules }}
-{{ tpl . $ | indent 2 }}
-  {{- end }}
-  {{- if .Values.ingress.tls }}
-  tls:
-{{ toYaml .Values.ingress.tls | indent 4 }}
-  {{- end -}}
-{{- end -}}
-{{- if ge ( len .Values.ingress.hosts ) 6 }}
----
-{{- $host := index .Values.ingress.hosts 5 -}}
-{{- $ingressNameF := default ( include "artifactory-ha.fullname" . ) .Values.ingress.name -}}
-{{- $ingressName := printf "%s-%s" $ingressNameF $host -}}
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: {{ $ingressName }}
-  labels:
-    app: {{ template "artifactory-ha.name" . }}
-    chart: {{ template "artifactory-ha.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-{{- if .Values.ingress.labels }}
-{{ .Values.ingress.labels | toYaml | trimSuffix "\n"| indent 4 -}}
-{{- end}}
-{{- if .Values.ingress.annotations.annotations6 }}
-  annotations:
-{{ .Values.ingress.annotations.annotations6 | toYaml | trimSuffix "\n" | indent 4 -}}
-{{- end }}
-spec:
-  ingressClassName: {{ .Values.ingress.class }}
-  {{- if .Values.ingress.defaultBackend.enabled }}
-  backend:
-    serviceName: {{ $serviceName }}
-    servicePort: {{ $servicePort }}
-  {{- end }}
-  rules:
-  - host: {{ $host | quote }}
-    http:
-      paths:
-        - path: {{ $.Values.ingress.routerPath }}
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ $serviceName }}
-              port:
-                {{- if or (kindIs "int" $servicePort) (regexMatch "^[0-9]{1,5}$" $servicePort) }}
-                number: {{ $servicePort | int }}
-                {{- else }}
-                name: {{ $servicePort | quote }}
-                {{- end }}
-        - path: {{ $.Values.ingress.artifactoryPath }}
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ $serviceName }}
-              port:
-                {{- if or (kindIs "int" $artifactoryServicePort) (regexMatch "^[0-9]{1,5}$" $artifactoryServicePort) }}
-                number: {{ $artifactoryServicePort | int }}
-                {{- else }}
-                name: {{ $artifactoryServicePort | quote }}
-                {{- end }}
-  {{- with .Values.ingress.additionalRules }}
-{{ tpl . $ | indent 2 }}
-  {{- end }}
-  {{- if .Values.ingress.tls }}
-  tls:
-{{ toYaml .Values.ingress.tls | indent 4 }}
-  {{- end -}}
-{{- end -}}
-{{- if .Values.artifactory.replicator.enabled }}
----
+
+{{- if and .Values.artifactory.replicator.enabled .Values.artifactory.replicator.ingress.enabled }}
 {{- $replicationIngressName := default ( include "artifactory-ha.replicator.fullname" . ) .Values.artifactory.replicator.ingress.name -}}
+  {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
 apiVersion: networking.k8s.io/v1
+  {{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
+apiVersion: networking.k8s.io/v1beta1
+  {{- else }}
+apiVersion: extensions/v1beta1
+  {{- end }}
 kind: Ingress
 metadata:
   name: {{ $replicationIngressName }}
@@ -391,15 +120,26 @@ metadata:
 {{ .Values.artifactory.replicator.ingress.annotations | toYaml | trimSuffix "\n" | indent 4 -}}
   {{- end }}
 spec:
-  ingressClassName: {{ .Values.ingress.class }}
+  {{- if and (or .Values.ingress.className .Values.artifactory.replicator.ingress.className) (semverCompare ">=1.18.0-0" .Capabilities.KubeVersion.GitVersion) }}
+  ingressClassName: {{ default .Values.ingress.className .Values.artifactory.replicator.ingress.className }}
+  {{- end }}
   {{- if .Values.ingress.defaultBackend.enabled }}
+    {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
+  defaultBackend:
+    service:
+      name: {{ $serviceName }}
+      port:
+        number: {{ $servicePort }}
+    {{- else }}
   backend:
     serviceName: {{ $serviceName }}
     servicePort: {{ $servicePort }}
+    {{- end }}
   {{- end }}
   rules:
 {{- if .Values.artifactory.replicator.ingress.hosts }}
-  {{- range $host := .Values.artifactory.replicator.ingress.hosts }}
+  {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
+    {{- range $host := .Values.artifactory.replicator.ingress.hosts }}
   - host: {{ $host | quote }}
     http:
       paths:
@@ -409,23 +149,30 @@ spec:
             service:
               name: {{ $serviceName }}
               port:
-                {{- if or (kindIs "int" $servicePort) (regexMatch "^[0-9]{1,5}$" $servicePort) }}
-                number: {{ $servicePort | int }}
-                {{- else }}
-                name: {{ $servicePort | quote }}
-                {{- end }}
+                number: {{ $servicePort }}
         - path: /artifactory/api/replication/replicate/file/streaming
           pathType: Prefix
           backend:
             service:
               name: {{ $serviceName }}
               port:
-                {{- if or (kindIs "int" $servicePort) (regexMatch "^[0-9]{1,5}$" $servicePort) }}
-                number: {{ $servicePort | int }}
-                {{- else }}
-                name: {{ $servicePort | quote }}
-                {{- end }}
-  {{- end -}}
+                number: {{ $servicePort }}
+    {{- end }}
+  {{- else }}
+    {{- range $host := .Values.artifactory.replicator.ingress.hosts }}
+  - host: {{ $host | quote }}
+    http:
+      paths:
+        - path: /replicator/
+          backend:
+            serviceName: {{ $serviceName }}
+            servicePort: {{ $servicePort }}
+        - path: /artifactory/api/replication/replicate/file/streaming
+          backend:
+            serviceName: {{ $serviceName }}
+            servicePort: {{ $servicePort }}
+    {{- end }}
+  {{- end }}
 {{- end -}}
   {{- if .Values.artifactory.replicator.ingress.tls }}
   tls:
@@ -435,7 +182,13 @@ spec:
 {{- if and .Values.artifactory.replicator.enabled .Values.artifactory.replicator.trackerIngress.enabled }}
 ---
 {{- $replicatorTrackerIngressName := default ( include "artifactory-ha.replicator.tracker.fullname" . ) .Values.artifactory.replicator.trackerIngress.name -}}
+  {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
 apiVersion: networking.k8s.io/v1
+  {{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
+apiVersion: networking.k8s.io/v1beta1
+  {{- else }}
+apiVersion: extensions/v1beta1
+  {{- end }}
 kind: Ingress
 metadata:
   name: {{ $replicatorTrackerIngressName }}
@@ -449,15 +202,26 @@ metadata:
 {{ .Values.artifactory.replicator.trackerIngress.annotations | toYaml | trimSuffix "\n" | indent 4 -}}
   {{- end }}
 spec:
-  ingressClassName: {{ .Values.ingress.class }}
+  {{- if and (or .Values.ingress.className .Values.artifactory.replicator.trackerIngress.className) (semverCompare ">=1.18.0-0" .Capabilities.KubeVersion.GitVersion) }}
+  ingressClassName: {{ default .Values.ingress.className .Values.artifactory.replicator.trackerIngress.className }}
+  {{- end }}
   {{- if .Values.ingress.defaultBackend.enabled }}
+    {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
+  defaultBackend:
+    service:
+      name: {{ $serviceName }}
+      port:
+        number: {{ $servicePort }}
+    {{- else }}
   backend:
     serviceName: {{ $serviceName }}
     servicePort: {{ $servicePort }}
+    {{- end }}
   {{- end }}
   rules:
 {{- if .Values.artifactory.replicator.trackerIngress.hosts }}
-  {{- range $host := .Values.artifactory.replicator.trackerIngress.hosts }}
+  {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
+    {{- range $host := .Values.artifactory.replicator.trackerIngress.hosts }}
   - host: {{ $host | quote }}
     http:
       paths:
@@ -467,12 +231,19 @@ spec:
             service:
               name: {{ $serviceName }}
               port:
-                {{- if or (kindIs "int" $servicePort) (regexMatch "^[0-9]{1,5}$" $servicePort) }}
-                number: {{ $servicePort | int }}
-                {{- else }}
-                name: {{ $servicePort | quote }}
-                {{- end }}
-  {{- end -}}
+                number: {{ $servicePort }}
+    {{- end }}
+  {{- else }}
+    {{- range $host := .Values.artifactory.replicator.trackerIngress.hosts }}
+  - host: {{ $host | quote }}
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: {{ $serviceName }}
+            servicePort: {{ $servicePort }}
+    {{- end }}
+  {{- end }}
 {{- end -}}
   {{- if .Values.artifactory.replicator.trackerIngress.tls }}
   tls:
