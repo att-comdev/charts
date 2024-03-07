@@ -72,7 +72,7 @@ spec:
       initContainers:
       {{- if and .Values.volumePermissions.enabled (or .Values.persistence.enabled (and .Values.shmVolume.enabled .Values.shmVolume.chmod.enabled) .Values.tls.enabled) }}
         - name: init-chmod-data
-          image: {{ .Values.image.volumePermissions }}
+          image: {{ template "postgresql.volumePermissions.image" . }}
           imagePullPolicy: {{ .Values.volumePermissions.image.pullPolicy | quote }}
           {{- if .Values.resources }}
           resources: {{- toYaml .Values.resources | nindent 12 }}
@@ -139,7 +139,7 @@ spec:
       {{- end }}
       containers:
         - name: {{ template "common.names.fullname" . }}
-          image: {{ .Values.image.postgresql }}
+          image: {{ template "postgresql.image" . }}
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
           {{- if .Values.resources }}
           resources: {{- toYaml .Values.resources | nindent 12 }}
@@ -453,7 +453,7 @@ spec:
 {{- end }}
 {{- if .Values.metrics.enabled }}
         - name: metrics
-          image: {{ .Values.image.metrics }}
+          image: {{ template "postgresql.metrics.image" . }}
           imagePullPolicy: {{ .Values.metrics.image.pullPolicy | quote }}
          {{- if .Values.metrics.securityContext.enabled }}
           securityContext: {{- omit .Values.metrics.securityContext "enabled" | toYaml | nindent 12 }}

@@ -1,12 +1,11 @@
 annotations:
   category: Database
-apiVersion: v1
-appVersion: 11.9.0
+apiVersion: v2
+appVersion: 11.11.0
 description: Chart for PostgreSQL, an object-relational database management system
   (ORDBMS) with an emphasis on extensibility and on standards-compliance.
-engine: gotpl
-home: https://www.postgresql.org/
-icon: https://bitnami.com/assets/stacks/postgresql/img/postgresql-stack-110x117.png
+home: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
+icon: https://bitnami.com/assets/stacks/postgresql/img/postgresql-stack-220x234.png
 keywords:
 - postgresql
 - postgres
@@ -22,4 +21,5 @@ maintainers:
 name: postgresql
 sources:
 - https://github.com/bitnami/bitnami-docker-postgresql
-version: 9.3.4
+- https://www.postgresql.org/
+version: 10.3.18
