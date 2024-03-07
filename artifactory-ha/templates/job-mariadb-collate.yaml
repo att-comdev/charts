@@ -1,0 +1,5 @@
+{{- if .Values.manifests.job_mariadb_collate }}
+{{- $dbToInit := dict "inputType" "secret" "adminSecret" .Values.secrets.oslo_db.admin -}}
+{{- $dbInitJob := dict "envAll" . "serviceName" "artifactory" "dbToInit" $dbToInit -}}
+{{ $dbInitJob | include "artifactory.job_mariadb_collate" }}
+{{- end }}

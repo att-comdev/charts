@@ -13,7 +13,9 @@ data:
   create-s3-user.sh: |
 {{- include "helm-toolkit.scripts.create_s3_user" . | indent 4 }}
   db-init.py: |
-{{- include "helm-toolkit.scripts.db_init" . | indent 4 }}
+{{- include "artifactory.db_init" . | indent 4 }}
   db-drop.py: |
 {{- include "helm-toolkit.scripts.db_drop" . | indent 4 }}
+  mariadb-collate.py: |
+{{- include "artifactory.mariadb_collate" . | indent 4 }}
 {{- end }}
