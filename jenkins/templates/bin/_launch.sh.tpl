@@ -28,11 +28,24 @@ fi
 
 {{ if .Values.plugins.enabled -}}
 
-curl -o /var/jenkins_home/plugins.tar.gz {{ .Values.plugins.url }}
-tar xzf /var/jenkins_home/plugins.tar.gz -C /var/jenkins_home/
-rm /var/jenkins_home/plugins.tar.gz
+rm -rf /tmp/plugins*
+if [ $(curl -s -w"%{http_code}" -o /tmp/plugins.tar.gz {{ .Values.plugins.url }})=="200" ] \
+    && tar xzf /tmp/plugins.tar.gz -C /tmp \
+    && [ -d /tmp/plugins ] \
+    && [ ! -z "$(ls -A /tmp/plugins)" ]
+then
+    rm -rf /var/jenkins_home/plugins
+    mv /tmp/plugins /var/jenkins_home/
+else
+    echo "[ERROR] Something went wrong while fetching plugins. Check the logs above."
+fi
+
+rm -rf /tmp/plugins*
+
 {{- else -}}
 
+# review: this will not work in new versions because
+# install-plugins.sh script is no longer supplied in jenkins images
 if [ -e /plugins.txt ] ; then
 
     # FIXME(cw): transitional, file should never have been there
@@ -56,6 +69,15 @@ python3 proxy-config-gen.py
 KFILE=~/.ssh/id_ed25519
 if [ ! -e "${KFILE}" ] ; then
     ssh-keygen -q -t ed25519 -f ${KFILE} -N ""
+fi
+
+# allow ssh-rsa that is disabled by default in recent versions
+if ! ssh -G * | grep ^pubkeyaccepted | grep ssh-rsa || ! ssh -G * | grep ^hostkeyalgorithms | grep ssh-rsa
+then
+    echo >> $JENKINS_HOME/.ssh/config && \
+    echo "Host *" >> $JENKINS_HOME/.ssh/config && \
+    echo "    PubkeyAcceptedKeyTypes=+ssh-rsa" >> $JENKINS_HOME/.ssh/config && \
+    echo "    HostKeyAlgorithms=+ssh-rsa" >> $JENKINS_HOME/.ssh/config
 fi
 
 exec /usr/bin/tini -- /usr/local/bin/jenkins.sh
