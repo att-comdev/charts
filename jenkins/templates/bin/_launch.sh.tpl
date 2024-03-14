@@ -58,4 +58,13 @@ if [ ! -e "${KFILE}" ] ; then
     ssh-keygen -q -t ed25519 -f ${KFILE} -N ""
 fi
 
+# allow ssh-rsa that is disabled by default in recent versions
+if ! ssh -G * | grep ^pubkeyaccepted | grep ssh-rsa || ! ssh -G * | grep ^hostkeyalgorithms | grep ssh-rsa
+then
+    echo >> $JENKINS_HOME/.ssh/config && \
+    echo "Host *" >> $JENKINS_HOME/.ssh/config && \
+    echo "    PubkeyAcceptedKeyTypes=+ssh-rsa" >> $JENKINS_HOME/.ssh/config && \
+    echo "    HostKeyAlgorithms=+ssh-rsa" >> $JENKINS_HOME/.ssh/config
+fi
+
 exec /usr/bin/tini -- /usr/local/bin/jenkins.sh
