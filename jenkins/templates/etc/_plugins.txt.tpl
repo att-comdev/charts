@@ -36,7 +36,7 @@ bootstrap5-api:5.3.3-1
 bouncycastle-api:2.30.1.77-225.v26ea_c9455fd9
 branch-api:2.1152.v6f101e97dd77
 build-history-metrics-plugin:112.v476124de7dfc
-build-name-setter:2.4.1
+build-name-setter:2.4.2
 build-timestamp:1.0.3
 build-user-vars-plugin:1.9
 buildresult-trigger:0.18
@@ -117,15 +117,15 @@ jquery:1.12.4-1
 jquery3-api:3.7.1-2
 jsch:0.2.16-86.v42e010d9484b_
 json-api:20240303-41.v94e11e6de726
-json-path-api:2.9.0-52.v57de85cc4722
+json-path-api:2.9.0-58.v62e3e85b_a_655
 junit:1259.v65ffcef24a_88
-kubernetes:4199.va_1647c280eb_2
+kubernetes:4203.v1dd44f5b_1cf9
 kubernetes-client-api:6.10.0-240.v57880ce8b_0b_2
 kubernetes-credentials:0.11
 last-changes:2.7.11
-ldap:711.vb_d1a_491714dc
-libvirt-slave:262.v98a_c85b_98c0a_
-lockable-resources:1243.v346d600eea_24
+ldap:719.vcb_d039b_77d0d
+libvirt-slave:286.vc21fa_98f531c
+lockable-resources:1246.v28b_e4cc6fa_16
 mailer:472.vf7c289a_4b_420
 mapdb-api:1.0.9-28.vf251ce40855d
 mask-passwords:173.v6a_077a_291eb_5
@@ -178,7 +178,7 @@ script-security:1326.vdb_c154de8669
 snakeyaml-api:2.2-111.vc6598e30cc65
 sse-gateway:1.26
 ssh-agent:346.vda_a_c4f2c8e50
-ssh-credentials:322.v124df57ed808
+ssh-credentials:326.v7fcb_a_ef6194b_
 ssh-slaves:2.948.vb_8050d697fec
 ssh-steps:2.0.68.va_d21a_12a_6476
 sshd:3.322.v159e91f6a_550
@@ -200,5 +200,5 @@ workflow-job:1400.v7fd111b_ec82f
 workflow-multibranch:773.vc4fe1378f1d5
 workflow-scm-step:427.v4ca_6512e7df1
 workflow-step-api:657.v03b_e8115821b_
-workflow-support:865.v43e78cc44e0d
+workflow-support:881.v7663695646cf
 ws-cleanup:0.45
