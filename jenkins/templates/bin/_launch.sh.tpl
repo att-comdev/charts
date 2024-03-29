@@ -61,10 +61,6 @@ fi
 # Plugins downloaded
 touch /var/jenkins_home/plugins_downloaded
 
-# proxy.xml configuration from environment variables
-rm -fv /var/jenkins_home/proxy.xml
-python3 proxy-config-gen.py
-
 # generate ssh key if we don't have one already
 KFILE=~/.ssh/id_ed25519
 if [ ! -e "${KFILE}" ] ; then
@@ -79,5 +75,11 @@ then
     echo "    PubkeyAcceptedKeyTypes=+ssh-rsa" >> $JENKINS_HOME/.ssh/config && \
     echo "    HostKeyAlgorithms=+ssh-rsa" >> $JENKINS_HOME/.ssh/config
 fi
+
+# remove update and proxy info because update through jenkins is disabled
+rm /var/jenkins_home/updates/default.json
+rm /var/jenkins_home/proxy.xml
+
+python3 proxy-config-gen.py
 
 exec /usr/bin/tini -- /usr/local/bin/jenkins.sh
