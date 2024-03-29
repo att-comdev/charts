@@ -63,6 +63,12 @@ cp -fv /tmp/pipeline-utility-steps.groovy /var/jenkins_home/init.groovy.d/pipeli
 # copy jobs init script
 cp -fv /tmp/preseed.groovy /var/jenkins_home/init.groovy.d/preseed.groovy
 
+# copy script that takes care of jenkins warnings
+cp -fv /tmp/disable_irrelevant_warnings.groovy /var/jenkins_home/init.groovy.d/disable_irrelevant_warnings.groovy
+
+# copy disable proxy script
+cp -fv /tmp/disable_proxy.groovy /var/jenkins_home/init.groovy.d/disable_proxy.groovy
+
 # the seed runs as root; everything else runs as jenkins so we have to
 # make sure the permissions are as expected
 {{- if .Values.conf.seed.change_owner_for_all_files }}
