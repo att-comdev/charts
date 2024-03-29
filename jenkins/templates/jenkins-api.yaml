@@ -131,6 +131,12 @@ spec:
             - name: jenkins-init
               mountPath: /tmp/preseed.groovy
               subPath: preseed.groovy
+            - name: jenkins-init
+              mountPath: /tmp/disable_irrelevant_warnings.groovy
+              subPath: disable_irrelevant_warnings.groovy
+            - name: jenkins-init
+              mountPath: /tmp/disable_proxy.groovy
+              subPath: disable_proxy.groovy
             {{- if .Values.conf.git_client_config.enable }}
             - name: jenkins-etc
               mountPath: /seed/org.jenkinsci.plugins.gitclient.GitHostKeyVerificationConfiguration.xml
@@ -211,9 +217,6 @@ spec:
             - name: jenkins-etc
               mountPath: /plugins.txt
               subPath: plugins.txt
-            - name: jenkins-bin
-              mountPath: /proxy-config-gen.py
-              subPath: proxy-config-gen.py
       volumes:
         - name: pod-tmp
           emptyDir: {}
