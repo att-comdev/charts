@@ -80,4 +80,7 @@ then
     echo "    HostKeyAlgorithms=+ssh-rsa" >> $JENKINS_HOME/.ssh/config
 fi
 
+# remove update info because update through jenkins is disabled
+rm /var/jenkins_home/updates/default.json
+
 exec /usr/bin/tini -- /usr/local/bin/jenkins.sh
