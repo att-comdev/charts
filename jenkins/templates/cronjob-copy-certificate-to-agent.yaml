@@ -1,0 +1,31 @@
+{{- if and .Values.manifests.job_create_namespaces .Values.manifests.certificates }}
+{{- $envAll := . }}
+
+{{- $serviceAccountName := printf "create-namespace-%s" .Release.Name }}
+{{- $CopyCertificate := printf "copy-certificate-to-agent-%s" .Release.Name }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cron-{{ $CopyCertificate }}
+  namespace: {{ .Values.jenkinsNodes.service.namespace }}
+  annotations:
+    "helm.sh/hook": "post-install,post-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+spec:
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          annotations:
+{{ dict "envAll" $envAll "podName" "copy-certificate-to-agent" "containerNames" (list "copy-certificate-to-agent") | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 12 }}
+        spec:
+          serviceAccount: {{ $serviceAccountName }}
+          containers:
+          - name: cron-copy-certificate-to-agent
+            image: {{ .Values.images.tags.namespace_creator }}
+            imagePullPolicy: {{ .Values.images.pull_policy }}
+            command: ["/bin/sh","-c", "while [ \"$(kubectl get secret jenkins-internal-tls -n {{ .Values.jenkinsNodes.service.namespace }} --no-headers -o custom-columns=':metadata.name' )\" != 'jenkins-internal-tls' ]; do echo \"waiting for secret to appear\"; sleep 1; done; kubectl get secret jenkins-internal-tls -n {{ .Values.jenkinsNodes.service.namespace }} -o json | jq '{apiVersion,data,kind,metadata,type} | .metadata |= {namespace, name} | .data |= {\"ca.crt\"} | .type=\"Opaque\" | .metadata.namespace=\"{{ .Values.jenkinsNodes.namespace }}\"' | kubectl apply -f -"]
+{{- end -}}
+...
