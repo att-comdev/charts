@@ -22,6 +22,11 @@ set -ex
 # avoids replacing files)
 cp -nrv /seed/* /var/jenkins_home/
 
+# this is a temporary solution for the upgrade
+# todo: remove this when nc v2.12 will no longer be supported
+cp -f /seed/audit-trail.xml /var/jenkins_home/
+cp -f /seed/org.jfrog.hudson.ArtifactoryBuilder.xml /var/jenkins_home/
+
 {{- if .Values.conf.gerrit_trigger.enable }}
 # Add ssh keys for gerrit trigger.
 mkdir -p /var/jenkins_home/.ssh
@@ -62,6 +67,14 @@ cp -fv /tmp/pipeline-utility-steps.groovy /var/jenkins_home/init.groovy.d/pipeli
 
 # copy jobs init script
 cp -fv /tmp/preseed.groovy /var/jenkins_home/init.groovy.d/preseed.groovy
+
+# copy script that takes care of jenkins warnings
+cp -fv /tmp/disable_irrelevant_warnings.groovy /var/jenkins_home/init.groovy.d/disable_irrelevant_warnings.groovy
+
+{{- if not .Values.conf.config.jenkins.useProxy}}
+# copy disable proxy script
+cp -fv /tmp/disable_proxy.groovy /var/jenkins_home/init.groovy.d/disable_proxy.groovy
+{{- end }}
 
 # the seed runs as root; everything else runs as jenkins so we have to
 # make sure the permissions are as expected
