@@ -194,6 +194,7 @@ conf:
         strategy: "hudson.security.FullControlOnceLoggedInAuthorizationStrategy"
         denyAnonymousReadAccess: false
         permissions: []
+      useProxy: false
 # Global env variables in Jenkins configuration
 # Most of the below env values are just dummy
       global_env_vars:
