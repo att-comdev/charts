@@ -16,7 +16,7 @@ def warningsToDisable = [
     warnings.find { it.id == "jenkins.model.BuiltInNodeMigration" },
 
     // Sometimes the message stays after root url is set. It is not correct and needs to be dismissed.
-    warnings.find { it.id == "jenkins.diagnostics.RootUrlNotSetMonitor" && Jenkins.instance.getRootUrl() }
+    warnings.find { it.id == "jenkins.diagnostics.RootUrlNotSetMonitor" }
 ].findAll { it!= null }
 
 warningsToDisable.each {

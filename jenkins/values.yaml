@@ -56,6 +56,9 @@ jenkinsNodes:
   service:
     namespace: openstack
 
+dind:
+  socket: docker.sock
+
 rbac:
   create: true
   role:
