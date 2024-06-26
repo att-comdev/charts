@@ -79,6 +79,10 @@ cp -fv /tmp/disable_proxy.groovy /var/jenkins_home/init.groovy.d/disable_proxy.g
 rm /var/jenkins_home/init.groovy.d/disable_proxy.groovy || true
 {{- end }}
 
+# remove badge plugin config file (the new one with default settings will be recreated by jenkins)
+# this is needed because older config has different format and it triggers warning in jenkins after update
+rm /var/jenkins_home/com.jenkinsci.plugins.badge.BadgePlugin.xml || true
+
 # the seed runs as root; everything else runs as jenkins so we have to
 # make sure the permissions are as expected
 {{- if .Values.conf.seed.change_owner_for_all_files }}
