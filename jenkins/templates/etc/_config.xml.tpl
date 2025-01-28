@@ -147,4 +147,5 @@
       <maxRequestsPerHost>64</maxRequestsPerHost>
     </org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud>
   </clouds>
+  <markupFormatter class="hudson.markup.RawHtmlMarkupFormatter" />
 </hudson>
