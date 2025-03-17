@@ -8,6 +8,8 @@ kind: Job
 metadata:
   name: {{ $DeletePlugins }}
   namespace: {{ .Values.jenkinsNodes.service.namespace }}
+  labels:
+{{ tuple $envAll "check-plugins" "check-plugins" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 4 }}
   annotations:
     "helm.sh/hook": "post-upgrade"
     "helm.sh/hook-delete-policy": "before-hook-creation"
