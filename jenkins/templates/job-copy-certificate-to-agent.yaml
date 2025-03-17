@@ -9,6 +9,8 @@ kind: Job
 metadata:
   name: {{ $CopyCertificate }}
   namespace: {{ .Values.jenkinsNodes.service.namespace }}
+  labels:
+{{ tuple $envAll "distribute-certificate" "copy-certificate-to-agent" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 4 }}
   annotations:
     "helm.sh/hook": "post-install,post-upgrade"
     "helm.sh/hook-delete-policy": "before-hook-creation"
