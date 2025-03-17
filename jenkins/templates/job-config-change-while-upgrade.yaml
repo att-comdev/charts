@@ -11,7 +11,10 @@ kind: Job
 metadata:
   name: {{ $configChange }}
   namespace: {{ .Values.jenkinsNodes.service.namespace }}
+  labels:
+{{ tuple $envAll "config-change-while-upgrade" "config-change-while-upgrade" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 4 }}
   annotations:
+{{ tuple $envAll | include "helm-toolkit.snippets.release_uuid" | indent 4 }}
     "helm.sh/hook": "pre-upgrade"
     "helm.sh/hook-delete-policy": "before-hook-creation"
 spec:
