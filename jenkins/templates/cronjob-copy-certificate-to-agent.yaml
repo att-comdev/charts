@@ -9,7 +9,10 @@ kind: CronJob
 metadata:
   name: cron-{{ $CopyCertificate }}
   namespace: {{ .Values.jenkinsNodes.service.namespace }}
+  labels:
+{{ tuple $envAll "cron-copy-certificate-to-agent" "copy-certificate-to-agent" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 4 }}
   annotations:
+{{ tuple $envAll | include "helm-toolkit.snippets.release_uuid" | indent 4 }}
     "helm.sh/hook": "post-install,post-upgrade"
     "helm.sh/hook-delete-policy": "before-hook-creation"
 spec:

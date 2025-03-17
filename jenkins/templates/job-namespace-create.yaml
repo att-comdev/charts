@@ -58,6 +58,7 @@ metadata:
   labels:
 {{ tuple $envAll "rbac-manager" "create-namespaces" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 4 }}
   annotations:
+{{ tuple $envAll | include "helm-toolkit.snippets.release_uuid" | indent 4 }}
     "helm.sh/hook": "pre-install,pre-upgrade"
     "helm.sh/hook-delete-policy": "before-hook-creation"
 spec:
