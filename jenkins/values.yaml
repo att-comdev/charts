@@ -492,7 +492,7 @@ endpoints:
             rotationPolicy: Always
           keySize: 2048
           duration: 8760h
-          renewBefore: 360h
+          renewBefore: 361h
           dnsNames:
             - jenkins.openstack.svc.cluster.local
           usages:
