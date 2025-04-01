@@ -87,4 +87,4 @@ python3 proxy-config-gen.py
 rm /var/jenkins_home/updates/default.json
 {{- end}}
 
-exec /usr/bin/tini -- /usr/local/bin/jenkins.sh
+JAVA_OPTS="-Dorg.jenkinsci.plugins.workflow.cps.LoggingInvoker.fieldSetWarning=false" exec /usr/bin/tini -- /usr/local/bin/jenkins.sh
