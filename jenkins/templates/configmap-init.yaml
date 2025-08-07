@@ -33,3 +33,7 @@ data:
 {{ tuple "init/_disable_proxy.groovy.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
   disable_irrelevant_warnings.groovy: |
 {{ tuple "init/_disable_irrelevant_warnings.groovy.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+{{- if .Values.conf.smart-proxy.enable }}
+  set_smart_proxy_var.groovy: |
+{{ tuple "init/_set_smart_proxy_var.groovy.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+{{- end }}
