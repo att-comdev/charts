@@ -71,6 +71,14 @@ cp -fv /tmp/preseed.groovy /var/jenkins_home/init.groovy.d/preseed.groovy
 # copy script that takes care of jenkins warnings
 cp -fv /tmp/disable_irrelevant_warnings.groovy /var/jenkins_home/init.groovy.d/disable_irrelevant_warnings.groovy
 
+{{- if .Values.conf.smart_proxy.enable -}}
+# copy script that sets UNIVERSAL_PROXY global var if smart proxy is enabled
+cp -fv /tmp/set_smart_proxy_var.groovy /var/jenkins_home/init.groovy.d/set_smart_proxy_var.groovy
+{{- else }}
+# remove that script if smart proxy is disabled
+rm /var/jenkins_home/init.groovy.d/set_smart_proxy_var.groovy || true
+{{- end }}
+
 {{- if not .Values.conf.config.jenkins.useProxy}}
 # copy disable proxy script
 cp -fv /tmp/disable_proxy.groovy /var/jenkins_home/init.groovy.d/disable_proxy.groovy

@@ -1,0 +1,1 @@
+//set smart proxy jenkins variable
