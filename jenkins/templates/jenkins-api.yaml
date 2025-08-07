@@ -142,6 +142,11 @@ spec:
               mountPath: /seed/org.jenkinsci.plugins.gitclient.GitHostKeyVerificationConfiguration.xml
               subPath: org.jenkinsci.plugins.gitclient.GitHostKeyVerificationConfiguration.xml
             {{- end }}
+            {{- if .Values.conf.smart_proxy.enable }}
+            - name: jenkins-init
+              mountPath: /tmp/set_smart_proxy_var.groovy
+              subPath: set_smart_proxy_var.groovy
+            {{- end }}
         {{- if .Values.manifests.certificates }}
         - name: cert-add
           image: {{ .Values.images.tags.jenkins }}
