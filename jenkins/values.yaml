@@ -31,6 +31,7 @@ images:
     image_repo_sync: docker.io/docker:17.07.0
     namespace_creator: gcr.io/google_containers/hyperkube-amd64:v1.12.9
     dind: docker.io/docker:18.09.0-dind
+    httpd: httpd:2.4.65
   pull_policy: "IfNotPresent"
   local_registry:
     active: false
@@ -119,6 +120,8 @@ pod:
       prepare-keys: runtime/default
     create-image-pull-secret:
       image-pull-secret-add-sa: runtime/default
+    smart-proxy:
+      apache: runtime/default
 
   security_context:
     jenkins:
@@ -247,6 +250,14 @@ conf:
         slack_url: https://att-comdev.slack.com/services/hooks/jenkins-ci/
         ssh_data: tempsshdata
     override: null
+  smart_proxy:
+    override: null
+    enable: false
+    port: 8888
+    rules:
+      - 'ProxyRemoteMatch ^(.*\:\/\/)?([^.]+\.)*github\.(com|io) http://github-proxy:8888'
+      - 'ProxyRemoteMatch ^(.*\:\/\/)?([^.]+\.)*githubusercontent\.com http://github-proxy:8888'
+      - 'ProxyRemote * http://proxy:8888'
   plugins:
     override: null
   security:
