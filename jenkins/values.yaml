@@ -31,6 +31,7 @@ images:
     image_repo_sync: docker.io/docker:17.07.0
     namespace_creator: gcr.io/google_containers/hyperkube-amd64:v1.12.9
     dind: docker.io/docker:18.09.0-dind
+    httpd: httpd:2.4.65
   pull_policy: "IfNotPresent"
   local_registry:
     active: false
@@ -247,6 +248,8 @@ conf:
         slack_url: https://att-comdev.slack.com/services/hooks/jenkins-ci/
         ssh_data: tempsshdata
     override: null
+  smart_proxy:
+    enable: false
   plugins:
     override: null
   security:
