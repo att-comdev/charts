@@ -1,0 +1,72 @@
+{{- if .Values.conf.smart_proxy.enable -}}
+{{- $envAll := . }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smart-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- tuple $envAll "smart-proxy" "httpd" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- tuple $envAll "smart-proxy" "httpd" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | nindent 8 }}
+    spec:
+      {{- dict "envAll" $envAll "application" "smart-proxy" | include "helm-toolkit.snippets.kubernetes_pod_security_context" | nindent 6 }}
+      containers:
+      - name: apache
+        image: {{ .Values.images.tags.httpd }}
+        {{- tuple $envAll $envAll.Values.pod.resources.api | include "helm-toolkit.snippets.kubernetes_resources" | nindent 8 }}
+        {{- dict "envAll" $envAll "application" "smart-proxy" "container" "apache" | include "helm-toolkit.snippets.kubernetes_container_security_context" | nindent 8 }}
+        ports:
+        - containerPort: {{ .Values.conf.smart_proxy.port }}
+        volumeMounts:
+        - name: apache-config
+          mountPath: /usr/local/apache2/conf/httpd.conf
+          subPath: httpd.conf
+      volumes:
+      - name: apache-config
+        configMap:
+          name: smart-proxy-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: smart-proxy-config
+data:
+  httpd.conf: |
+    ErrorLog /dev/stderr
+    ServerRoot "/usr/local/apache2"
+    Listen {{ .Values.conf.smart_proxy.port }}
+    LoadModule mpm_event_module modules/mod_mpm_event.so
+    LoadModule authz_core_module modules/mod_authz_core.so
+    LoadModule proxy_module modules/mod_proxy.so
+    LoadModule proxy_connect_module modules/mod_proxy_connect.so
+    LoadModule unixd_module modules/mod_unixd.so
+    PidFile /usr/local/apache2/logs/httpd.pid
+    User daemon
+    Group daemon
+    ProxyRequests On
+    ServerName smart-proxy
+    <Proxy "*">
+        Require all granted
+    </Proxy>
+    {{- range $rule := .Values.conf.smart_proxy.rules -}}
+      {{- $rule | nindent 4}}
+    {{- end }}
+    AllowCONNECT 443
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: smart-proxy
+spec:
+  selector:
+    {{- tuple $envAll "smart-proxy" "httpd" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | nindent 4 }}
+  ports:
+  - protocol: TCP
+    port: {{ .Values.conf.smart_proxy.port }}
+    targetPort: {{ .Values.conf.smart_proxy.port }}
+{{- end -}}
