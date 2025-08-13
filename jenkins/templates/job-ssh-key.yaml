@@ -72,6 +72,7 @@ spec:
       initContainers:
 {{ tuple $envAll "job_ssh_key" list | include "helm-toolkit.snippets.kubernetes_entrypoint_init_container" | indent 8 }}
         - name: "prepare-keys"
+{{ dict "envAll" $envAll "application" "jenkins_ssh_key" "container" "prepare_keys" | include "helm-toolkit.snippets.kubernetes_container_security_context" | indent 10 }}
 {{ tuple $envAll "jenkins" | include "helm-toolkit.snippets.image" | indent 10 }}
           command:
             - /tmp/add_ssh_keys.sh
@@ -84,6 +85,7 @@ spec:
               subPath: add_ssh_keys.sh
       containers:
         - name: {{ $jobName }}
+{{ dict "envAll" $envAll "application" "jenkins_ssh_key" "container" "jenkins_ssh_key" | include "helm-toolkit.snippets.kubernetes_container_security_context" | indent 10 }}
 {{ tuple $envAll "namespace_creator" | include "helm-toolkit.snippets.image" | indent 10 }}
           command:
             - /tmp/add_ssh_keys.sh

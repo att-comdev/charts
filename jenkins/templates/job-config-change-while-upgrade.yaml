@@ -27,6 +27,7 @@ spec:
       serviceAccount: {{ $serviceAccountName }}
       containers:
       - name: config-change-while-upgrade
+{{ dict "envAll" $envAll "application" "config_change_while_upgrade" "container" "config_change_while_upgrade" | include "helm-toolkit.snippets.kubernetes_container_security_context" | indent 8 }}
         image: {{ .Values.images.tags.namespace_creator }}
         imagePullPolicy: {{ .Values.images.pull_policy }}
         command:

@@ -95,31 +95,6 @@ rbac:
 
 
 pod:
-  mandatory_access_control:
-    type: apparmor
-    jenkins-api:
-      seed: runtime/default
-      jenkins: runtime/default
-      cert-add: runtime/default
-    create-namespaces:
-      namespace-creator: runtime/default
-    dindproxy:
-      dindproxy: runtime/default
-    check-plugins:
-      check-plugins: runtime/default
-    delete-plugins:
-      delete-plugins: runtime/default
-    copy-certificate-to-agent:
-      copy-certificate-to-agent: runtime/default
-    config-change-while-upgrade:
-      config-change-while-upgrade: runtime/default
-    jenkins-ssh-key:
-      init: runtime/default
-      jenkins-ssh-key: runtime/default
-      prepare-keys: runtime/default
-    create-image-pull-secret:
-      image-pull-secret-add-sa: runtime/default
-
   security_context:
     jenkins:
       pod:
@@ -128,12 +103,67 @@ pod:
         seed:
           runAsUser: 0
           readOnlyRootFilesystem: false
+          appArmorProfile:
+            type: RuntimeDefault
         cert-add:
           runAsUser: 0
           readOnlyRootFilesystem: false
+          appArmorProfile:
+            type: RuntimeDefault
         jenkins:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: false
+          appArmorProfile:
+            type: RuntimeDefault
+    create_namespaces:
+      container:
+        namespace_creator:
+          appArmorProfile:
+            type: RuntimeDefault
+    dindproxy:
+      container:
+        dindproxy:
+          privileged: true
+          appArmorProfile:
+            type: RuntimeDefault
+    check_plugins:
+      container:
+        check_plugins:
+          appArmorProfile:
+            type: RuntimeDefault
+    delete_plugins:
+      container:
+        delete_plugins:
+          appArmorProfile:
+            type: RuntimeDefault
+    copy_certificate_to_agent:
+      container:
+        copy_certificate_to_agent:
+          appArmorProfile:
+            type: RuntimeDefault
+    config_change_while_upgrade:
+      container:
+        config_change_while_upgrade:
+          appArmorProfile:
+            type: RuntimeDefault
+    jenkins_ssh_key:
+      container:
+        prepare_keys:
+          appArmorProfile:
+            type: RuntimeDefault
+        jenkins_ssh_key:
+          appArmorProfile:
+            type: RuntimeDefault
+    create_image_pull_secret:
+      container:
+        image_pull_secret_add_sa:
+          appArmorProfile:
+            type: RuntimeDefault
+    kubernetes_entrypoint:
+      container:
+        kubernetes_entrypoint:
+          appArmorProfile:
+            type: RuntimeDefault
   affinity:
     anti:
       type:
