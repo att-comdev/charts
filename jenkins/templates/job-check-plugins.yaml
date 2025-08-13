@@ -24,6 +24,7 @@ spec:
       serviceAccount: {{ $serviceAccountName }}
       containers:
       - name: check-plugins
+{{ dict "envAll" $envAll "application" "check_plugins" "container" "check_plugins" | include "helm-toolkit.snippets.kubernetes_container_security_context" | indent 8 }}
         image: {{ .Values.images.tags.namespace_creator }}
         imagePullPolicy: {{ .Values.images.pull_policy }}
         command: ["/bin/sh","-c", "while [ \"$(kubectl get pods -n {{ .Values.jenkinsNodes.service.namespace }} jenkins-api-0 --no-headers -o custom-columns=':status.phase')\" != 'Running' ]; do echo 'Waiting for Jenkins POD to come running'; sleep 1; done; kubectl exec jenkins-api-0 -n {{ .Values.jenkinsNodes.service.namespace }} -- bash -c 'while [ ! -f /var/jenkins_home/plugins_downloaded ]; do echo \"Plugins are not downloaded yet...\"; done; echo \"Plugins are downloaded\"; if [ ! -d '/var/jenkins_home/plugins' ]; then echo \"Copying plugins backup to plugins folder\"; cp -r /var/jenkins_home/plugins_bkp /var/jenkins_home/plugins; fi'"]

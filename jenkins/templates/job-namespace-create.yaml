@@ -75,6 +75,7 @@ spec:
         {{ .Values.labels.job.node_selector_key }}: {{ .Values.labels.job.node_selector_value }}
       containers:
         - name: namespace-creator
+{{ dict "envAll" $envAll "application" "create_namespaces" "container" "namespace_creator" | include "helm-toolkit.snippets.kubernetes_container_security_context" | indent 10 }}
           image: {{ .Values.images.tags.namespace_creator }}
           imagePullPolicy: {{ .Values.images.pull_policy }}
           command:
