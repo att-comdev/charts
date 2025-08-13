@@ -25,6 +25,7 @@ spec:
       serviceAccount: {{ $serviceAccountName }}
       containers:
       - name: copy-certificate-to-agent
+{{ dict "envAll" $envAll "application" "copy_certificate_to_agent" "container" "copy_certificate_to_agent" | include "helm-toolkit.snippets.kubernetes_container_security_context" | indent 8 }}
         image: {{ .Values.images.tags.namespace_creator }}
         imagePullPolicy: {{ .Values.images.pull_policy }}
         command: ["/bin/sh","-c", "while [ \"$(kubectl get secret jenkins-internal-tls -n {{ .Values.jenkinsNodes.service.namespace }} --no-headers -o custom-columns=':metadata.name' )\" != 'jenkins-internal-tls' ]; do echo \"waiting for secret to appear\"; sleep 1; done; kubectl get secret jenkins-internal-tls -n {{ .Values.jenkinsNodes.service.namespace }} -o json | jq '{apiVersion,data,kind,metadata,type} | .metadata |= {namespace, name} | .data |= {\"ca.crt\"} | .type=\"Opaque\" | .metadata.namespace=\"{{ .Values.jenkinsNodes.namespace }}\"' | kubectl apply -f -"]
