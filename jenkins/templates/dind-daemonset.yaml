@@ -21,9 +21,11 @@ spec:
       annotations:
         {{ tuple $envAll | include "helm-toolkit.snippets.release_uuid" }}
 {{ dict "envAll" $envAll "podName" "dindproxy" "containerNames" (list "dindproxy") | include "helm-toolkit.snippets.kubernetes_mandatory_access_control_annotation" | indent 8 }}
+        {{ tuple $envAll | include "helm-toolkit.snippets.release_uuid" }}
     spec:
       containers:
       - name: dindproxy
+{{ dict "envAll" $envAll "application" "dindproxy" "container" "dindproxy" | include "helm-toolkit.snippets.kubernetes_container_security_context" | indent 8 }}
         image: {{ .Values.images.tags.dind }}
         imagePullPolicy: {{ .Values.images.pull_policy }}
         args:
@@ -37,8 +39,6 @@ spec:
             value: {{ .value | quote }}
           {{- end }}
         {{- end }}
-        securityContext:
-          privileged: true
         volumeMounts:
         - name: varlibdockerproxy
           mountPath: /var/lib/dockerproxy
