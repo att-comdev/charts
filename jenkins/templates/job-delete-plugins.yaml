@@ -24,6 +24,7 @@ spec:
       serviceAccount: {{ $serviceAccountName }}
       containers:
       - name: delete-plugins
+{{ dict "envAll" $envAll "application" "delete_plugins" "container" "delete_plugins" | include "helm-toolkit.snippets.kubernetes_container_security_context" | indent 8 }}
         image: {{ .Values.images.tags.namespace_creator }}
         imagePullPolicy: {{ .Values.images.pull_policy }}
         command: ["/bin/sh","-c", "kubectl exec jenkins-api-0 -n {{ .Values.jenkinsNodes.service.namespace }} -- bash -c 'if [ -d '/var/jenkins_home/plugins_bkp' ]; then echo \"Deleting plugins backup folder\"; rm -rf /var/jenkins_home/plugins_bkp; fi; if [ -d '/var/jenkins_home/plugins' ]; then mv /var/jenkins_home/plugins /var/jenkins_home/plugins_bkp; fi'"]

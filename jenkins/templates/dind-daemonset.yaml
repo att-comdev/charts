@@ -24,6 +24,7 @@ spec:
     spec:
       containers:
       - name: dindproxy
+{{ dict "envAll" $envAll "application" "dindproxy" "container" "dindproxy" | include "helm-toolkit.snippets.kubernetes_container_security_context" | indent 8 }}
         image: {{ .Values.images.tags.dind }}
         imagePullPolicy: {{ .Values.images.pull_policy }}
         args:

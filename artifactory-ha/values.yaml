@@ -218,16 +218,6 @@ conf:
     append:
 
 pod:
-  mandatory_access_control:
-    type: apparmor
-    artifactory-ha-member:
-      remove-lost-found: runtime/default
-      wait-for-db: runtime/default
-      artifactory-ha: runtime/default
-    artifactory-ha-primary:
-      remove-lost-found: runtime/default
-      wait-for-db: runtime/default
-      artifactory-ha: runtime/default
   resources:
     jobs:
       storage_init:
