@@ -21,6 +21,20 @@ The xray-sbom name
 {{- end -}}
 
 {{/*
+The xray-panoramic name
+*/}}
+{{- define "xray-panoramic.name" -}}
+{{- default .Chart.Name .Values.panoramic.name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+The xray-policyenforcer name
+*/}}
+{{- define "xray-policyenforcer.name" -}}
+{{- default .Chart.Name .Values.panoramic.name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 The xray-indexer name
 */}}
 {{- define "xray-indexer.name" -}}
@@ -432,31 +446,38 @@ Return the proper xray chart image names
 {{- define "xray.getImageInfoByValue" -}}
 {{- $dot := index . 0 }}
 {{- $indexReference := index . 1 }}
-{{- if hasKey $dot.Values.images.tags $indexReference -}}
-    {{- printf "%s" ( index $dot.Values.images.tags $indexReference ) -}}
-{{- else -}}
-  {{- $registryName := index $dot.Values $indexReference "image" "registry" -}}
-  {{- $repositoryName := index $dot.Values $indexReference "image" "repository" -}}
-  {{- $tag := default $dot.Chart.AppVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
-  {{- if and $dot.Values.common.xrayVersion (or (eq $indexReference "persist") (eq $indexReference "server") (eq $indexReference "analysis") (eq $indexReference "sbom") (eq $indexReference "indexer")) }}
-  {{- $tag = $dot.Values.common.xrayVersion | toString -}}
-  {{- end -}}
-  {{- if $dot.Values.global }}
-      {{- if and $dot.Values.global.versions.router (eq $indexReference "router") }}
-      {{- $tag = $dot.Values.global.versions.router | toString -}}
-      {{- end -}}
-      {{- if and $dot.Values.global.versions.xray (or (eq $indexReference "persist") (eq $indexReference "server") (eq $indexReference "analysis") (eq $indexReference "sbom") (eq $indexReference "indexer")) }}
-      {{- $tag = $dot.Values.global.versions.xray | toString -}}
-      {{- end -}}
-      {{- if $dot.Values.global.imageRegistry }}
-          {{- printf "%s/%s:%s" $dot.Values.global.imageRegistry $repositoryName $tag -}}
-      {{- else -}}
-          {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
-      {{- end -}}
-  {{- else -}}
-      {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
-  {{- end -}}
+{{- $registryName := index $dot.Values $indexReference "image" "registry" -}}
+{{- $repositoryName := index $dot.Values $indexReference "image" "repository" -}}
+{{- $tag := default $dot.Chart.AppVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
+{{- if and $dot.Values.common.xrayVersion (or (eq $indexReference "persist") (eq $indexReference "server") (eq $indexReference "analysis") (eq $indexReference "sbom") (eq $indexReference "indexer") (eq $indexReference "policyenforcer") (eq $indexReference "panoramic")) }}
+{{- $tag = $dot.Values.common.xrayVersion | toString -}}
 {{- end -}}
+{{- if $dot.Values.global }}
+    {{- if and $dot.Values.global.versions.router (eq $indexReference "router") }}
+    {{- $tag = $dot.Values.global.versions.router | toString -}}
+    {{- end -}}
+    {{- if and $dot.Values.global.versions.initContainers (eq $indexReference "initContainers") }}
+    {{- $tag = $dot.Values.global.versions.initContainers | toString -}}
+    {{- end -}}
+    {{- if and $dot.Values.global.versions.xray (or (eq $indexReference "persist") (eq $indexReference "server") (eq $indexReference "analysis") (eq $indexReference "sbom") (eq $indexReference "indexer") (eq $indexReference "policyenforcer") (eq $indexReference "panoramic")) }}
+    {{- $tag = $dot.Values.global.versions.xray | toString -}}
+    {{- end -}}
+    {{- if $dot.Values.global.imageRegistry }}
+        {{- printf "%s/%s:%s" $dot.Values.global.imageRegistry $repositoryName $tag -}}
+    {{- else -}}
+        {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
+    {{- end -}}
+{{- else -}}
+    {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the proper xray app version
+*/}}
+{{- define "xray.app.version" -}}
+{{- $tag := (splitList ":" ((include "xray.getImageInfoByValue" (list . "server" )))) | last | toString -}}
+{{- printf "%s" $tag -}}
 {{- end -}}
 
 {{/*
@@ -505,7 +526,15 @@ for file in $(ls * | grep -v ":" | grep -v grep); do if [ -f "${file}" ]; then c
 Resolve xray requiredServiceTypes value
 */}}
 {{- define "xray.router.requiredServiceTypes" -}}
-{{- $requiredTypes := "jfxr,jfxana,jfxidx,jfxpst,jfob" -}}
+{{- $requiredTypes := "jfxr,jfxana,jfxidx,jfxpst,jfxpe,jfob" -}}
+{{- $requiredTypes -}}
+{{- end -}}
+
+{{/*
+Resolve xray ipa requiredServiceTypes value
+*/}}
+{{- define "xray.router.ipa.requiredServiceTypes" -}}
+{{- $requiredTypes := "jfxana,jfxidx,jfxpst,jfxpe,jfob" -}}
 {{- $requiredTypes -}}
 {{- end -}}
 
@@ -575,6 +604,28 @@ Resolve autoscalingQueues value
 {{- end -}}
 
 {{/*
+Resolve autoscalingQueues value for ipa
+*/}}
+{{- define "xray.autoscalingQueuesIpa" -}}
+{{- if .Values.autoscalingIpa.keda.queues }}
+{{- range .Values.autoscalingIpa.keda.queues }}
+- type: rabbitmq
+  metadata:
+    name: "{{- .name -}}-queue"
+    protocol: amqp
+    queueName: {{ .name }}
+    mode: QueueLength
+    value: "{{ .value }}"
+{{- if $.Values.global.xray.rabbitmq.haQuorum.enabled }}
+    vhostName: "{{ $.Values.global.xray.rabbitmq.haQuorum.vhost }}"
+{{- end }}
+  authenticationRef:
+    name: keda-trigger-auth-rabbitmq-conn-xray
+{{- end }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Return the secret name of rabbitmq TLS certs.
 */}}
 {{- define "xray.rabbitmqCustomCertificateshandler" -}}
@@ -596,8 +647,15 @@ Prints value of Values.rabbitmq.auth.tls.enabled.
 {{- printf "%t" $.Values.auth.tls.enabled -}}
 {{- end -}}
 
+{{/*
+Returns true if either local or global RabbitMQ TLS is enabled.
+*/}}
 {{- define "xray.rabbitmq.isManagementListenerTlsEnabled" -}}
-{{- printf "%t" $.Values.rabbitmq.auth.tls.enabled -}}
+{{- if or .Values.rabbitmq.auth.tls.enabled  .Values.global.rabbitmq.auth.tls.enabled -}}
+true
+{{- else -}}
+false
+{{- end -}}
 {{- end -}}
 
 {{/*
@@ -618,6 +676,26 @@ Set xray env variables if rabbitmq.tls is enabled.
 {{- end }}
 {{- end -}}
 
+{{- define "xray.resolveUsedMasterKeySecretName" -}}
+{{- if or .Values.xray.masterKey .Values.xray.masterKeySecretName .Values.global.masterKey .Values.global.masterKeySecretName -}}
+{{- if or (not .Values.xray.unifiedSecretInstallation) (or .Values.xray.masterKeySecretName .Values.global.masterKeySecretName) -}}
+{{- include "xray.masterKeySecretName" . -}}
+{{- else -}}
+{{ template "xray.fullname" . }}-unified-secret
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "xray.resolveUsedJoinKeySecretName" -}}
+{{- if or .Values.xray.joinKey .Values.xray.joinKeySecretName .Values.global.joinKey .Values.global.joinKeySecretName -}}
+{{- if or (not .Values.xray.unifiedSecretInstallation) (or .Values.xray.joinKeySecretName .Values.global.joinKeySecretName) -}}
+{{- include "xray.joinKeySecretName" . -}}
+{{- else -}}
+{{ template "xray.fullname" . }}-unified-secret
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "xray.envVariables" }}
 - name: XRAY_CHART_FULL_NAME
   value: '{{ include "xray.fullname" . }}'
@@ -629,4 +707,26 @@ Set xray env variables if rabbitmq.tls is enabled.
   value: "{{ .Values.systemYamlOverride.existingSecret }}"
 - name: XRAY_CHART_SYSTEM_YAML_OVERRIDE_DATA_KEY
   value: "{{ .Values.systemYamlOverride.dataKey }}"
+- name: XRAY_CHART_MASTER_KEY_SECRET_NAME
+  value: '{{ include "xray.resolveUsedMasterKeySecretName" . }}'
+- name: XRAY_CHART_JOIN_KEY_SECRET_NAME
+  value: '{{ include "xray.resolveUsedJoinKeySecretName" . }}'
 {{- end }}
+
+{{/*
+Calculate the systemYaml from structured and unstructured text input
+*/}}
+{{- define "xray.finalSystemYaml" -}}
+{{- if .Values.xray.extraSystemYaml }}
+{{ tpl (mergeOverwrite (include "xray.systemYaml" . | fromYaml) .Values.xray.extraSystemYaml | toYaml) . }}
+{{- else }}
+{{ include "xray.systemYaml" . }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Calculate the systemYaml from the unstructured text input
+*/}}
+{{- define "xray.systemYaml" -}}
+{{ include (print $.Template.BasePath "/_system-yaml-render.tpl") . }}
+{{- end -}}

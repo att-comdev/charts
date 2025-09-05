@@ -192,32 +192,39 @@ Resolve customSidecarContainers value
 {{- end -}}
 
 {{/*
+Return the proper distribution app version
+*/}}
+{{- define "distribution.app.version" -}}
+{{- $tag := (splitList ":" ((include "distribution.getImageInfoByValue" (list . "distribution" )))) | last | toString -}}
+{{- printf "%s" $tag -}}
+{{- end -}}
+
+{{/*
 Return the proper distribution chart image names
 */}}
 {{- define "distribution.getImageInfoByValue" -}}
 {{- $dot := index . 0 }}
 {{- $indexReference := index . 1 }}
-{{- if hasKey $dot.Values.images.tags $indexReference -}}
-    {{- printf "%s" ( index $dot.Values.images.tags $indexReference ) -}}
+{{- $registryName := index $dot.Values $indexReference "image" "registry" -}}
+{{- $repositoryName := index $dot.Values $indexReference "image" "repository" -}}
+{{- $tag := default $dot.Chart.AppVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
+{{- if $dot.Values.global }}
+    {{- if and $dot.Values.global.versions.router (eq $indexReference "router") }}
+    {{- $tag = $dot.Values.global.versions.router | toString -}}
+    {{- end -}}
+    {{- if and $dot.Values.global.versions.initContainers (eq $indexReference "initContainers") }}
+    {{- $tag = $dot.Values.global.versions.initContainers | toString -}}
+    {{- end -}}
+    {{- if and $dot.Values.global.versions.distribution (eq $indexReference "distribution") }}
+    {{- $tag = $dot.Values.global.versions.distribution | toString -}}
+    {{- end -}}
+    {{- if $dot.Values.global.imageRegistry }}
+        {{- printf "%s/%s:%s" $dot.Values.global.imageRegistry $repositoryName $tag -}}
+    {{- else -}}
+        {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
+    {{- end -}}
 {{- else -}}
-  {{- $registryName := index $dot.Values $indexReference "image" "registry" -}}
-  {{- $repositoryName := index $dot.Values $indexReference "image" "repository" -}}
-  {{- $tag := default $dot.Chart.AppVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
-  {{- if $dot.Values.global }}
-      {{- if and $dot.Values.global.versions.router (eq $indexReference "router") }}
-      {{- $tag = $dot.Values.global.versions.router | toString -}}
-      {{- end -}}
-      {{- if and $dot.Values.global.versions.distribution (eq $indexReference "distribution") }}
-      {{- $tag = $dot.Values.global.versions.distribution | toString -}}
-      {{- end -}}
-      {{- if $dot.Values.global.imageRegistry }}
-          {{- printf "%s/%s:%s" $dot.Values.global.imageRegistry $repositoryName $tag -}}
-      {{- else -}}
-          {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
-      {{- end -}}
-  {{- else -}}
-      {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
-  {{- end -}}
+    {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
 {{- end -}}
 {{- end -}}
 
@@ -270,3 +277,38 @@ if the volume exists in customVolume then an extra volume with the same name wil
 {{- printf "%s" "false" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Calculate the systemYaml from structured and unstructured text input
+*/}}
+{{- define "distribution.finalSystemYaml" -}}
+{{ tpl (mergeOverwrite (include "distribution.systemYaml" . | fromYaml) .Values.distribution.extraSystemYaml | toYaml) . }}
+{{- end -}}
+
+{{/*
+Calculate the systemYaml from the unstructured text input
+*/}}
+{{- define "distribution.systemYaml" -}}
+{{ include (print $.Template.BasePath "/_system-yaml-render.tpl") . }}
+{{- end -}}
+
+{{/*
+Resolve unified secret prepend release name
+*/}}
+{{- define "distribution.unifiedSecretPrependReleaseName" -}}
+{{- if .Values.distribution.unifiedSecretPrependReleaseName }}
+{{- printf "%s" (include "distribution.fullname" .) -}}
+{{- else }}
+{{- printf "%s" (include "distribution.name" .) -}}
+{{- end }}
+{{- end }}
+
+{{/*
+Resolve autoscalling metrics value
+*/}}
+{{- define "distribution.metrics" -}}
+{{- if .Values.autoscaling.metrics -}}
+{{- .Values.autoscaling.metrics -}}
+{{- end -}}
+{{- end -}}
+

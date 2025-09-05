@@ -1,13 +1,108 @@
 # JFrog Xray Chart Changelog
 All changes to this chart will be documented in this file.
 
+## [103.124.21] - Jun 13, 2025
+* Fix the xray xsmall sizing issue that caused problems with DB sync.
+* Added extra validation checks for quorum queues
+* Added Rabbitmq 4 validation checks
+* Updated bitnami/kubectl version to 1.33.1
+
+## [103.119.0] - April 11, 2025
+* Added support for the RabbitMQ password secret via `.Values.auth.existingPasswordSecret` [GH-1961](https://github.com/jfrog/charts/issues/1961)
+* Refactored rabbitmq's load_definition configuration (moved to files/load_definition.json instead of key in values.yaml)
+* **Important changes**
+* Update postgresql tag version to `16.6.0-debian-12-r2`
+
+## [103.118.0] - April 2, 2025
+* Update postgresql tag version to `15.10.0-debian-12-r2`
+* Add affinity and tolerations to rabbitmq migration hook
+* Update rabbitmq tag version to `3.13.7-debian-12-r6`
+* Added support for json based console logging `.Values.logToStdoutJson`
+* **Important changes**
+* Upgrade rabbitmq chart version to 15.4.1
+
+## [103.117.0] - March 12, 2025
+* Added support for installing multiple Xray applications in a single namespace
+
+## [103.113.0] - Jan 14, 2025
+* Updated rabbitmq multi-arch tag version to to `3.13.7-debian-12-r5`
+* Updated bitnami kubectl multi-arch tag version to to `1.32.0`
+
+## [103.112.0] - Jan 2, 2025
+* Fix an issue with a warning in the rabbitmq password check
+
+## [103.109.0] - Nov 27, 2024
+* **Important changes**
+* Upgrade rabbitmq chart version to 14.6.6
+* Added catalog as a dependency chart
+* **Breaking changes**
+* Upgrade postgres chart version to 15.5.20
+    * This has many changes related to key names and path in values yaml
+    * The effected keys present in default yaml have been aligned to the new path in 15.5.20
+    * if you have customised any keys, make sure to validate it with the 15.5.20 chart
+    * Delete the postgresql statefulset and postgresql secret before the upgrade. for more information, please refer the [xray upgrade docs](https://jfrog.com/help/r/jfrog-installation-setup-documentation/upgrading-xray)
+
+## [103.108.0] - Nov 11, 2024
+* Introduced a validation check in the template to warn users against using the default RabbitMQ password. If a default password is found, the installation will be paused, prompting users to update their credentials before proceeding.
+* Fix for panoramic env indentation [GH-1919](https://github.com/jfrog/charts/pull/1919)
+* Added memory metric targetMemoryUtilizationPercentage to Xray Horizontal Pod Scaler
+
+## [103.107.0] - September 26, 2024
+* Added support to read rabbitmq and database secrets from mounted secret files
+
+## [103.105.0] - August 22, 2024
+* Added support for `serviceAccount.annotations`to be passed to chart [GH-1841](https://github.com/jfrog/charts/pull/1841)
+* Updated rabbitmq multi-arch tag version to to `3.13.6-debian-12-r1`
+
+## [103.102.0] - July 17, 2024
+* Added support of specifying resources constraints for RabbitMQ's pre-upgrade-hook job
+* Fixed formatting error associated to the `volumeMounts` for the `panoramic` microservice [GH-1895](https://github.com/jfrog/charts/issues/1895)
+
+## [103.99.0] - June 18, 2024
+* Fixed #adding colon in image registry breaks deployment with meta label error. [GH-1892](https://github.com/jfrog/charts/pull/1892)
+
+## [103.97.0] - May 27, 2024
+* Added chart label to xray pods
+
+## [103.96.0] - Apr 17, 2024
+* Added `rabbitmq.containerSecurityContext.allowPrivilegeEscalation` flag to ensure `RunAsUser` commands cannot bypass their existing sets of permissions. Set to `false` by default
+* Updated rabbitmq multi-arch tag version to to `3.12.13-debian-11-r0`
+
+## [103.95.0] - Apr 2, 2024
+* **IMPORTANT**
+* Refactored systemYaml configuration (moved to files/system.yaml instead of key in values.yaml)
+* Added ability to provide `extraSystemYaml` configuration in values.yaml which will merge with the existing system yaml when `systemYamlOverride` is not given. [GH-1842](https://github.com/jfrog/charts/pull/1842)
+* Update postgresql tag version to `15.6.0-debian-11-r16`
+
+## [103.94.0] - Mar 27, 2024
+* **IMPORTANT**
+* Added image section for `initContainers` instead of `initContainerImage`
+* Removed image section for `loggers`
+* Added support for `global.verisons.initContainers` to override `initContainers.image.tag`
+
+## [103.93.0] - Mar 5,2024
+* Updated rabbitmq multi-arch tag version to to `3.12.10-debian-11-r1`
+* Fixed - StatefulSet pod annotations changed from range to toYaml [GH-1828](https://github.com/jfrog/charts/issues/1828)
+* Updated README.md to create a namespace using `--create-namespace` as part of helm install
+* Added a headless service for IPA pod
+
+## [103.91.0] - Feb 21,2024
+* **IMPORTANT**
+* Added `unifiedSecretInstallation` flag which enables single unified secret holding all internal (chart) secrets to `true` by default
+* Renamed sizing yaml file names from `xray-sizing-<size>.yaml` to `xray-<size>.yaml`
+* **Important change:**
+* Update postgresql tag version to `15.2.0-debian-11-r23`
+* Renamed `common.xrayUserId` to `podSecurityContext.runAsUser`
+* Renamed `common.xrayGroupId` to `podSecurityContext.runAsGroup` and `podSecurityContext.fsGroup`
+* Renamed `common.fsGroupChangePolicy` to `podSecurityContext.fsGroupChangePolicy`
+
 ## [103.89.0] - Jan 18,2023
 * Remove fallback section from keda.
 
 ## [103.88.0] - Dec 20,2023
 * Added support for migrating rabbitmq to high-availability quorum queues setup
 
-## [103.88.12] - Dec 7,2023
+## [103.87.0] - Dec 7,2023
 * Update minimum supported kubernetes version to 1.19
 * Added recommended t-shirt sizing configurations under sizing folder
 * Added support for rabbitmq high-availability quorum queues clean install setup
