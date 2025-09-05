@@ -1,0 +1,15 @@
+configVersion: 1
+router:
+  serviceRegistry:
+    insecure: {{ .Values.router.serviceRegistry.insecure }}
+shared:
+  database:
+    type: {{ .Values.database.type }}
+    driver: {{ .Values.database.driver }}
+catalog:
+  mode: "singleTenant"
+  central:
+    url: "https://jfscatalogcentral.jfrog.io"
+  logging:
+    application:
+      level: "debug"

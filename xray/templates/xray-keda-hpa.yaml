@@ -1,3 +1,4 @@
+{{- if or (and .Values.splitXraytoSeparateDeployments.gradualUpgrade .Values.splitXraytoSeparateDeployments.ipa) (and (not .Values.splitXraytoSeparateDeployments.ipa) (not .Values.splitXraytoSeparateDeployments.fullSplit)) (and .Values.splitXraytoSeparateDeployments.gradualUpgrade .Values.splitXraytoSeparateDeployments.fullSplit) }}
 {{- if and (.Values.autoscaling.enabled) (eq .Values.autoscaling.keda.enabled true) }}
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
@@ -8,6 +9,15 @@ metadata:
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
   name: {{ template "xray.fullname" . }}
+  {{- if or .Values.global.autoscaling.keda.annotations .Values.autoscaling.keda.annotations }}
+  annotations:
+    {{- with .Values.global.autoscaling.keda.annotations }}
+{{ toYaml . | indent 4 }}
+    {{- end }}
+    {{- with .Values.autoscaling.keda.annotations }}
+{{ toYaml . | indent 4 }}
+    {{- end }}
+  {{- end }}
 spec:
   scaleTargetRef:
     kind: StatefulSet
@@ -33,4 +43,5 @@ spec:
       metricType: Utilization
       metadata:
         value: "{{ .Values.autoscaling.targetMemoryUtilizationPercentage }}"
+{{- end }}
 {{- end }}

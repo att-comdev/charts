@@ -23,8 +23,8 @@ artifactory:
         cpu: "4"
   customInitContainersBegin: |
    - name: "custom-init-begin-local"
-     image: "{{ .Values.initContainerImage }}"
-     imagePullPolicy: "{{ .Values.artifactory.image.pullPolicy }}"
+     image: {{ include "artifactory-ha.getImageInfoByValue" (list . "initContainers") }}
+     imagePullPolicy: {{ .Values.initContainers.image.pullPolicy }}
      command:
        - 'sh'
        - '-c'
@@ -34,8 +34,8 @@ artifactory:
          name: volume
   customInitContainers: |
    - name: "custom-init-local"
-     image: "{{ .Values.initContainerImage }}"
-     imagePullPolicy: "{{ .Values.artifactory.image.pullPolicy }}"
+     image: {{ include "artifactory-ha.getImageInfoByValue" (list . "initContainers") }}
+     imagePullPolicy: {{ .Values.initContainers.image.pullPolicy }}
      command:
        - 'sh'
        - '-c'
@@ -55,8 +55,8 @@ artifactory:
   # Add custom sidecar containers
   customSidecarContainers: |
    - name: "sidecar-list-local"
-     image: "{{ .Values.initContainerImage }}"
-     imagePullPolicy: "{{ .Values.artifactory.image.pullPolicy }}"
+     image: {{ include "artifactory-ha.getImageInfoByValue" (list . "initContainers") }}
+     imagePullPolicy: {{ .Values.initContainers.image.pullPolicy }}
      securityContext:
        allowPrivilegeEscalation: false
        capabilities:
@@ -76,16 +76,18 @@ artifactory:
 
 # To Fix ct tool --reuse-values - PASSWORDS ERROR: you must provide your current passwords when upgrade the release
 postgresql:
-  postgresqlPassword: password
-  persistence:
-    enabled: false
+  auth:
+    password: "password"
+  primary:
+    persistence:
+      enabled: false
 global:
   masterKey: FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
   joinKey: EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
   customInitContainersBegin: |
    - name: "custom-init-begin-global"
-     image: "{{ .Values.initContainerImage }}"
-     imagePullPolicy: "{{ .Values.artifactory.image.pullPolicy }}"
+     image: {{ include "artifactory-ha.getImageInfoByValue" (list . "initContainers") }}
+     imagePullPolicy: {{ .Values.initContainers.image.pullPolicy }}
      command:
        - 'sh'
        - '-c'
@@ -95,8 +97,8 @@ global:
          name: volume
   customInitContainers: |
    - name: "custom-init-global"
-     image: "{{ .Values.initContainerImage }}"
-     imagePullPolicy: "{{ .Values.artifactory.image.pullPolicy }}"
+     image: {{ include "artifactory-ha.getImageInfoByValue" (list . "initContainers") }}
+     imagePullPolicy: {{ .Values.initContainers.image.pullPolicy }}
      command:
        - 'sh'
        - '-c'
@@ -116,8 +118,8 @@ global:
   # Add custom sidecar containers
   customSidecarContainers: |
    - name: "sidecar-list-global"
-     image: "{{ .Values.initContainerImage }}"
-     imagePullPolicy: "{{ .Values.artifactory.image.pullPolicy }}"
+     image: {{ include "artifactory-ha.getImageInfoByValue" (list . "initContainers") }}
+     imagePullPolicy: {{ .Values.initContainers.image.pullPolicy }}
      securityContext:
        allowPrivilegeEscalation: false
        capabilities:
@@ -138,8 +140,8 @@ global:
 nginx:
   customInitContainers: |
    - name: "custom-init-begin-nginx"
-     image: "{{ .Values.initContainerImage }}"
-     imagePullPolicy: "{{ .Values.artifactory.image.pullPolicy }}"
+     image: {{ include "artifactory-ha.getImageInfoByValue" (list . "initContainers") }}
+     imagePullPolicy: {{ .Values.initContainers.image.pullPolicy }}
      command:
        - 'sh'
        - '-c'
@@ -149,8 +151,8 @@ nginx:
          name: custom-script-local
   customSidecarContainers: |
    - name: "sidecar-list-nginx"
-     image: "{{ .Values.initContainerImage }}"
-     imagePullPolicy: "{{ .Values.artifactory.image.pullPolicy }}"
+     image: {{ include "artifactory-ha.getImageInfoByValue" (list . "initContainers") }}
+     imagePullPolicy: {{ .Values.initContainers.image.pullPolicy }}
      securityContext:
        allowPrivilegeEscalation: false
        capabilities:
