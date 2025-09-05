@@ -56,32 +56,6 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
-Create a default fully qualified Replicator app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
-*/}}
-{{- define "artifactory-ha.replicator.fullname" -}}
-{{- if .Values.artifactory.replicator.ingress.name -}}
-{{- .Values.artifactory.replicator.ingress.name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-replication" .Chart.Name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Create a default fully qualified replicator tracker ingress name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
-*/}}
-{{- define "artifactory-ha.replicator.tracker.fullname" -}}
-{{- if .Values.artifactory.replicator.trackerIngress.name -}}
-{{- .Values.artifactory.replicator.trackerIngress.name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-replication-tracker" .Chart.Name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
@@ -307,41 +281,60 @@ Return the proper artifactory chart image names
 {{- define "artifactory-ha.getImageInfoByValue" -}}
 {{- $dot := index . 0 }}
 {{- $indexReference := index . 1 }}
-{{- if hasKey $dot.Values.images.tags $indexReference -}}
-    {{- printf "%s" ( index $dot.Values.images.tags $indexReference ) -}}
+{{- $registryName := index $dot.Values $indexReference "image" "registry" -}}
+{{- $repositoryName := index $dot.Values $indexReference "image" "repository" -}}
+{{- $tag := "" -}}
+{{- if and (eq $indexReference "artifactory") (hasKey $dot.Values "artifactoryService") }}
+    {{- if default false $dot.Values.artifactoryService.enabled }}
+        {{- $indexReference = "artifactoryService" -}}
+        {{- $tag = default $dot.Chart.Annotations.artifactoryServiceVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
+        {{- $repositoryName = index $dot.Values $indexReference "image" "repository" -}}
+    {{- else -}}
+        {{- $tag = default $dot.Chart.AppVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
+    {{- end -}}
 {{- else -}}
-    {{- $registryName := index $dot.Values $indexReference "image" "registry" -}}
-    {{- $repositoryName := index $dot.Values $indexReference "image" "repository" -}}
-    {{- $tag := default $dot.Chart.AppVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
-    {{- if $dot.Values.global }}
-        {{- if and $dot.Values.splitServicesToContainers $dot.Values.global.versions.router (eq $indexReference "router") }}
+    {{- $tag = default $dot.Chart.AppVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
+{{- end -}}
+{{- if and (eq $indexReference "metadata") (hasKey $dot.Values.metadata "standaloneImageEnabled") }}
+    {{- if default false $dot.Values.metadata.standaloneImageEnabled }}
+        {{- $tag = default $dot.Chart.Annotations.metadataVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
+    {{- end -}}
+{{- end -}}
+{{- if and (eq $indexReference "observability") (hasKey $dot.Values.observability "standaloneImageEnabled") }}
+    {{- if default false $dot.Values.observability.standaloneImageEnabled }}
+        {{- $tag = default $dot.Chart.Annotations.observabilityVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
+    {{- end -}}
+{{- end -}}
+{{- if $dot.Values.global }}
+    {{- if and $dot.Values.splitServicesToContainers $dot.Values.global.versions.router (eq $indexReference "router") }}
         {{- $tag = $dot.Values.global.versions.router | toString -}}
+    {{- end -}}
+    {{- if and $dot.Values.global.versions.initContainers (eq $indexReference "initContainers") }}
+        {{- $tag = $dot.Values.global.versions.initContainers | toString -}}
+    {{- end -}}
+    {{- if and $dot.Values.global.versions.rtfs (eq $indexReference "rtfs") }}
+    {{- $tag = $dot.Values.global.versions.rtfs | toString -}}
+    {{- end -}}
+    {{- if $dot.Values.global.versions.artifactory }}
+        {{- if or (eq $indexReference "artifactory") (eq $indexReference "metadata") (eq $indexReference "nginx") (eq $indexReference "observability") }}
+            {{- $tag = $dot.Values.global.versions.artifactory | toString -}}
         {{- end -}}
-        {{- if and $dot.Values.global.versions.artifactory (or (eq $indexReference "artifactory") (eq $indexReference "nginx") ) }}
-        {{- $tag = $dot.Values.global.versions.artifactory | toString -}}
-        {{- end -}}
-        {{- if $dot.Values.global.imageRegistry }}
-            {{- printf "%s/%s:%s" $dot.Values.global.imageRegistry $repositoryName $tag -}}
-        {{- else -}}
-            {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
-        {{- end -}}
+    {{- end -}}
+    {{- if $dot.Values.global.imageRegistry }}
+        {{- printf "%s/%s:%s" $dot.Values.global.imageRegistry $repositoryName $tag -}}
     {{- else -}}
         {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
     {{- end -}}
+{{- else -}}
+    {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
 {{- end -}}
 {{- end -}}
-
 
 {{/*
 Return the proper artifactory app version
 */}}
 {{- define "artifactory-ha.app.version" -}}
-{{- $tag := .Chart.AppVersion -}}
-{{- $image := (include "artifactory-ha.getImageInfoByValue" (list . "artifactory")) | toString | trunc 63 -}}
-{{- if (and (not (contains "@sha256" $image)) (contains ":" $image)) -}}
-  {{- $imageSplit := split ":" $image -}}
-  {{- $tag := $imageSplit._1 -}}
-{{- end -}}
+{{- $tag := (splitList ":" ((include "artifactory-ha.getImageInfoByValue" (list . "artifactory" )))) | last | toString -}}
 {{- printf "%s" $tag -}}
 {{- end -}}
 
@@ -387,11 +380,20 @@ Resolve requiredServiceTypes value
 {{- if .Values.jfconnect.enabled -}}
   {{- $requiredTypes = printf "%s,%s" $requiredTypes "jfcon" -}}
 {{- end -}}
-{{- if .Values.artifactory.replicator.enabled -}}
-    {{- $requiredTypes = printf "%s,%s" $requiredTypes "jfxfer" -}}
+{{- if .Values.evidence.enabled -}}
+  {{- $requiredTypes = printf "%s,%s" $requiredTypes "jfevd" -}}
+{{- end -}}
+{{- if .Values.topology.enabled -}}
+  {{- $requiredTypes = printf "%s,%s" $requiredTypes "jftpl" -}}
+{{- end -}}
+{{- if .Values.jfconfig.enabled -}}
+  {{- $requiredTypes = printf "%s,%s" $requiredTypes "jfcfg" -}}
 {{- end -}}
 {{- if .Values.mc.enabled -}}
   {{- $requiredTypes = printf "%s,%s" $requiredTypes "jfmc" -}}
+{{- end -}}
+{{- if .Values.onemodel.enabled -}}
+  {{- $requiredTypes = printf "%s,%s" $requiredTypes "jfomr" -}}
 {{- end -}}
 {{- $requiredTypes -}}
 {{- end -}}
@@ -405,6 +407,16 @@ nginx scheme (http/https)
 {{- else -}}
 {{- printf "%s" "https" -}}
 {{- end -}}
+{{- end -}}
+
+
+{{/*
+nginx command
+*/}}
+{{- define "nginx.command" -}}
+{{- if .Values.nginx.customCommand }}
+{{  toYaml .Values.nginx.customCommand }}
+{{- end }}
 {{- end -}}
 
 {{/*
@@ -489,3 +501,233 @@ nodeSelector:
 {{ toYaml .Values.nginx.nodeSelector | indent 2 }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Calculate the systemYaml from structured and unstructured text input
+*/}}
+{{- define "artifactory.finalSystemYaml" -}}
+{{ tpl (mergeOverwrite (include "artifactory.systemYaml" . | fromYaml) .Values.artifactory.extraSystemYaml | toYaml) . }}
+{{- end -}}
+
+{{/*
+Calculate the systemYaml from the unstructured text input
+*/}}
+{{- define "artifactory.systemYaml" -}}
+{{ include (print $.Template.BasePath "/_system-yaml-render.tpl") . }}
+{{- end -}}
+
+{{/*
+Metrics enabled
+*/}}
+{{- define "metrics.enabled" -}}
+  metrics:
+    enabled: true
+{{- end }}
+
+{{/*
+Resolve artifactory metrics
+*/}}
+{{- define "artifactory.metrics" -}}
+{{- if .Values.artifactory.openMetrics -}} 
+{{- if .Values.artifactory.openMetrics.enabled -}}
+{{ include "metrics.enabled" . }}
+{{- if .Values.artifactory.openMetrics.filebeat }}
+{{- if .Values.artifactory.openMetrics.filebeat.enabled }}
+{{ include "metrics.enabled" . }}
+    filebeat:
+{{ tpl (.Values.artifactory.openMetrics.filebeat | toYaml) . | indent 6 }}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- else if .Values.artifactory.metrics -}}
+{{- if .Values.artifactory.metrics.enabled -}}
+{{ include "metrics.enabled" . }}
+{{- if .Values.artifactory.metrics.filebeat }}
+{{- if .Values.artifactory.metrics.filebeat.enabled }}
+{{ include "metrics.enabled" . }}
+    filebeat:
+{{ tpl (.Values.artifactory.metrics.filebeat | toYaml) . | indent 6 }}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Resolve unified secret prepend release name
+*/}}
+{{- define "artifactory.unifiedSecretPrependReleaseName" -}}
+{{- if .Values.artifactory.unifiedSecretPrependReleaseName }}
+{{- printf "%s" (include "artifactory-ha.fullname" .) -}}
+{{- else }}
+{{- printf "%s" (include "artifactory-ha.name" .) -}}
+{{- end }}
+{{- end }}
+
+{{/*
+Resolve nginx hosts value
+*/}}
+{{- define "artifactory.nginx.hosts" -}}
+{{- if .Values.ingress.hosts }}
+{{- range .Values.ingress.hosts -}}
+  {{- if contains "." . -}}
+    {{ "" | indent 0 }} ~(?<repo>.+)\.{{ . }}
+  {{- end -}}
+{{- end -}}
+{{- else if .Values.nginx.hosts }}
+{{- range .Values.nginx.hosts -}}
+  {{- if contains "." . -}}
+    {{ "" | indent 0 }} ~(?<repo>.+)\.{{ . }}
+  {{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create a default fully qualified grpc ingress name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "artifactory.ingressGrpc.fullname" -}}
+{{- printf "%s-%s" (include "artifactory-ha.fullname" .) .Values.ingressGrpc.name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Create a default fully qualified grpc service name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "artifactory.serviceGrpc.fullname" -}}
+{{- printf "%s-%s" (include "artifactory-ha.fullname" .) .Values.artifactory.serviceGrpc.name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Resolve Artifactory autoscalling metrics
+*/}}
+{{- define "artifactory-ha.hpametrics" -}}
+{{- if .Values.autoscaling.metrics -}}
+{{- .Values.autoscaling.metrics -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create a default fully qualified app name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "rtfs.fullname" -}}
+{{- if .Values.fullnameOverride -}}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- if contains $name .Release.Name -}}
+{{- printf "%s-%s" (.Release.Name | trunc 63 | trimSuffix "-") .Values.rtfs.name -}}
+{{- else -}}
+{{- printf "%s-%s-%s" (.Release.Name | trunc 63 | trimSuffix "-") $name .Values.rtfs.name -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+
+{{/*
+    Resolve jfrogUrl value
+*/}}
+{{- define "rtfs.jfrogUrl" -}}
+{{- if .Values.global.jfrogUrl -}}
+{{- .Values.global.jfrogUrl -}}
+{{- else if .Values.rtfs.jfrogUrl -}}
+{{- .Values.rtfs.jfrogUrl -}}
+{{- else -}}
+{{- printf "http://%s:8082" (include "artifactory-ha.fullname" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Resolve RTFS customSidecarContainers value
+*/}}
+{{- define "artifactory.rtfs.customSidecarContainers" -}}
+{{- if .Values.rtfs.customSidecarContainers -}}
+{{- .Values.rtfs.customSidecarContainers -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Resolve RTFS customInitContainers value
+*/}}
+{{- define "artifactory.rtfs.customInitContainers" -}}
+{{- if .Values.rtfs.customInitContainers -}}
+{{- .Values.rtfs.customInitContainers -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Resolve customVolumes value
+*/}}
+{{- define "artifactory.rtfs.customVolumes" -}}
+{{- if .Values.rtfs.customVolumes -}}
+{{- .Values.rtfs.customVolumes -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Rtfs command
+*/}}
+{{- define "rtfs.command" -}}
+{{- if .Values.rtfs.customCommand }}
+{{  toYaml .Values.rtfs.customCommand }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Resolve customVolumeMounts rtfs value
+*/}}
+{{- define "artifactory.rtfs.customVolumeMounts" -}}
+{{- if .Values.rtfs.customVolumeMounts -}}
+{{- .Values.rtfs.customVolumeMounts -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Resolve RTFS autoscalling metrics
+*/}}
+{{- define "rtfs.metrics" -}}
+{{- if .Values.rtfs.autoscaling.metrics -}}
+{{- .Values.rtfs.autoscaling.metrics -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return true if both AWS S3 V3 identitySecret and credentialSecret are configured with non-empty values
+*/}}
+{{- define "artifactory-ha.awsS3V3SecretsConfigured" -}}
+{{- $s3 := .Values.artifactory.persistence.awsS3V3 | default dict -}}
+{{- $identity := $s3.identitySecret | default dict -}}
+{{- $credential := $s3.credentialSecret | default dict -}}
+{{- if and (kindIs "map" $identity)
+           (kindIs "map" $credential)
+           $identity.name
+           $identity.key
+           $credential.name
+           $credential.key -}}
+true
+{{- else -}}
+false
+{{- end -}}
+{{- end }}
+
+{{/*
+Return true if both Azure Blob accountNameSecret and accountKeySecret are properly configured with non-empty values
+*/}}
+{{- define "artifactory-ha.azureBlobSecretsConfigured" -}}
+{{- $blob := .Values.artifactory.persistence.azureBlob | default dict -}}
+{{- $accountNameSecret := $blob.accountNameSecret | default dict -}}
+{{- $accountKeySecret := $blob.accountKeySecret | default dict -}}
+{{- if and 
+      (kindIs "map" $accountNameSecret)
+      (kindIs "map" $accountKeySecret)
+      $accountNameSecret.name
+      $accountNameSecret.key
+      $accountKeySecret.name
+      $accountKeySecret.key -}}
+true
+{{- else -}}
+false
+{{- end -}}
+{{- end }}

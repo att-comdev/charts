@@ -1,0 +1,39 @@
+{{- if and  (not .Values.splitXraytoSeparateDeployments.gradualUpgrade)  .Values.splitXraytoSeparateDeployments.ipa (not .Values.splitXraytoSeparateDeployments.fullSplit) }}
+{{- if and (.Values.autoscalingIpa.enabled) (eq .Values.autoscalingIpa.keda.enabled true) }}
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  labels:
+    app: {{ template "xray.name" . }}
+    chart: {{ template "xray.chart" . }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+  name: {{ template "xray.fullname" . }}-ipa
+  {{- if or .Values.global.autoscaling.keda.annotations .Values.autoscalingIpa.keda.annotations }}
+  annotations:
+    {{- with .Values.global.autoscaling.keda.annotations }}
+{{ toYaml . | indent 4 }}
+    {{- end }}
+    {{- with .Values.autoscalingIpa.keda.annotations }}
+{{ toYaml . | indent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: {{ template "xray.fullname" . }}-ipa
+  minReplicaCount: {{ .Values.autoscalingIpa.minReplicas }}
+  maxReplicaCount: {{ .Values.autoscalingIpa.maxReplicas }}
+  pollingInterval: {{ .Values.autoscalingIpa.keda.pollingInterval }}
+  cooldownPeriod: {{ .Values.autoscalingIpa.keda.cooldownPeriod }}
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+        {{- .Values.autoscalingIpa.keda.scaleUp | toYaml | nindent 10 }}
+        scaleDown:
+        {{- .Values.autoscalingIpa.keda.scaleDown | toYaml | nindent 10 }}
+  triggers:
+  {{- include "xray.autoscalingQueuesIpa" . | indent 4 }}
+{{- end }}
+{{- end }}

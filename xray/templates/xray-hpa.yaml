@@ -1,3 +1,4 @@
+{{- if or (and .Values.splitXraytoSeparateDeployments.gradualUpgrade .Values.splitXraytoSeparateDeployments.ipa) (and (not .Values.splitXraytoSeparateDeployments.ipa) (not .Values.splitXraytoSeparateDeployments.fullSplit)) (and .Values.splitXraytoSeparateDeployments.gradualUpgrade .Values.splitXraytoSeparateDeployments.fullSplit) }}
 {{- if and (.Values.autoscaling.enabled) (eq .Values.autoscaling.keda.enabled  false) }}
   {{- if semverCompare ">=v1.23.0-0" .Capabilities.KubeVersion.Version }}
 apiVersion: autoscaling/v2
@@ -26,4 +27,11 @@ spec:
         target:
           type: Utilization
           averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
+{{- end }}
 {{- end }}
