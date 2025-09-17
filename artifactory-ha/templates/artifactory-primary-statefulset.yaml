@@ -1,7 +1,11 @@
+{{- $serviceName := include "artifactory-ha.primary.name" . -}}
+{{- $serviceAccountName := $serviceName | replace "_" "-" }}
+{{ tuple . "artifactory" $serviceAccountName | include "helm-toolkit.snippets.kubernetes_pod_rbac_serviceaccount" }}
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "artifactory-ha.primary.name" . }}
+  name: {{ $serviceName }}
   labels:
     app: {{ template "artifactory-ha.name" . }}
     chart: {{ template "artifactory-ha.chart" . }}
@@ -58,20 +62,20 @@ metadata:
 {{ toYaml . | indent 4 }}
 {{- end }}
 spec:
-  serviceName: {{ template "artifactory-ha.primary.name" . }}
+  serviceName: {{ $serviceName }}
   replicas: {{ .Values.artifactory.primary.replicaCount }}
   updateStrategy: {{- toYaml .Values.artifactory.primary.updateStrategy | nindent 4}}
   selector:
     matchLabels:
       app: {{ template "artifactory-ha.name" . }}
-      role: {{ template "artifactory-ha.primary.name" . }}
+      role: {{ $serviceName }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
         app: {{ template "artifactory-ha.name" . }}
         chart: {{ template "artifactory-ha.chart" . }}
-        role: {{ template "artifactory-ha.primary.name" . }}
+        role: {{ $serviceName }}
         component: {{ .Values.artifactory.name }}
         heritage: {{ .Release.Service }}
         release: {{ .Release.Name }}
@@ -109,7 +113,7 @@ spec:
       priorityClassName: {{ default (include "artifactory-ha.fullname" .) .Values.artifactory.priorityClass.name }}
       {{- end }}
     {{- end }}
-      serviceAccountName: {{ template "artifactory-ha.serviceAccountName" . }}
+      serviceAccountName: {{ $serviceAccountName }}
       terminationGracePeriodSeconds: {{ add .Values.artifactory.terminationGracePeriodSeconds 10 }}
     {{- if or .Values.imagePullSecrets .Values.global.imagePullSecrets }}
 {{- include "artifactory-ha.imagePullSecrets" . | indent 6 }}
@@ -122,6 +126,7 @@ spec:
 {{ tpl (toYaml .Values.artifactory.topologySpreadConstraints) . | indent 8 }}
       {{- end }}
       initContainers:
+{{ tuple . "artifactory" list | include "helm-toolkit.snippets.kubernetes_entrypoint_init_container" | indent 6 }}
     {{- if or .Values.artifactory.customInitContainersBegin .Values.global.customInitContainersBegin }}
 {{ tpl (include "artifactory-ha.customInitContainersBegin" .)  . | indent 6 }}
     {{- end }}
@@ -512,7 +517,7 @@ spec:
         - >
           {{- if .Values.artifactory.migration.preStartCommand }}
           echo "Running custom preStartCommand command";
-          {{ tpl .Values.artifactory.migration.preStartCommand . }};
+          {{ tpl .Values.artifactory.migration.preStartCommand . | indent 10 }};
           {{- end }}
           scriptsPath="/opt/jfrog/artifactory/app/bin";
           mkdir -p $scriptsPath;
@@ -1337,7 +1342,7 @@ spec:
           mountPath: {{ .Values.observability.persistence.mountPath | quote }}
           {{- else }}
           mountPath: {{ .Values.artifactory.persistence.mountPath | quote }}
-          {{- end }}        
+          {{- end }}
         resources:
 {{ toYaml .Values.observability.resources | indent 10 }}
       {{- if .Values.observability.startupProbe.enabled }}
@@ -1367,7 +1372,7 @@ spec:
           set -e;
           {{- if .Values.access.preStartCommand }}
           echo "Running custom preStartCommand command";
-          {{ tpl .Values.access.preStartCommand . }};
+          {{ tpl .Values.access.preStartCommand . | indent 10 }};
           {{- end }}
           exec /opt/jfrog/artifactory/app/access/bin/entrypoint-access.sh
         {{- with .Values.access.lifecycle }}
@@ -1514,7 +1519,7 @@ spec:
         startupProbe:
 {{ tpl .Values.access.startupProbe.config . | indent 10 }}
         {{- end }}
-    {{- if semverCompare "<v1.20.0-0" .Capabilities.KubeVersion.Version }}   
+    {{- if semverCompare "<v1.20.0-0" .Capabilities.KubeVersion.Version }}
         {{- if .Values.access.readinessProbe.enabled }}
         readinessProbe:
 {{ tpl .Values.access.readinessProbe.config . | indent 10 }}
@@ -1557,11 +1562,11 @@ spec:
         {{- end }}
         {{- with .Values.artifactory.preStartCommand }}
           echo "Running custom preStartCommand command";
-          {{ tpl . $ }};
+          {{ tpl . $ | indent 10 }};
         {{- end }}
         {{- with .Values.artifactory.primary.preStartCommand }}
           echo "Running primary specific custom preStartCommand command";
-          {{ tpl . $ }};
+          {{ tpl . $ | indent 10 }};
         {{- end }}
           exec /entrypoint-artifactory.sh
         {{- with .Values.artifactory.lifecycle }}
@@ -2084,7 +2089,7 @@ spec:
       {{- if and (not .Values.systemYamlOverride.existingSecret) }}
       - name: systemyaml
         secret:
-          secretName: {{ template "artifactory-ha.primary.name" . }}-system-yaml
+          secretName: {{ $serviceName }}-system-yaml
       {{- end }}
       {{- if and (eq (include "artifactory-ha.awsS3V3SecretsConfigured" .) "true") (not .Values.artifactory.persistence.customBinarystoreXmlSecret) }}
         {{- with .Values.artifactory.persistence.awsS3V3.identitySecret }}

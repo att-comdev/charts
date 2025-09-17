@@ -1,10 +1,9 @@
 apiVersion: v2
 appVersion: 2.33.2
 dependencies:
-- condition: postgresql.enabled
-  name: postgresql
-  repository: https://charts.jfrog.io/
-  version: 15.5.20
+- name: helm-toolkit
+  repository: file://../deps/helm-toolkit
+  version: ">= 0.1.0"
 description: A Helm chart for JFrog Distribution
 home: https://jfrog.com/distribution/
 icon: https://raw.githubusercontent.com/jfrog/charts/master/stable/distribution/logo/distribution-logo.png

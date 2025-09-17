@@ -5,10 +5,9 @@ annotations:
 apiVersion: v2
 appVersion: 7.117.15
 dependencies:
-- condition: postgresql.enabled
-  name: postgresql
-  repository: https://charts.jfrog.io/
-  version: 15.5.20
+- name: helm-toolkit
+  repository: file://../deps/helm-toolkit
+  version: ">= 0.1.0"
 description: Universal Repository Manager supporting all major packaging formats,
   build tools and CI servers.
 home: https://www.jfrog.com/artifactory/
