@@ -133,7 +133,7 @@ spec:
           ready=false;
           while ! $ready; do echo Primary not ready. Waiting...;
             timeout 2s bash -c "</dev/tcp/{{ template "artifactory-ha.primary.name" . }}/{{ .Values.artifactory.externalPort }}"; exit_status=$?;
-            if [[ $exit_status -eq 0 ]]; then ready=true; echo "Primary node ready!"; fi; sleep 3; 
+            if [[ $exit_status -eq 0 ]]; then ready=true; echo "Primary node ready!"; fi; sleep 3;
           done
           {{- end }}
         resources:
@@ -347,7 +347,7 @@ spec:
           ready=false;
           while ! $ready; do echo waiting;
             timeout 2s bash -c "</dev/tcp/{{ .Release.Name }}-postgresql/{{ .Values.postgresql.primary.service.ports.postgresql }}"; exit_status=$?;
-            if [[ $exit_status -eq 0 ]]; then ready=true; echo "database ok"; fi; sleep 1; 
+            if [[ $exit_status -eq 0 ]]; then ready=true; echo "database ok"; fi; sleep 1;
           done
         resources:
 {{ toYaml .Values.initContainers.resources | indent 10 }}
@@ -877,7 +877,7 @@ spec:
           mountPath: {{ .Values.artifactory.customPersistentVolumeClaim.mountPath }}
        {{- end }}
         - name: volume
-          mountPath: {{ .Values.artifactory.persistence.mountPath | quote }}        
+          mountPath: {{ .Values.artifactory.persistence.mountPath | quote }}
         resources:
 {{ toYaml .Values.event.resources | indent 10 }}
       {{- if .Values.event.startupProbe.enabled }}
@@ -1351,7 +1351,7 @@ spec:
         startupProbe:
 {{ tpl .Values.access.startupProbe.config . | indent 10 }}
         {{- end }}
-    {{- if semverCompare "<v1.20.0-0" .Capabilities.KubeVersion.Version }}   
+    {{- if semverCompare "<v1.20.0-0" .Capabilities.KubeVersion.Version }}
         {{- if .Values.access.readinessProbe.enabled }}
         readinessProbe:
 {{ tpl .Values.access.readinessProbe.config . | indent 10 }}
@@ -1382,7 +1382,7 @@ spec:
         {{- end }}
         {{- if .Values.artifactory.preStartCommand }}
           echo "Running custom preStartCommand command";
-          {{ tpl .Values.artifactory.preStartCommand . }};
+          {{ tpl .Values.artifactory.preStartCommand . | indent 10}};
         {{- end }}
         {{- with .Values.artifactory.node.preStartCommand }}
           echo "Running member node specific custom preStartCommand command";
