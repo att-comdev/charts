@@ -205,26 +205,30 @@ Return the proper distribution chart image names
 {{- define "distribution.getImageInfoByValue" -}}
 {{- $dot := index . 0 }}
 {{- $indexReference := index . 1 }}
-{{- $registryName := index $dot.Values $indexReference "image" "registry" -}}
-{{- $repositoryName := index $dot.Values $indexReference "image" "repository" -}}
-{{- $tag := default $dot.Chart.AppVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
-{{- if $dot.Values.global }}
-    {{- if and $dot.Values.global.versions.router (eq $indexReference "router") }}
-    {{- $tag = $dot.Values.global.versions.router | toString -}}
-    {{- end -}}
-    {{- if and $dot.Values.global.versions.initContainers (eq $indexReference "initContainers") }}
-    {{- $tag = $dot.Values.global.versions.initContainers | toString -}}
-    {{- end -}}
-    {{- if and $dot.Values.global.versions.distribution (eq $indexReference "distribution") }}
-    {{- $tag = $dot.Values.global.versions.distribution | toString -}}
-    {{- end -}}
-    {{- if $dot.Values.global.imageRegistry }}
-        {{- printf "%s/%s:%s" $dot.Values.global.imageRegistry $repositoryName $tag -}}
+{{- if hasKey $dot.Values.images.tags $indexReference -}}
+    {{- printf "%s" ( index $dot.Values.images.tags $indexReference ) -}}
+{{- else -}}
+    {{- $registryName := index $dot.Values $indexReference "image" "registry" -}}
+    {{- $repositoryName := index $dot.Values $indexReference "image" "repository" -}}
+    {{- $tag := default $dot.Chart.AppVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
+    {{- if $dot.Values.global }}
+        {{- if and $dot.Values.global.versions.router (eq $indexReference "router") }}
+        {{- $tag = $dot.Values.global.versions.router | toString -}}
+        {{- end -}}
+        {{- if and $dot.Values.global.versions.initContainers (eq $indexReference "initContainers") }}
+        {{- $tag = $dot.Values.global.versions.initContainers | toString -}}
+        {{- end -}}
+        {{- if and $dot.Values.global.versions.distribution (eq $indexReference "distribution") }}
+        {{- $tag = $dot.Values.global.versions.distribution | toString -}}
+        {{- end -}}
+        {{- if $dot.Values.global.imageRegistry }}
+            {{- printf "%s/%s:%s" $dot.Values.global.imageRegistry $repositoryName $tag -}}
+        {{- else -}}
+            {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
+        {{- end -}}
     {{- else -}}
         {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
     {{- end -}}
-{{- else -}}
-    {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
 {{- end -}}
 {{- end -}}
 
@@ -311,4 +315,3 @@ Resolve autoscalling metrics value
 {{- .Values.autoscaling.metrics -}}
 {{- end -}}
 {{- end -}}
-

@@ -63,6 +63,24 @@ initContainers:
 imagePullSecrets:
 # - myRegistryKeySecretName
 
+images:
+  tags:
+    dep_check: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
+  local_registry:
+    active: false
+dependencies:
+  static:
+    distribution:
+      services:
+        - endpoint: internal
+          service: artifactory
+endpoints:
+  artifactory:
+    hosts:
+      default: artifactory-ha
+manifests:
+  job_rabbit_init: false
+
 ## Distribution systemYaml override
 ## This is for advanced usecases where users wants to provide their own systemYaml for configuring distribution
 ## Refer - https://www.jfrog.com/confluence/display/JFROG/Distribution+System+YAML
