@@ -1,18 +1,9 @@
 apiVersion: v2
 appVersion: 3.124.21
 dependencies:
-- condition: postgresql.enabled
-  name: postgresql
-  repository: https://charts.jfrog.io/
-  version: 15.5.20
-- condition: rabbitmq.enabled
-  name: rabbitmq
-  repository: https://charts.jfrog.io/
-  version: 15.4.1
-- condition: catalog.enabled
-  name: catalog
-  repository: https://charts.jfrog.io/
-  version: 101.22.5
+- name: helm-toolkit
+  repository: file://../deps/helm-toolkit
+  version: ">= 0.1.0"
 description: Universal component scan for security and license inventory and impact
   analysis
 home: https://www.jfrog.com/xray/

@@ -124,7 +124,7 @@ spec:
       {{- end }}
       containers:
         - name: pre-upgrade-container
-          image: "{{ include "xray.getRegistryByService" (list . "migrationHook") }}/{{ .Values.rabbitmq.migration.image.repository }}:{{ .Values.rabbitmq.migration.image.tag }}"
+          image:  {{ include "xray.getImageInfoByValue" (list . "rabbitmq_migration") }}
           imagePullPolicy: IfNotPresent
           {{- if .Values.rabbitmq.resources }}
           resources:
@@ -180,7 +180,7 @@ spec:
 
             {{- if and .Values.global.xray.rabbitmq.haQuorum.enabled .Values.rabbitmq.migration.removeHaPolicyOnMigrationToHaQuorum.enabled }}
             for (( i=1; i<=6; i++ ))
-            do 
+            do
               if [ "$rabbitMqZeroPodStatus" = "True" ]; then
                 break
               fi
@@ -194,7 +194,7 @@ spec:
             fi
             policyExists=$(kubectl exec -i $rabbitMqZeroPodName -n {{ .Release.Namespace }} -- bash -c "rabbitmqctl list_policies --formatter json | grep -o "'"\"name\":\"ha-all\""'" | wc -l | tr -d '[:space:]'")
             if [ "$?" -ne 0 ]; then
-              echo "Failed to check if policy ha-all exists on default vhost" 
+              echo "Failed to check if policy ha-all exists on default vhost"
               exit 1
             fi
             echo "Policy ha-all exists: $policyExists"
@@ -208,12 +208,12 @@ spec:
               fi
             fi
             {{- end }}
-            
+
             {{- if .Values.rabbitmq.migration.enabled }}
             if [ "$rabbitMqZeroPodStatus" = "True" ]; then
                 kubectl exec -i $rabbitMqZeroPodName -n {{ .Release.Namespace }} -- rabbitmqctl enable_feature_flag all
                 if [ "$?" -ne 0 ]; then
-                    echo "Failed to perform the migration. Please make sure to enable the feature flag in rabbitmq manually [rabbitmqctl enable_feature_flag all] " 
+                    echo "Failed to perform the migration. Please make sure to enable the feature flag in rabbitmq manually [rabbitmqctl enable_feature_flag all] "
                     exit 1
                 else
                     echo Feature flags executed successfully!
@@ -222,7 +222,7 @@ spec:
                 echo "Rabbitmq zero pod is not in running state. Ignoring feature flag migration for rabbitmq"
             fi
             {{- end }}
-            
+
             {{- if .Values.rabbitmq.migration.deleteStatefulSetToAllowFieldUpdate.enabled }}
             # Checking whether RMQ sts exist as we delete it with --cascade=orphan during upgrade
             # If it exists proceed with the deletion and update the podManagementPolicy field
@@ -300,7 +300,7 @@ spec:
       {{- end }}
       containers:
         - name: post-upgrade-container
-          image: "{{ include "xray.getRegistryByService" (list . "migrationHook") }}/{{ .Values.rabbitmq.migration.image.repository }}:{{ .Values.rabbitmq.migration.image.tag }}"
+          image:  {{ include "xray.getImageInfoByValue" (list . "rabbitmq_migration") }}
           imagePullPolicy: IfNotPresent
           {{- if .Values.rabbitmq.resources }}
           resources:

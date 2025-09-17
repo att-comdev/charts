@@ -281,52 +281,56 @@ Return the proper artifactory chart image names
 {{- define "artifactory-ha.getImageInfoByValue" -}}
 {{- $dot := index . 0 }}
 {{- $indexReference := index . 1 }}
-{{- $registryName := index $dot.Values $indexReference "image" "registry" -}}
-{{- $repositoryName := index $dot.Values $indexReference "image" "repository" -}}
-{{- $tag := "" -}}
-{{- if and (eq $indexReference "artifactory") (hasKey $dot.Values "artifactoryService") }}
-    {{- if default false $dot.Values.artifactoryService.enabled }}
-        {{- $indexReference = "artifactoryService" -}}
-        {{- $tag = default $dot.Chart.Annotations.artifactoryServiceVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
-        {{- $repositoryName = index $dot.Values $indexReference "image" "repository" -}}
+{{- if hasKey $dot.Values.images.tags $indexReference -}}
+    {{- printf "%s" ( index $dot.Values.images.tags $indexReference ) -}}
+{{- else -}}
+    {{- $registryName := index $dot.Values $indexReference "image" "registry" -}}
+    {{- $repositoryName := index $dot.Values $indexReference "image" "repository" -}}
+    {{- $tag := "" -}}
+    {{- if and (eq $indexReference "artifactory") (hasKey $dot.Values "artifactoryService") }}
+        {{- if default false $dot.Values.artifactoryService.enabled }}
+            {{- $indexReference = "artifactoryService" -}}
+            {{- $tag = default $dot.Chart.Annotations.artifactoryServiceVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
+            {{- $repositoryName = index $dot.Values $indexReference "image" "repository" -}}
+        {{- else -}}
+            {{- $tag = default $dot.Chart.AppVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
+        {{- end -}}
     {{- else -}}
         {{- $tag = default $dot.Chart.AppVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
     {{- end -}}
-{{- else -}}
-    {{- $tag = default $dot.Chart.AppVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
-{{- end -}}
-{{- if and (eq $indexReference "metadata") (hasKey $dot.Values.metadata "standaloneImageEnabled") }}
-    {{- if default false $dot.Values.metadata.standaloneImageEnabled }}
-        {{- $tag = default $dot.Chart.Annotations.metadataVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
-    {{- end -}}
-{{- end -}}
-{{- if and (eq $indexReference "observability") (hasKey $dot.Values.observability "standaloneImageEnabled") }}
-    {{- if default false $dot.Values.observability.standaloneImageEnabled }}
-        {{- $tag = default $dot.Chart.Annotations.observabilityVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
-    {{- end -}}
-{{- end -}}
-{{- if $dot.Values.global }}
-    {{- if and $dot.Values.splitServicesToContainers $dot.Values.global.versions.router (eq $indexReference "router") }}
-        {{- $tag = $dot.Values.global.versions.router | toString -}}
-    {{- end -}}
-    {{- if and $dot.Values.global.versions.initContainers (eq $indexReference "initContainers") }}
-        {{- $tag = $dot.Values.global.versions.initContainers | toString -}}
-    {{- end -}}
-    {{- if and $dot.Values.global.versions.rtfs (eq $indexReference "rtfs") }}
-    {{- $tag = $dot.Values.global.versions.rtfs | toString -}}
-    {{- end -}}
-    {{- if $dot.Values.global.versions.artifactory }}
-        {{- if or (eq $indexReference "artifactory") (eq $indexReference "metadata") (eq $indexReference "nginx") (eq $indexReference "observability") }}
-            {{- $tag = $dot.Values.global.versions.artifactory | toString -}}
+    {{- if and (eq $indexReference "metadata") (hasKey $dot.Values.metadata "standaloneImageEnabled") }}
+        {{- if default false $dot.Values.metadata.standaloneImageEnabled }}
+            {{- $tag = default $dot.Chart.Annotations.metadataVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
         {{- end -}}
     {{- end -}}
-    {{- if $dot.Values.global.imageRegistry }}
-        {{- printf "%s/%s:%s" $dot.Values.global.imageRegistry $repositoryName $tag -}}
+    {{- if and (eq $indexReference "observability") (hasKey $dot.Values.observability "standaloneImageEnabled") }}
+        {{- if default false $dot.Values.observability.standaloneImageEnabled }}
+            {{- $tag = default $dot.Chart.Annotations.observabilityVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
+        {{- end -}}
+    {{- end -}}
+    {{- if $dot.Values.global }}
+        {{- if and $dot.Values.splitServicesToContainers $dot.Values.global.versions.router (eq $indexReference "router") }}
+            {{- $tag = $dot.Values.global.versions.router | toString -}}
+        {{- end -}}
+        {{- if and $dot.Values.global.versions.initContainers (eq $indexReference "initContainers") }}
+            {{- $tag = $dot.Values.global.versions.initContainers | toString -}}
+        {{- end -}}
+        {{- if and $dot.Values.global.versions.rtfs (eq $indexReference "rtfs") }}
+        {{- $tag = $dot.Values.global.versions.rtfs | toString -}}
+        {{- end -}}
+        {{- if $dot.Values.global.versions.artifactory }}
+            {{- if or (eq $indexReference "artifactory") (eq $indexReference "metadata") (eq $indexReference "nginx") (eq $indexReference "observability") }}
+                {{- $tag = $dot.Values.global.versions.artifactory | toString -}}
+            {{- end -}}
+        {{- end -}}
+        {{- if $dot.Values.global.imageRegistry }}
+            {{- printf "%s/%s:%s" $dot.Values.global.imageRegistry $repositoryName $tag -}}
+        {{- else -}}
+            {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
+        {{- end -}}
     {{- else -}}
         {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
     {{- end -}}
-{{- else -}}
-    {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
 {{- end -}}
 {{- end -}}
 
@@ -334,7 +338,12 @@ Return the proper artifactory chart image names
 Return the proper artifactory app version
 */}}
 {{- define "artifactory-ha.app.version" -}}
-{{- $tag := (splitList ":" ((include "artifactory-ha.getImageInfoByValue" (list . "artifactory" )))) | last | toString -}}
+{{- $tag := .Chart.AppVersion -}}
+{{- $image := (include "artifactory-ha.getImageInfoByValue" (list . "artifactory")) | toString | trunc 63 -}}
+{{- if (and (not (contains "@sha256" $image)) (contains ":" $image)) -}}
+  {{- $imageSplit := split ":" $image -}}
+  {{- $tag := $imageSplit._1 -}}
+{{- end -}}
 {{- printf "%s" $tag -}}
 {{- end -}}
 
@@ -528,7 +537,7 @@ Metrics enabled
 Resolve artifactory metrics
 */}}
 {{- define "artifactory.metrics" -}}
-{{- if .Values.artifactory.openMetrics -}} 
+{{- if .Values.artifactory.openMetrics -}}
 {{- if .Values.artifactory.openMetrics.enabled -}}
 {{ include "metrics.enabled" . }}
 {{- if .Values.artifactory.openMetrics.filebeat }}
@@ -719,7 +728,7 @@ Return true if both Azure Blob accountNameSecret and accountKeySecret are proper
 {{- $blob := .Values.artifactory.persistence.azureBlob | default dict -}}
 {{- $accountNameSecret := $blob.accountNameSecret | default dict -}}
 {{- $accountKeySecret := $blob.accountKeySecret | default dict -}}
-{{- if and 
+{{- if and
       (kindIs "map" $accountNameSecret)
       (kindIs "map" $accountKeySecret)
       $accountNameSecret.name
