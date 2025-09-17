@@ -1,7 +1,11 @@
+{{- $serviceName := include "distribution.fullname" . -}}
+{{- $serviceAccountName := $serviceName | replace "_" "-" }}
+{{ tuple . "distribution" $serviceAccountName | include "helm-toolkit.snippets.kubernetes_pod_rbac_serviceaccount" }}
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "distribution.fullname" . }}
+  name: {{ $serviceName }}
   labels:
     app: {{ template "distribution.name" . }}
     chart: {{ template "distribution.chart" . }}
@@ -23,7 +27,7 @@ metadata:
 {{ toYaml . | indent 4 }}
 {{- end }}
 spec:
-  serviceName: {{ template "distribution.fullname" . }}-headless
+  serviceName: {{ $serviceName }}-headless
   replicas: {{ .Values.replicaCount }}
   updateStrategy:
     type: RollingUpdate
@@ -64,7 +68,7 @@ spec:
       priorityClassName: {{ default (include "distribution.fullname" .) .Values.distribution.priorityClass.name }}
       {{- end }}
     {{- end }}
-      serviceAccountName: {{ template "distribution.serviceAccountName" . }}
+      serviceAccountName: {{ $serviceAccountName }}
     {{- if or .Values.imagePullSecrets .Values.global.imagePullSecrets }}
 {{- include "distribution.imagePullSecrets" . | indent 6 }}
     {{- end }}
@@ -76,6 +80,7 @@ spec:
 {{ tpl (toYaml .Values.common.topologySpreadConstraints) . | indent 8 }}
       {{- end }}
       initContainers:
+{{ tuple . "distribution" list | include "helm-toolkit.snippets.kubernetes_entrypoint_init_container" | indent 6 }}
     {{- if or .Values.common.customInitContainersBegin .Values.global.customInitContainersBegin }}
 {{ tpl (include "distribution.customInitContainersBegin" .)  . | indent 6 }}
     {{- end }}
@@ -201,7 +206,7 @@ spec:
           ready=false;
           while ! $ready; do echo waiting;
             timeout 2s bash -c "</dev/tcp/{{ .Release.Name }}-postgresql/{{ .Values.postgresql.primary.service.ports.postgresql }}"; exit_status=$?;
-            if [[ $exit_status -eq 0 ]]; then ready=true; echo "database ok"; fi; sleep 1; 
+            if [[ $exit_status -eq 0 ]]; then ready=true; echo "database ok"; fi; sleep 1;
           done
       {{- end }}
   {{- end }}
