@@ -13,12 +13,15 @@ Return the proper image name
 {{- $repositoryName := .imageRoot.repository -}}
 {{- $separator := ":" -}}
 {{- $termination := .imageRoot.tag | toString -}}
+{{- $fullName := .imageRoot.fullName -}}
 
 {{- if .imageRoot.digest }}
     {{- $separator = "@" -}}
     {{- $termination = .imageRoot.digest | toString -}}
 {{- end -}}
-{{- if $registryName }}
+{{- if $fullName -}}
+    {{- printf "%s" $fullName -}}
+{{- else if $registryName }}
     {{- printf "%s/%s%s%s" $registryName $repositoryName $separator $termination -}}
 {{- else -}}
     {{- printf "%s%s%s"  $repositoryName $separator $termination -}}
@@ -106,4 +109,3 @@ Return the proper image version (ingores image revision/prerelease info & fallba
     {{- print .chart.AppVersion -}}
 {{- end -}}
 {{- end -}}
-

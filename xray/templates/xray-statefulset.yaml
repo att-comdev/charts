@@ -1,8 +1,12 @@
 {{- if or (and .Values.splitXraytoSeparateDeployments.gradualUpgrade .Values.splitXraytoSeparateDeployments.ipa) (and (not .Values.splitXraytoSeparateDeployments.ipa) (not .Values.splitXraytoSeparateDeployments.fullSplit)) (and .Values.splitXraytoSeparateDeployments.gradualUpgrade .Values.splitXraytoSeparateDeployments.fullSplit) }}
+{{- $serviceName := include "xray.fullname" . -}}
+{{- $serviceAccountName := $serviceName | replace "_" "-" }}
+{{ tuple . "xray" $serviceAccountName | include "helm-toolkit.snippets.kubernetes_pod_rbac_serviceaccount" }}
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "xray.fullname" . }}
+  name: {{ $serviceName }}
   labels:
     app: {{ template "xray.name" . }}
     chart: {{ template "xray.chart" . }}
@@ -90,7 +94,7 @@ spec:
       priorityClassName: {{ default (include "xray.fullname" .) .Values.xray.priorityClass.name }}
       {{- end }}
     {{- end }}
-      serviceAccountName: {{ template "xray.serviceAccountName" . }}
+      serviceAccountName: {{ $serviceAccountName }}
       {{- if .Values.podSecurityContext.enabled }}
       securityContext: {{- omit .Values.podSecurityContext "enabled" | toYaml | nindent 8 }}
       {{- end }}
@@ -99,6 +103,7 @@ spec:
 {{ tpl (toYaml .Values.common.topologySpreadConstraints) . | indent 8 }}
       {{- end }}
       initContainers:
+{{ tuple . "xray" list | include "helm-toolkit.snippets.kubernetes_entrypoint_init_container" | indent 6 }}
     {{- if or .Values.common.customInitContainersBegin .Values.global.customInitContainersBegin }}
 {{ tpl (include "xray.customInitContainersBegin" .) . | indent 6 }}
     {{- end }}
@@ -272,7 +277,7 @@ spec:
           ready=false;
           while ! $ready; do echo waiting;
             timeout 2s bash -c "</dev/tcp/{{ .Release.Name }}-postgresql/{{ .Values.postgresql.primary.service.ports.postgresql }}"; exit_status=$?;
-            if [[ $exit_status -eq 0 ]]; then ready=true; echo "database ok"; fi; sleep 1; 
+            if [[ $exit_status -eq 0 ]]; then ready=true; echo "database ok"; fi; sleep 1;
           done
       {{- end }}
   {{- end }}
@@ -310,7 +315,7 @@ spec:
             echo $nodesNum
             quorumSize=$(( $JF_SHARED_RABBITMQ_REPLICASCOUNT/2 + 1 ))
             echo $quorumSize
-            if [[ "$nodesNum" -ge "$quorumSize" ]]; then ready=true; echo "rabbitmq ok"; fi; sleep 5; 
+            if [[ "$nodesNum" -ge "$quorumSize" ]]; then ready=true; echo "rabbitmq ok"; fi; sleep 5;
           done
         env:
       {{- if eq (include "xray.rabbitmq.isManagementListenerTlsEnabled" .) "true" }}
