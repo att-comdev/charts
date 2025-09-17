@@ -97,6 +97,170 @@ rbac:
           - get
           - watch
           - list
+
+labels:
+  job:
+    node_selector_key: openstack-control-plane
+    node_selector_value: enabled
+
+images:
+  tags:
+    dep_check: 'quay.io/airshipit/kubernetes-entrypoint:v1.0.0'
+  local_registry:
+    active: false
+    exclude:
+      - dep_check
+      - image_repo_sync
+
+dependencies:
+  dynamic:
+    common:
+      local_image_registry:
+        jobs:
+          - artifactory-image-repo-sync
+        services:
+          - endpoint: node
+            service: local_image_registry
+  static:
+    artifactory:
+      jobs:
+        - artifactory-db-init
+      services:
+        - endpoint: internal
+          service: oslo_db
+    db_init:
+      services:
+        - endpoint: internal
+          service: oslo_db
+    mariadb_collate:
+      jobs:
+        - artifactory-db-init
+      services:
+        - endpoint: internal
+          service: oslo_db
+    s3_user:
+      services:
+        - endpoint: internal
+          service: ceph_object_store
+    s3_bucket:
+      jobs:
+        - artifactory-s3-user
+secrets:
+  rgw:
+    admin: radosgw-s3-admin-creds
+    artifactory: artifactory-s3-user-creds
+  oslo_db:
+    admin: artifactory-db-admin
+    artifactory: artifactory-db-user
+  tls:
+    artifactory:
+      artifactory:
+        public: artifactory-tls-public
+manifests:
+  job_rabbit_init: false
+endpoints:
+  cluster_domain_suffix: cluster.local
+  artifactory:
+    host_fqdn_override:
+      default: null
+    # NOTE(SaiBattina): this chart supports TLS for fqdn over-ridden public
+    # endpoints using the following format:
+    #   public:
+    #     host: artifactory.domain.example
+    #     tls:
+    #       crt: null
+    #       key: null
+    #       ca: null
+  oslo_db:
+    namespace: null
+    auth:
+      admin:
+        username: root
+        password: password
+      artifactory:
+        username: artifactory
+        password: password
+    hosts:
+      default: mariadb
+    host_fqdn_override:
+      default: null
+    path: /artifactory
+    scheme: mysql+pymysql
+    port:
+      mysql:
+        default: 3306
+  ceph_object_store:
+    name: radosgw
+    namespace: null
+    auth:
+      artifactory:
+        username: artifactory
+        access_key: "art_access_key"
+        secret_key: "art_secret_key"
+      admin:
+        username: s3_admin
+        access_key: "admin_access_key"
+        secret_key: "admin_secret_key"
+    hosts:
+      default: ceph-rgw
+      public: radosgw
+    host_fqdn_override:
+      default: null
+    path:
+      default: null
+    scheme:
+      default: http
+    endpoint: http://ceph-rgw.openstack.svc.cluster.local
+    https: false
+    port:
+      api:
+        default: 8088
+        public: 80
+
+conf:
+  artifactory:
+    snapshots:
+      enabled: true
+      # NOTE: The path for the radosgw s3 endpoint gets populated
+      # dynamically with this value to ensure the bucket name and s3 compatible
+      # radosgw endpoint/path match
+      bucket: artifactory_bucket
+      repositories:
+        logstash:
+          name: logstash_snapshots
+  ceph:
+    radosgw:
+      s3_admin_caps: "users=*;buckets=*;zone=*"
+    monitors: []
+    admin_keyring: null
+    override:
+    append:
+
+pod:
+  resources:
+    jobs:
+      storage_init:
+        requests:
+          memory: "128Mi"
+          cpu: "100m"
+        limits:
+          memory: "1024Mi"
+          cpu: "2000m"
+      s3_bucket:
+        requests:
+          memory: "128Mi"
+          cpu: "100m"
+        limits:
+          memory: "1024Mi"
+          cpu: "2000m"
+      s3_user:
+        requests:
+          memory: "128Mi"
+          cpu: "100m"
+        limits:
+          memory: "1024Mi"
+          cpu: "2000m"
+
 ## Service Account
 ## Ref: https://kubernetes.io/docs/admin/service-accounts-admin/
 ##
@@ -115,10 +279,10 @@ ingress:
   ## Used to create an Ingress record.
   hosts: []
   ## Useful in controllers where ImplementationSpecific is considered as a Regex Match and, not a Prefix match
-  pathType: ImplementationSpecific
+  pathType: Prefix
   routerPath: /
   artifactoryPath: /artifactory/
-  className: ""
+  className: "nginx"
   annotations: {}
   # kubernetes.io/tls-acme: "true"
   # nginx.ingress.kubernetes.io/proxy-body-size: "0"
@@ -167,16 +331,16 @@ ingressGrpc:
 
   ## Additional ingress rules
   additionalRules: []
-networkpolicy: []
+networkpolicy:
 # Allows all ingress and egress
-# - name: artifactory
-#   podSelector:
-#     matchLabels:
-#       app: artifactory-ha
-#   egress:
-#   - {}
-#   ingress:
-#   - {}
+- name: artifactory
+  podSelector:
+    matchLabels:
+      app: artifactory-ha
+  egress:
+  - {}
+  ingress:
+  - {}
 ## Uncomment to allow only artifactory pods to communicate with postgresql (if postgresql.enabled is true)
 # - name: postgresql
 #   podSelector:
@@ -195,7 +359,7 @@ waitForDatabase: true
 ## ref: https://github.com/bitnami/charts/blob/master/bitnami/postgresql/README.md
 ##
 postgresql:
-  enabled: true
+  enabled: false
   image:
     registry: releases-docker.jfrog.io
     repository: bitnami/postgresql
@@ -2240,3 +2404,12 @@ splitServicesToContainers: true
 ## Specify common probes parameters
 probes:
   timeoutSeconds: 5
+
+manifests:
+  secret_ingress_tls: true
+  secret_db: true
+  job_db_init: true
+  job_s3_user: true
+  job_s3_bucket: true
+  secret_s3: true
+  configmap_bin: true
