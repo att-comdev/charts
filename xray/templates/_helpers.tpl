@@ -446,29 +446,33 @@ Return the proper xray chart image names
 {{- define "xray.getImageInfoByValue" -}}
 {{- $dot := index . 0 }}
 {{- $indexReference := index . 1 }}
-{{- $registryName := index $dot.Values $indexReference "image" "registry" -}}
-{{- $repositoryName := index $dot.Values $indexReference "image" "repository" -}}
-{{- $tag := default $dot.Chart.AppVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
-{{- if and $dot.Values.common.xrayVersion (or (eq $indexReference "persist") (eq $indexReference "server") (eq $indexReference "analysis") (eq $indexReference "sbom") (eq $indexReference "indexer") (eq $indexReference "policyenforcer") (eq $indexReference "panoramic")) }}
-{{- $tag = $dot.Values.common.xrayVersion | toString -}}
-{{- end -}}
-{{- if $dot.Values.global }}
-    {{- if and $dot.Values.global.versions.router (eq $indexReference "router") }}
-    {{- $tag = $dot.Values.global.versions.router | toString -}}
-    {{- end -}}
-    {{- if and $dot.Values.global.versions.initContainers (eq $indexReference "initContainers") }}
-    {{- $tag = $dot.Values.global.versions.initContainers | toString -}}
-    {{- end -}}
-    {{- if and $dot.Values.global.versions.xray (or (eq $indexReference "persist") (eq $indexReference "server") (eq $indexReference "analysis") (eq $indexReference "sbom") (eq $indexReference "indexer") (eq $indexReference "policyenforcer") (eq $indexReference "panoramic")) }}
-    {{- $tag = $dot.Values.global.versions.xray | toString -}}
-    {{- end -}}
-    {{- if $dot.Values.global.imageRegistry }}
-        {{- printf "%s/%s:%s" $dot.Values.global.imageRegistry $repositoryName $tag -}}
-    {{- else -}}
-        {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
-    {{- end -}}
+{{- if hasKey $dot.Values.images.tags $indexReference -}}
+    {{- printf "%s" ( index $dot.Values.images.tags $indexReference ) -}}
 {{- else -}}
-    {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
+  {{- $registryName := index $dot.Values $indexReference "image" "registry" -}}
+  {{- $repositoryName := index $dot.Values $indexReference "image" "repository" -}}
+  {{- $tag := default $dot.Chart.AppVersion (index $dot.Values $indexReference "image" "tag") | toString -}}
+  {{- if and $dot.Values.common.xrayVersion (or (eq $indexReference "persist") (eq $indexReference "server") (eq $indexReference "analysis") (eq $indexReference "sbom") (eq $indexReference "indexer") (eq $indexReference "policyenforcer") (eq $indexReference "panoramic")) }}
+  {{- $tag = $dot.Values.common.xrayVersion | toString -}}
+  {{- end -}}
+  {{- if $dot.Values.global }}
+      {{- if and $dot.Values.global.versions.router (eq $indexReference "router") }}
+      {{- $tag = $dot.Values.global.versions.router | toString -}}
+      {{- end -}}
+      {{- if and $dot.Values.global.versions.initContainers (eq $indexReference "initContainers") }}
+      {{- $tag = $dot.Values.global.versions.initContainers | toString -}}
+      {{- end -}}
+      {{- if and $dot.Values.global.versions.xray (or (eq $indexReference "persist") (eq $indexReference "server") (eq $indexReference "analysis") (eq $indexReference "sbom") (eq $indexReference "indexer") (eq $indexReference "policyenforcer") (eq $indexReference "panoramic")) }}
+      {{- $tag = $dot.Values.global.versions.xray | toString -}}
+      {{- end -}}
+      {{- if $dot.Values.global.imageRegistry }}
+          {{- printf "%s/%s:%s" $dot.Values.global.imageRegistry $repositoryName $tag -}}
+      {{- else -}}
+          {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
+      {{- end -}}
+  {{- else -}}
+      {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
+  {{- end -}}
 {{- end -}}
 {{- end -}}
 
@@ -477,7 +481,7 @@ Return the proper xray app version
 */}}
 {{- define "xray.app.version" -}}
 {{- $tag := (splitList ":" ((include "xray.getImageInfoByValue" (list . "server" )))) | last | toString -}}
-{{- printf "%s" $tag -}}
+{{- printf "%s" $tag | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
