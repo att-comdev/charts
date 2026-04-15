@@ -1,0 +1,35 @@
+{{- if .Values.httpRoute.enabled }}
+{{- $servicePort := printf "%1.f" .Values.containers.ports.containerPort -}}
+apiversion: gateway.networking.k8s.io/v1
+kind: {{ }}
+metadata:
+  name: jenkins-nc
+  labels:
+    app: jenkins
+    chart: jenkins
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    {{- range $key, $value := .Values.httpRoute.annotations }}
+      {{ $key }}: {{ $value | quote }}
+    {{- end }}
+spec:
+  parentRefs:
+  {{ toYaml .Values.httpRoutes.parentRefs | indent 4 }}
+  hostnames:
+  {{- range .Values.httpRoutes.hostnames }}
+  - {{ . | quote }}
+  {{- end }}
+  rules:
+{{- if .Values.httpRoute.extraRules }}
+{{ toYaml .Values.httpRoute.extraRules | indent 2 }}
+{{- end }}
+  - backendRefs:
+    - kind: Service
+      name: jenkins
+      port: {{ $servicePort | int }}
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+{{- end }}
