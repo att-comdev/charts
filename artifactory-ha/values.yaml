@@ -2240,3 +2240,7 @@ splitServicesToContainers: true
 ## Specify common probes parameters
 probes:
   timeoutSeconds: 5
+
+# -- Array of extra K8s manifests to deploy
+## Note: Supports use of custom Helm templates
+extraObjects: []
