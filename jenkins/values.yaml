@@ -458,6 +458,20 @@ ingress:
   #   hosts:
   #     - jenkins.domain.example
 
+# Gateway API HTTPRoute
+httpRoute:
+  enabled: false
+  parentRefs: []
+  # parentRefs should point to the Gateway to attach to
+  # - name: cluster-gateway
+  #   namespace: kube-system
+  hostnames: []
+  # - jenkins.DOMAIN
+  annotations: {}
+  # additional httproute rules
+  # inserted before default rule
+  extraRules: []
+
 containers:
   ports:
     containerPort: 8080
@@ -584,3 +598,7 @@ manifests:
   job_create_namespaces: true
   kubernetes_rbac_rule: true
   configmap_init: true
+
+# -- Array of extra K8s manifests to deploy
+## Note: Supports use of custom Helm templates
+extraObjects: []
