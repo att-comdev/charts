@@ -1,0 +1,67 @@
+{{- if .Values.httpRoute.enabled -}}
+{{- $serviceName := include "artifactory-ha.fullname" . -}}
+{{- $servicePort := .Values.artifactory.externalPort -}}
+{{- $serviceRTFSName := include "rtfs.fullname" . -}}
+{{- $artifactoryServicePort := .Values.artifactory.externalArtifactoryPort -}}
+{{- $httpRouteNameArtifactory := default ( include "artifactory-ha.fullname" . ) .Values.httpRoute.name -}}
+{{- if .Values.httpRoute.hostnames }}
+  {{- range $index, $host := .Values.httpRoute.hostnames }}
+    {{- $httpRouteName := printf "%s-%s" $httpRouteNameArtifactory $host -}}
+    {{- $annotationName := printf "annotations%d" ( add1 $index ) -}}
+    {{- $filterName := printf "filter%d" ( add1 $index ) -}}
+    {{- $parentName := printf "parent%d" ( add1 $index ) -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ $httpRouteName }}
+  labels:
+    app: {{ template "artifactory-ha.name" $ }}
+    chart: {{ template "artifactory-ha.chart" $ }}
+    release: {{ $.Release.Name }}
+    heritage: {{ $.Release.Service }}
+    {{- if $.Values.httpRoute.labels }}
+{{ $.Values.httpRoute.labels | toYaml | trimSuffix "\n"| indent 4 -}}
+    {{- end }}
+    {{- if hasKey $.Values.httpRoute.annotations $annotationName }}
+  annotations:
+{{ index $.Values.httpRoute "annotations" $annotationName | toYaml | trimSuffix "\n" | indent 4 }}
+    {{- end }}
+spec:
+  parentRefs:
+{{ index $.Values.httpRoute "parentRefs" $parentName | toYaml | trimSuffix "\n" | indent 4 }}
+  hostnames:
+  - {{ $host | quote }}
+  rules:
+{{- if $.Values.httpRoute.extraRules }}
+{{ toYaml $.Values.httpRoute.extraRules | indent 2 }}
+{{- end }}
+  - backendRefs:
+    - kind: Service
+      name: {{ $serviceName }}
+      port: {{ $servicePort }}
+    matches:
+    - path:
+        type: PathPrefix
+        value: {{ $.Values.httpRoute.routerPath }}
+    {{- if hasKey $.Values.httpRoute.extraFilters $filterName }}
+    filters:
+{{ index $.Values.httpRoute "extraFilters" $filterName | toYaml | trimSuffix "\n" | indent 4 }}
+    {{- end }}
+{{- if not $.Values.ingress.disableRouterBypass }}
+  - backendRefs:
+    - kind: Service
+      name: {{ $serviceName }}
+      port: {{ $artifactoryServicePort }}
+    matches:
+    - path:
+        type: PathPrefix
+        value: {{ $.Values.httpRoute.artifactoryPath }}
+    {{- if hasKey $.Values.httpRoute.extraFilters $filterName }}
+    filters:
+{{ index $.Values.httpRoute "extraFilters" $filterName | toYaml | trimSuffix "\n" | indent 4 }}
+    {{- end }}
+{{- end }}
+---
+  {{- end }}
+{{- end }}
+{{- end }}
