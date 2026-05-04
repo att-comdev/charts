@@ -331,6 +331,34 @@ ingressGrpc:
 
   ## Additional ingress rules
   additionalRules: []
+
+httpRoute:
+  enabled: false
+  parentRefs: {}
+  # parentRefs iterated to match hostnames
+  # should point to the Gateway to attach to
+  # parent1:
+  # - name: cluster-gateway
+  #   namespace: kube-system
+  hostnames: []
+  routerPath: /
+  artifactoryPath: /artifactory/
+  labels: {}
+  annotations: {}
+  extraRules: {}
+  # additional httproute rules, inserted before default rule
+  extraFilters: {}
+  # iterated to match hostnames
+  # filter1:
+  # - type: RequestHeaderModifier
+  #   requestHeaderModifier:
+  #     set:
+  #     - name: "X-JFrog-Override-Base-Url"
+  #       value: "https://artifacts.DOMAIN/""
+
+  ## This is an experimental feature, enabling this feature will route all traffic through the Router.
+  disableRouterBypass: false
+
 networkpolicy:
 # Allows all ingress and egress
 - name: artifactory
@@ -2404,6 +2432,10 @@ splitServicesToContainers: true
 ## Specify common probes parameters
 probes:
   timeoutSeconds: 5
+
+# -- Array of extra K8s manifests to deploy
+## Note: Supports use of custom Helm templates
+extraObjects: []
 
 manifests:
   secret_ingress_tls: true
