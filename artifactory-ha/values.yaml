@@ -331,7 +331,36 @@ ingressGrpc:
 
   ## Additional ingress rules
   additionalRules: []
+<<<<<<< HEAD
 networkpolicy:
+=======
+
+httpRoute:
+  enabled: false
+  parentRefs: {}
+  # parentRefs iterated to match hostnames
+  # should point to the Gateway to attach to
+  # parent1:
+  # - name: cluster-gateway
+  #   namespace: kube-system
+  hostnames: []
+  routerPath: /
+  artifactoryPath: /artifactory/
+  labels: {}
+  annotations: {}
+  extraRules: []
+  # additional httproute rules, inserted before default rule
+  extraFilters: {}
+  # iterated to match hostnames
+  # filter1:
+  # - type: RequestHeaderModifier
+  #   requestHeaderModifier:
+  #     set:
+  #     - name: "X-JFrog-Override-Base-Url"
+  #       value: "https://artifacts.DOMAIN/""
+
+networkpolicy: []
+>>>>>>> 4f37a84 ([artifactory] Add support for Gateway API)
 # Allows all ingress and egress
 - name: artifactory
   podSelector:
@@ -2405,6 +2434,10 @@ splitServicesToContainers: true
 probes:
   timeoutSeconds: 5
 
+# -- Array of extra K8s manifests to deploy
+## Note: Supports use of custom Helm templates
+extraObjects: []
+
 manifests:
   secret_ingress_tls: true
   secret_db: true
@@ -2413,3 +2446,4 @@ manifests:
   job_s3_bucket: true
   secret_s3: true
   configmap_bin: true
+
