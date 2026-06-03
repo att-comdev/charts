@@ -549,7 +549,7 @@ endpoints:
             kind: ClusterIssuer
           privateKey:
             rotationPolicy: Always
-          keySize: 2048
+            keySize: 2048
           duration: 8760h
           renewBefore: 360h
           dnsNames:
