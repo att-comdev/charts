@@ -126,7 +126,8 @@ ingress:
   # traffic-type: external
   # traffic-type: internal
   tls: []
-  ## Secrets must be manually created in the namespace.
+  ## TLS configuration. Referenced secrets must exist in the target namespace.
+  ## Secrets can be created manually, via extraObjects, or by cert-manager.
   # - secretName: chart-example-tls
   #   hosts:
   #     - artifactory.domain.example
@@ -2240,3 +2241,7 @@ splitServicesToContainers: true
 ## Specify common probes parameters
 probes:
   timeoutSeconds: 5
+
+# -- Array of extra K8s manifests to deploy
+## Note: Supports use of custom Helm templates
+extraObjects: []

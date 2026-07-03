@@ -25,4 +25,4 @@ name: artifactory-ha
 sources:
 - https://github.com/jfrog/charts
 type: application
-version: 107.117.15
+version: 207.117.15
