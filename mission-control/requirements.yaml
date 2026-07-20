@@ -2,3 +2,6 @@ dependencies:
 - name: helm-toolkit
   repository: file://../deps/helm-toolkit
   version: ">= 0.1.0"
+- name: postgresql
+  repository: file://charts/postgresql
+  version: "~9.3.0"
